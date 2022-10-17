@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 with open('README.md') as f:
@@ -18,5 +18,5 @@ setup(
     author_email='david.gutierrez@liferay.com',
     url='https://github.com/david-gutierrez-mesa/JiraAutomatedTasks',
     license=license_jat,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=['liferay', 'manage_credentials']
 )
