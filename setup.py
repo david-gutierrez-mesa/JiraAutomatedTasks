@@ -18,5 +18,5 @@ setup(
     author_email='david.gutierrez@liferay.com',
     url='https://github.com/david-gutierrez-mesa/JiraAutomatedTasks',
     license=license_jat,
-    packages=['liferay', 'manage_credentials']
+    packages=['liferay']
 )
