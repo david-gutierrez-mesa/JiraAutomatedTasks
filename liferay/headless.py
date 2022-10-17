@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from liferay.helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
+from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
     initialize_subtask_test_automation
-from liferay.jira_liferay import get_jira_connection
+from jira_liferay import get_jira_connection
 
 
 def create_headless_testing_subtasks(jira):

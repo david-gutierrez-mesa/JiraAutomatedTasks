@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from liferay.helpers import get_property, create_poshi_task_for, initialize_subtask_front_end, \
+from helpers import get_property, create_poshi_task_for, initialize_subtask_front_end, \
     initialize_subtask_back_end, AUTOMATION_TABLE_HEADER
-from liferay.jira_liferay import get_jira_connection
+from jira_liferay import get_jira_connection
 
 
 def assign_qa_engineer(jira):
