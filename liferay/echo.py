@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from liferay.helpers import get_property, create_poshi_task_for, initialize_subtask_front_end, initialize_subtask_back_end
+from liferay.helpers import get_property, create_poshi_task_for, initialize_subtask_front_end, \
+    initialize_subtask_back_end, AUTOMATION_TABLE_HEADER
 from liferay.jira_liferay import get_jira_connection
 
 
-def assign_qa_engineer():
+def assign_qa_engineer(jira):
     print("Assigning QA Engineer to LPS tasks...")
-    jira = get_jira_connection()
-    stories_without_qa_engineer = jira.search_issues('filter=54607')
+    stories_without_qa_engineer = jira.search_issues('filter=54607', fields="assignee, customfield_24852")
     for story in stories_without_qa_engineer:
         qa_engineer = [{'name': story.fields.assignee.name}]
         story.update(
@@ -16,9 +16,8 @@ def assign_qa_engineer():
     print("LPS have QA Engineer field up to date")
 
 
-def close_ready_for_release_bugs_in_lps():
+def close_ready_for_release_bugs(jira):
     print("Closing bugs in Ready for Release status...")
-    jira = get_jira_connection()
     bugs_in_ready_for_release = jira.search_issues('filter=54632')
     all_bugs_closed = True
     for bug in bugs_in_ready_for_release:
@@ -48,9 +47,8 @@ def close_ready_for_release_bugs_in_lps():
     print("Ready for Release status are closed")
 
 
-def creating_testing_subtasks():
+def creating_testing_subtasks(jira):
     print("Creating subtasks for Echo team...")
-    jira = get_jira_connection()
     stories_without_testing_subtask = jira.search_issues('filter=54572')
     for story in stories_without_testing_subtask:
         print("Creating sub-task for story " + story.id)
@@ -80,15 +78,12 @@ def creating_testing_subtasks():
     print("Subtasks for Echo team are up to date")
 
 
-def create_testing_table_for_stories():
+def create_testing_table_for_stories(jira):
     print("Creating tests table for Echo team...")
-    jira = get_jira_connection()
     stories_without_testing_table = jira.search_issues('filter=54772')
     for story in stories_without_testing_table:
         current_description = story.fields.description
-        poshi_automation_table = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
-                                 'JS-Unit)||Is it covered by BackEnd ? (unit or integration)||Could it be covered by ' \
-                                 'POSHI?||' + '\r\n'
+        poshi_automation_table = AUTOMATION_TABLE_HEADER + '\r\n'
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == 'Test Scenarios Coverage | Test Creation':
@@ -109,11 +104,9 @@ def create_testing_table_for_stories():
     print("All stories have testing table")
 
 
-def create_poshi_automation_task():
+def create_poshi_automation_task(jira):
     print("Creating Poshi tasks...")
     output_message = ''
-
-    jira = get_jira_connection()
     stories_without_poshi_automation_created = jira.search_issues('filter=54646')
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
@@ -158,8 +151,9 @@ def create_poshi_automation_task():
 
 
 if __name__ == "__main__":
-    get_jira_connection()
-    close_ready_for_release_bugs_in_lps()
-    creating_testing_subtasks()
-    create_testing_table_for_stories()
-    create_poshi_automation_task()
+    jira_connection = get_jira_connection()
+    assign_qa_engineer(jira_connection)
+    creating_testing_subtasks(jira_connection)
+    create_testing_table_for_stories(jira_connection)
+    create_poshi_automation_task(jira_connection)
+    close_ready_for_release_bugs(jira_connection)

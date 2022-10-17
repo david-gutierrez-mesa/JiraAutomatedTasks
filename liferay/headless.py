@@ -4,9 +4,8 @@ from liferay.helpers import initialize_subtask_test_creation, initialize_subtask
 from liferay.jira_liferay import get_jira_connection
 
 
-def create_headless_testing_subtasks():
+def create_headless_testing_subtasks(jira):
     print("Creating subtasks for Headless team...")
-    jira = get_jira_connection()
     stories_without_testing_subtask = jira.search_issues('filter=54596')
     for story in stories_without_testing_subtask:
         print("Creating sub-tasks for story " + story.key)
@@ -45,4 +44,5 @@ def create_headless_testing_subtasks():
 
 
 if __name__ == "__main__":
-    create_headless_testing_subtasks()
+    jira_connection = get_jira_connection()
+    create_headless_testing_subtasks(jira_connection)
