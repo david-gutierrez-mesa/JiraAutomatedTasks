@@ -1,9 +1,9 @@
 from jira import JIRA
 
-from manage_credentials import manageCredentialsCrypto
+from manageCredentialsCrypto import get_credentials
 
 
 def get_jira_connection():
-    login = manageCredentialsCrypto.get_credentials()
+    login = get_credentials()
     jira = JIRA("https://issues.liferay.com", basic_auth=login)
     return jira
