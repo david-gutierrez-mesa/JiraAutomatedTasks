@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+from setuptools import setup, find_packages
+
+
+with open('README.rst') as f:
+    readme = f.read()
+
+with open('LICENSE') as f:
+    license_jat = f.read()
+
+setup(
+    name='JiraAutomatedTasks',
+    version='0.1.0',
+    description='Package to do perform some automated task in Liferay Jira',
+    long_description=readme,
+    author='David Gutierrez Mesa',
+    author_email='david.gutierrez@liferay.com',
+    url='https://github.com/david-gutierrez-mesa/JiraAutomatedTasks',
+    license=license_jat,
+    packages=find_packages(exclude=('tests', 'docs'))
+)

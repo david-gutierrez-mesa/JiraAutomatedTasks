@@ -1,3 +1,8 @@
+AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
+                          'JS-Unit)||Is it covered by BackEnd ? (unit or integration)||Could it be covered by ' \
+                          'POSHI?||'
+
+
 def create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     print("Creating automation task for ", parent_key)
