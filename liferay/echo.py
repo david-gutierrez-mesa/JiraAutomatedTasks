@@ -142,6 +142,7 @@ def create_poshi_automation_task(jira):
                     output_message += "Story " + story.key + " has already a POSHI subtask.\n"
                 else:
                     create_poshi_task_for(jira, story, poshi_automation_table)
+
             else:
                 print("Automation task not needed or not possible to create")
         else:
