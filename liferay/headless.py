@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
-    initialize_subtask_test_automation
+    initialize_subtask_test_automation_headless
 from jira_liferay import get_jira_connection
 
 
@@ -36,7 +36,7 @@ def create_headless_testing_subtasks(jira):
             print("* Created sub-task: " + child.key)
 
         if automation_test_creation:
-            subtask_test_automation = initialize_subtask_test_automation(story, components)
+            subtask_test_automation = initialize_subtask_test_automation_headless(story, components)
             child = jira.create_issue(fields=subtask_test_automation)
             print("* Created sub-task: " + child.key)
 

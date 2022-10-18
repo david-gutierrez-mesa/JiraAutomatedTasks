@@ -29,6 +29,10 @@ def create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
         inwardIssue=new_issue.key,
         outwardIssue=parent_key,
     )
+
+    subtask_test_automation = initialize_subtask_test_automation_headless(new_issue, components)
+    jira_local.create_issue(fields=subtask_test_automation)
+
     print("Poshi task ", new_issue.key, " created for", parent_key)
 
 
@@ -96,12 +100,22 @@ def initialize_subtask_test_validation(story, components):
     return subtask_test_validation
 
 
-def initialize_subtask_test_automation(story, components):
+def initialize_subtask_test_automation_echo(story, components):
+    description = 'Create test automation to validate the critical test scenarios/cases of the related story. ' \
+                  'Instructions [here|https://liferay.atlassian.net/l/c/FUSUocqi]. '
+    return initialize_subtask_test_automation(story, components, description)
+
+
+def initialize_subtask_test_automation_headless(story, components):
+    description = 'Create test automation to validate the critical test scenarios/cases of the related story.'
+    return initialize_subtask_test_automation(story, components, description)
+
+
+def initialize_subtask_test_automation(story, components, description):
     subtask_test_automation = {
         'project': {'key': 'LPS'},
         'summary': 'Product QA | Automation Test Creation',
-        'description': 'Create test automation to validate the critical test scenarios/cases of the related '
-                       'story. Instructions [here|https://liferay.atlassian.net/l/c/FUSUocqi].',
+        'description': description,
         'issuetype': {'name': 'Technical Testing'},
         'components': components,
         'parent': {'id': story.id},
