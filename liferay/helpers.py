@@ -3,39 +3,6 @@ AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it 
                           'POSHI?||'
 
 
-def create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
-    parent_key = parent_story.key
-    print("Creating automation task for ", parent_key)
-    epic_link = parent_story.get_field('customfield_12821')
-    components = []
-    for component in parent_story.fields.components:
-        components.append({'name': component.name})
-    issue_dict = {
-        'project': {'key': 'LPS'},
-        'summary': parent_key + ' - Product QA | Test Automation Creation',
-        'description': 'Create test automation to validate the critical test scenarios/cases of the related '
-                       'story.\n\nThe focus of this task is to implement the CRITICAL, HIGH, and MID tests of the '
-                       'related story, but if you believe that can and have time to implement the LOW and TRIVIAL '
-                       'test cases, please, create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n'
-                       + poshi_automation_table,
-        'issuetype': {'name': 'Testing'},
-        'components': components,
-        'customfield_12821': epic_link
-    }
-
-    new_issue = jira_local.create_issue(fields=issue_dict)
-    jira_local.create_issue_link(
-        type="relates",
-        inwardIssue=new_issue.key,
-        outwardIssue=parent_key,
-    )
-
-    subtask_test_automation = initialize_subtask_test_automation_headless(new_issue, components)
-    jira_local.create_issue(fields=subtask_test_automation)
-
-    print("Poshi task ", new_issue.key, " created for", parent_key)
-
-
 def get_property(local_case, property_name):
     test_property = 'TBD'
     string_start = local_case.find(property_name) + len(property_name)
@@ -98,17 +65,6 @@ def initialize_subtask_test_validation(story, components):
         'parent': {'id': story.id},
     }
     return subtask_test_validation
-
-
-def initialize_subtask_test_automation_echo(story, components):
-    description = 'Create test automation to validate the critical test scenarios/cases of the related story. ' \
-                  'Instructions [here|https://liferay.atlassian.net/l/c/FUSUocqi]. '
-    return initialize_subtask_test_automation(story, components, description)
-
-
-def initialize_subtask_test_automation_headless(story, components):
-    description = 'Create test automation to validate the critical test scenarios/cases of the related story.'
-    return initialize_subtask_test_automation(story, components, description)
 
 
 def initialize_subtask_test_automation(story, components, description):
