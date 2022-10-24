@@ -37,6 +37,7 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
                   'Feel free to create a new test or add new steps to an existing one '
     new_issue = create_poshi_automation_task_for(jira_local, bug, summary, description)
     print("Poshi task ", new_issue.key, " created for bug", parent_key)
+    return new_issue
 
 
 def get_property(local_case, property_name):
