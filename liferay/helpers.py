@@ -3,6 +3,42 @@ AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it 
                           'POSHI?||'
 
 
+def create_poshi_automation_task_for(jira_local, issue, summary, description):
+    parent_key = issue.key
+    epic_link = issue.get_field('customfield_12821')
+    components = []
+    for component in issue.fields.components:
+        components.append({'name': component.name})
+    issue_dict = {
+        'project': {'key': 'LPS'},
+        'summary': summary,
+        'description': description,
+        'issuetype': {'name': 'Testing'},
+        'components': components,
+        'customfield_12821': epic_link
+    }
+
+    new_issue = jira_local.create_issue(fields=issue_dict)
+    jira_local.create_issue_link(
+        type="relates",
+        inwardIssue=new_issue.key,
+        outwardIssue=parent_key,
+    )
+    return new_issue
+
+
+def create_poshi_automation_task_for_bug(jira_local, bug):
+    parent_key = bug.key
+    bug_summary = bug.fields.summary
+    print("Creating automation task for bug", parent_key)
+    summary = 'Poshi Automation for Bug ' + parent_key + ' '+ bug_summary
+
+    description = 'We need to automate bug ' + parent_key + '\'' + bug_summary + '\' since it was a release blocker. ' \
+                  'Feel free to create a new test or add new steps to an existing one '
+    new_issue = create_poshi_automation_task_for(jira_local, bug, summary, description)
+    print("Poshi task ", new_issue.key, " created for bug", parent_key)
+
+
 def get_property(local_case, property_name):
     test_property = 'TBD'
     string_start = local_case.find(property_name) + len(property_name)
