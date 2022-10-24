@@ -172,7 +172,8 @@ def create_poshi_automation_task(jira):
 def create_poshi_automation_task_for_bugs(jira):
     bugs_without_poshi_automation_created = jira.search_issues('filter=51790')
     for bug in bugs_without_poshi_automation_created:
-        create_poshi_automation_task_for_bug(jira, bug)
+        poshi_task = create_poshi_automation_task_for_bug(jira, bug)
+        jira.transition_issue(poshi_task, transition='10022')
 
 
 if __name__ == "__main__":
