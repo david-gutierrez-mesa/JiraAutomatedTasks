@@ -78,12 +78,11 @@ def initialize_subtask_front_end(story, components):
     return subtask_frontend
 
 
-def initialize_subtask_test_creation(story, components):
+def initialize_subtask_test_creation(story, components, description):
     subtask_test_creation = {
         'project': {'key': 'LPS'},
         'summary': 'Test Scenarios Coverage | Test Creation',
-        'description': 'Define the test scenarios of the parent epic. Instructions [here '
-                       '|https://liferay.atlassian.net/l/c/Ed0yE1to].',
+        'description': description,
         'issuetype': {'name': 'Technical Testing'},
         'components': components,
         'parent': {'id': story.id},
@@ -91,18 +90,16 @@ def initialize_subtask_test_creation(story, components):
     return subtask_test_creation
 
 
-def initialize_subtask_test_validation(story, components):
+def initialize_subtask_test_validation(story, components, description):
     subtask_test_validation = {
         'project': {'key': 'LPS'},
         'summary': 'Product QA | Test Validation - Round 1',
-        'description': 'Execute the tests of the parent epic. Instructions ['
-                       'here|https://liferay.atlassian.net/l/c/VURAf9A3].',
+        'description': description,
         'issuetype': {'name': 'Technical Testing'},
         'components': components,
         'parent': {'id': story.id},
     }
     return subtask_test_validation
-
 
 def initialize_subtask_test_automation(story, components, description):
     subtask_test_automation = {
