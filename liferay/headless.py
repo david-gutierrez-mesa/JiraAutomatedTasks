@@ -20,16 +20,22 @@ def create_headless_test_creation_subtask(jira):
 
         if test_creation:
             description = '*Output*' \
-                          '\r\n # Our table with the Test scenarios/test cases to be validated in the validation phase.' \
-                          '\r\n # After being reviewed by the team, add a finalized table to the parent story description' \
-                          '\r\n # Add test cases to [Test Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY/edit#gid=2145200593]' \
+                          '\r\n # Our table with the Test scenarios/test cases to be validated in the ' \
+                          'validation phase.' \
+                          '\r\n # After being reviewed by the team, add a finalized table to the parent story ' \
+                          'description' \
+                          '\r\n # Add test cases to [Test ' \
+                          'Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY' \
+                          '/edit#gid=2145200593]' \
                           '\r\n' \
                           '\r\n*Test Scenarios:*' \
-                          '\r\n||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (business impact)||' \
+                          '\r\n||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (' \
+                          'business impact)||' \
                           '\r\n| | | | |' \
                           '\r\n' \
                           '\r\n*Exploratory testing to consider:*' \
-                          '\r\n||Requirement||Test Scenarios||Test Priority (business impact)||Covered by frontend/backend Unit Test?||' \
+                          '\r\n||Requirement||Test Scenarios||Test Priority (business impact)||Covered by ' \
+                          'frontend/backend Unit Test?||' \
                           '\r\n| | | | |'
             subtask_test_creation = initialize_subtask_test_creation(story, components, description)
             child = jira.create_issue(fields=subtask_test_creation)
@@ -55,13 +61,16 @@ def create_headless_test_validation_subtask(jira):
 
         if test_validation:
             description = '\r\n*Context*' \
-                          '\r\nExecute the tests of the parent story, and use the information in the*Test Information*section to perform the tests.' \
+                          '\r\nExecute the tests of the parent story, and use the information in the*Test ' \
+                          'Information*section to perform the tests.' \
                           '\r\n' \
                           '\r\n*Output*' \
-                          '\r\nTell in one comment (in the story ticket) the final status of this first round, and in this ticket, fill the bug section.' \
+                          '\r\nTell in one comment (in the story ticket) the final status of this first round, ' \
+                          'and in this ticket, fill the bug section.' \
                           '\r\nRemember to link the bug (if you discover it) with the Story ticket.' \
                           '\r\n{code:java}' \
-                          '\r\n*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.' \
+                          '\r\n*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          'color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.' \
                           '\r\n' \
                           '\r\n*Verified on:*' \
                           '\r\n*Environment*: localhost' \
@@ -72,8 +81,10 @@ def create_headless_test_validation_subtask(jira):
                           '\r\n*Last Commit*: ? ' \
                           '\r\n' \
                           '\r\n|| Test Scenarios || Test Result ||' \
-                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{color:#59afe1}BLOCKED{color}*|' \
-                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{color:#59afe1}BLOCKED{color}*|' \
+                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          'color:#59afe1}BLOCKED{color}*|' \
+                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          'color:#59afe1}BLOCKED{color}*|' \
                           '\r\n...' \
                           '\r\n{code}' \
                           '\r\n*Bugs:*' \
@@ -136,7 +147,7 @@ def create_poshi_automation_task(jira):
                 table_staring_position = description.find(table_starring_string)
                 table_ending_string = '*Exploratory'
                 table_ending_position = description.find(table_ending_string)
-                poshi_automation_table = description[table_staring_position:table_ending_position-1]
+                poshi_automation_table = description[table_staring_position:table_ending_position - 1]
                 __create_poshi_task_for(jira, story, poshi_automation_table)
                 output_message = output_message + "Automation Test Creation created for " + story.get_field('summary')
     print(output_message)

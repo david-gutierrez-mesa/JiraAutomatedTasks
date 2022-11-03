@@ -31,10 +31,11 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
     parent_key = bug.key
     bug_summary = bug.fields.summary
     print("Creating automation task for bug", parent_key)
-    summary = 'Poshi Automation for Bug ' + parent_key + ' '+ bug_summary
+    summary = 'Poshi Automation for Bug ' + parent_key + ' ' + bug_summary
 
     description = 'We need to automate bug ' + parent_key + '\'' + bug_summary + '\' since it was a release blocker. ' \
-                  'Feel free to create a new test or add new steps to an existing one '
+                                                                                 'Feel free to create a new test or ' \
+                                                                                 'add new steps to an existing one '
     new_issue = create_poshi_automation_task_for(jira_local, bug, summary, description)
     print("Poshi task ", new_issue.key, " created for bug", parent_key)
     return new_issue
@@ -100,6 +101,7 @@ def initialize_subtask_test_validation(story, components, description):
         'parent': {'id': story.id},
     }
     return subtask_test_validation
+
 
 def initialize_subtask_test_automation(story, components, description):
     subtask_test_automation = {
