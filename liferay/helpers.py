@@ -3,6 +3,18 @@ AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it 
                           'POSHI?||'
 
 
+def __initialize_subtask_technical_test(story, components, summary, description):
+    subtask_test_automation = {
+        'project': {'key': 'LPS'},
+        'summary': summary,
+        'description': description,
+        'issuetype': {'name': 'Technical Testing'},
+        'components': components,
+        'parent': {'id': story.id},
+    }
+    return subtask_test_automation
+
+
 def create_poshi_automation_task_for(jira_local, issue, summary, description):
     parent_key = issue.key
     epic_link = issue.get_field('customfield_12821')
@@ -51,65 +63,36 @@ def get_property(local_case, property_name):
 
 
 def initialize_subtask_back_end(story, components):
-    subtask_backend = {
-        'project': {'key': 'LPS'},
-        'summary': 'Test Scenarios Coverage | Backend',
-        'description': '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n'
-                       '* Implement the Backend unit and/or integration tests that are missing, '
-                       'comparing with the test scenarios table, created in the parent story.',
-        'issuetype': {'name': 'Technical Testing'},
-        'components': components,
-        'parent': {'id': story.id},
-    }
+    summary = 'Test Scenarios Coverage | Backend'
+    description = '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n' \
+                  '* Implement the Backend unit and/or integration tests that are missing, comparing with the test ' \
+                  'scenarios table, created in the parent story. '
+    subtask_backend = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_backend
 
 
 def initialize_subtask_front_end(story, components):
-    subtask_frontend = {
-        'project': {'key': 'LPS'},
-        'summary': 'Test Scenarios Coverage | Frontend',
-        'description': '* Fill the Frontend coverage on the test scenarios table, '
-                       'created in the parent story.\n'
-                       '* Implement the Frontend unit and/or integration tests that are missing, '
-                       'comparing with the test scenarios table, created in the parent story.',
-        'issuetype': {'name': 'Technical Testing'},
-        'components': components,
-        'parent': {'id': story.id},
-    }
-    return subtask_frontend
+    summary = 'Test Scenarios Coverage | Frontend'
+    description = '* Fill the Frontend coverage on the test scenarios table, created in the parent story.\n' \
+                  '* Implement the Frontend unit and/or integration tests that are missing, comparing with the test ' \
+                  'scenarios table, created in the parent story. '
+    subtask_test_creation = __initialize_subtask_technical_test(story, components, summary, description)
+    return subtask_test_creation
 
 
 def initialize_subtask_test_creation(story, components, description):
-    subtask_test_creation = {
-        'project': {'key': 'LPS'},
-        'summary': 'Test Scenarios Coverage | Test Creation',
-        'description': description,
-        'issuetype': {'name': 'Technical Testing'},
-        'components': components,
-        'parent': {'id': story.id},
-    }
+    summary = 'Test Scenarios Coverage | Test Creation'
+    subtask_test_creation = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_creation
 
 
 def initialize_subtask_test_validation(story, components, description):
-    subtask_test_validation = {
-        'project': {'key': 'LPS'},
-        'summary': 'Product QA | Test Validation - Round 1',
-        'description': description,
-        'issuetype': {'name': 'Technical Testing'},
-        'components': components,
-        'parent': {'id': story.id},
-    }
+    summary = 'Product QA | Test Validation - Round 1'
+    subtask_test_validation = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_validation
 
 
 def initialize_subtask_test_automation(story, components, description):
-    subtask_test_automation = {
-        'project': {'key': 'LPS'},
-        'summary': 'Product QA | Automation Test Creation',
-        'description': description,
-        'issuetype': {'name': 'Technical Testing'},
-        'components': components,
-        'parent': {'id': story.id},
-    }
+    summary = 'Product QA | Automation Test Creation'
+    subtask_test_automation = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_automation
