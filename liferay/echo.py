@@ -162,6 +162,9 @@ def create_poshi_automation_task(jira):
                     __create_poshi_task_for_story(jira, story, poshi_automation_table)
 
             else:
+                jira.add_comment(story, "No Poshi automation is needed.")
+                story.fields.labels.append("poshi_test_not_needed")
+                story.update(fields={"labels": story.fields.labels})
                 print("Automation task not needed or not possible to create")
         else:
             output_message += "Story " + story.key + " don't have test table. \n"
