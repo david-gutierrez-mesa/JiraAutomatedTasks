@@ -3,9 +3,9 @@ from helpers import initialize_subtask_test_creation, initialize_subtask_test_va
 from jira_liferay import get_jira_connection
 
 
-def create_headless_test_creation_subtask(jira):
-    print("Creating test creation subtasks for Headless team...")
-    stories_without_testing_subtask = jira.search_issues('filter=54996')
+def create_frontend_infra_test_creation_subtask(jira):
+    print("Creating test creation subtasks for Frontend Infra team...")
+    stories_without_testing_subtask = jira.search_issues('filter=55092')
     for story in stories_without_testing_subtask:
         print("Creating sub-tasks for story " + story.key)
         test_creation = True
@@ -25,7 +25,7 @@ def create_headless_test_creation_subtask(jira):
                           '\r\n # After being reviewed by the team, add a finalized table to the parent story ' \
                           'description' \
                           '\r\n # Add test cases to [Test ' \
-                          'Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY' \
+                          'Map|https://docs.google.com/spreadsheets/d/1_liLRC1XHBydH_mfeeDifgKxBWN3kfRtX7uqbKgJ72k' \
                           '/edit#gid=2145200593]' \
                           '\r\n' \
                           '\r\n*Test Scenarios:*' \
@@ -41,12 +41,12 @@ def create_headless_test_creation_subtask(jira):
             child = jira.create_issue(fields=subtask_test_creation)
             print("* Created sub-task: " + child.key)
 
-    print("Subtasks for Headless team are up to date")
+    print("Subtasks for Frontend Infra team are up to date")
 
 
-def create_headless_test_validation_subtask(jira):
-    print("Creating test validation subtasks for Headless team...")
-    stories_without_testing_subtask = jira.search_issues('filter=54997')
+def create_frontend_infra_test_validation_subtask(jira):
+    print("Creating test validation subtasks for Frontend Infra team...")
+    stories_without_testing_subtask = jira.search_issues('filter=55093')
     for story in stories_without_testing_subtask:
         print("Creating sub-tasks for story " + story.key)
         test_validation = True
@@ -101,7 +101,7 @@ def create_headless_test_validation_subtask(jira):
             child = jira.create_issue(fields=subtask_test_validation)
             print("* Created sub-task: " + child.key)
 
-    print("Subtasks for Headless team are up to date")
+    print("Subtasks for Frontend Infra team are up to date")
 
 
 def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
@@ -138,7 +138,7 @@ def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
 def create_poshi_automation_task(jira):
     print("Creating Poshi tasks...")
     output_message = ''
-    stories_without_poshi_automation_created = jira.search_issues('filter=54999')
+    stories_without_poshi_automation_created = jira.search_issues('filter=55095')
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
@@ -155,6 +155,6 @@ def create_poshi_automation_task(jira):
 
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
-    create_headless_test_creation_subtask(jira_connection)
-    create_headless_test_validation_subtask(jira_connection)
+    create_frontend_infra_test_creation_subtask(jira_connection)
+    create_frontend_infra_test_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)
