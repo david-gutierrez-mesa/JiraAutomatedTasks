@@ -4,10 +4,9 @@ from jira_liferay import get_jira_connection
 
 
 def create_frontend_infra_test_creation_subtask(jira):
-    print("Creating test creation subtasks for Frontend Infra team...")
     stories_without_testing_subtask = jira.search_issues('filter=55092')
     for story in stories_without_testing_subtask:
-        print("Creating sub-tasks for story " + story.key)
+        print("Creating test scenarios coverage sub-task for story " + story.key)
         test_creation = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
@@ -39,16 +38,15 @@ def create_frontend_infra_test_creation_subtask(jira):
                           '\r\n| | | | |'
             subtask_test_creation = initialize_subtask_test_creation(story, components, description)
             child = jira.create_issue(fields=subtask_test_creation)
-            print("* Created sub-task: " + child.key)
+            print("   * sub-task created: " + child.key)
 
-    print("Subtasks for Frontend Infra team are up to date")
+    print("✓ Test scenarios coverage subtasks are up to date \n")
 
 
 def create_frontend_infra_test_validation_subtask(jira):
-    print("Creating test validation subtasks for Frontend Infra team...")
     stories_without_testing_subtask = jira.search_issues('filter=55093')
     for story in stories_without_testing_subtask:
-        print("Creating sub-tasks for story " + story.key)
+        print("Creating test validation sub-task for story " + story.key)
         test_validation = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
@@ -99,15 +97,15 @@ def create_frontend_infra_test_validation_subtask(jira):
                           '\r\n|?|?|'
             subtask_test_validation = initialize_subtask_test_validation(story, components, description)
             child = jira.create_issue(fields=subtask_test_validation)
-            print("* Created sub-task: " + child.key)
+            print("   * sub-task created: " + child.key)
 
-    print("Subtasks for Frontend Infra team are up to date")
+    print("✓ Manual Test Validation subtasks are up to date \n")
 
 
 def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     parent_summary = parent_story.get_field('summary')
-    print("Creating automation task for ", parent_key)
+    print("Creating poshi automation task for story", parent_key)
     epic_link = parent_story.get_field('customfield_12821')
     components = []
     for component in parent_story.fields.components:
@@ -132,29 +130,28 @@ def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
         outwardIssue=parent_key,
     )
 
-    print("Poshi task ", new_issue.key, " created for", parent_key)
+    print("   * task created: " + new_issue.key)
 
 
 def create_poshi_automation_task(jira):
-    print("Creating Poshi tasks...")
-    output_message = ''
     stories_without_poshi_automation_created = jira.search_issues('filter=55095')
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
                 description = jira.issue(subtask.id, fields='description').fields.description
-                table_starring_string = '||Requirement||'
-                table_staring_position = description.find(table_starring_string)
+                table_starting_string = '||Requirement||'
+                table_starting_position = description.find(table_starting_string)
                 table_ending_string = '*Exploratory'
                 table_ending_position = description.find(table_ending_string)
-                poshi_automation_table = description[table_staring_position:table_ending_position - 1]
+                poshi_automation_table = description[table_starting_position:table_ending_position - 1]
                 __create_poshi_task_for(jira, story, poshi_automation_table)
-                output_message = output_message + "Automation Test Creation created for " + story.get_field('summary')
-    print(output_message)
+
+    print("✓ Poshi automation tasks are up to date \n")
 
 
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
+    print("Creating subtasks for Frontend Infra team...\n")
     create_frontend_infra_test_creation_subtask(jira_connection)
     create_frontend_infra_test_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)
