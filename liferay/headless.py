@@ -1,22 +1,30 @@
 #!/usr/bin/env python
-from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation
+from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
+    prepare_test_creation_subtask, prepare_test_validation_subtask, create_poshi_automation_task_for
 from jira_liferay import get_jira_connection
 
 
-def create_headless_test_creation_subtask(jira):
+def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
+    parent_key = parent_story.key
+    parent_summary = parent_story.get_field('summary')
+    print("Creating poshi automation task for story", parent_key)
+    summary = 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary
+
+    description = 'Create test automation to validate the critical test scenarios/cases of the related story.\n\nThe ' \
+                  'focus of this task is to implement the CRITICAL, HIGH, and MID tests of the related story, ' \
+                  'but if you believe that can and have time to implement the LOW and TRIVIAL test cases, please, ' \
+                  'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
+    new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
+
+    print("Poshi task ", new_issue.key, " created for", parent_key)
+
+
+def create_creation_subtask(jira):
     print("Creating test creation subtasks for Headless team...")
     stories_without_testing_subtask = jira.search_issues('filter=54996')
     for story in stories_without_testing_subtask:
         print("Creating sub-tasks for story " + story.key)
-        test_creation = True
-        for subtask in story.fields.subtasks:
-            summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Test Creation':
-                test_creation = False
-
-        components = []
-        for component in story.fields.components:
-            components.append({'name': component.name})
+        test_creation, components = prepare_test_creation_subtask(story)
 
         if test_creation:
             description = '*Output*' \
@@ -44,20 +52,12 @@ def create_headless_test_creation_subtask(jira):
     print("Subtasks for Headless team are up to date")
 
 
-def create_headless_test_validation_subtask(jira):
+def create_validation_subtask(jira):
     print("Creating test validation subtasks for Headless team...")
     stories_without_testing_subtask = jira.search_issues('filter=54997')
     for story in stories_without_testing_subtask:
         print("Creating sub-tasks for story " + story.key)
-        test_validation = True
-        for subtask in story.fields.subtasks:
-            summary = subtask.fields.summary
-            if summary == 'Product QA | Test Validation - Round 1':
-                test_validation = False
-
-        components = []
-        for component in story.fields.components:
-            components.append({'name': component.name})
+        test_validation, components = prepare_test_validation_subtask(story)
 
         if test_validation:
             description = '\r\n*Context*' \
@@ -104,37 +104,6 @@ def create_headless_test_validation_subtask(jira):
     print("Subtasks for Headless team are up to date")
 
 
-def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
-    parent_key = parent_story.key
-    parent_summary = parent_story.get_field('summary')
-    print("Creating automation task for ", parent_key)
-    epic_link = parent_story.get_field('customfield_12821')
-    components = []
-    for component in parent_story.fields.components:
-        components.append({'name': component.name})
-    issue_dict = {
-        'project': {'key': 'LPS'},
-        'summary': 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary,
-        'description': 'Create test automation to validate the critical test scenarios/cases of the related '
-                       'story.\n\nThe focus of this task is to implement the CRITICAL, HIGH, and MID tests of the '
-                       'related story, but if you believe that can and have time to implement the LOW and TRIVIAL '
-                       'test cases, please, create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n'
-                       + poshi_automation_table,
-        'issuetype': {'name': 'Testing'},
-        'components': components,
-        'customfield_12821': epic_link
-    }
-
-    new_issue = jira_local.create_issue(fields=issue_dict)
-    jira_local.create_issue_link(
-        type="relates",
-        inwardIssue=new_issue.key,
-        outwardIssue=parent_key,
-    )
-
-    print("Poshi task ", new_issue.key, " created for", parent_key)
-
-
 def create_poshi_automation_task(jira):
     print("Creating Poshi tasks...")
     output_message = ''
@@ -155,6 +124,6 @@ def create_poshi_automation_task(jira):
 
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
-    create_headless_test_creation_subtask(jira_connection)
-    create_headless_test_validation_subtask(jira_connection)
+    create_creation_subtask(jira_connection)
+    create_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)

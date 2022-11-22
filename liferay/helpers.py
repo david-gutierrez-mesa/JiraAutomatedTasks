@@ -96,3 +96,31 @@ def initialize_subtask_test_automation(story, components, description):
     summary = 'Product QA | Automation Test Creation'
     subtask_test_automation = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_automation
+
+
+def prepare_test_creation_subtask(story):
+    test_creation = True
+    for subtask in story.fields.subtasks:
+        summary = subtask.fields.summary
+        if summary == 'Test Scenarios Coverage | Test Creation':
+            test_creation = False
+
+    components = []
+    for component in story.fields.components:
+        components.append({'name': component.name})
+
+    return test_creation, components
+
+
+def prepare_test_validation_subtask(story):
+    test_validation = True
+    for subtask in story.fields.subtasks:
+        summary = subtask.fields.summary
+        if summary == 'Product QA | Test Validation - Round 1':
+            test_validation = False
+
+    components = []
+    for component in story.fields.components:
+        components.append({'name': component.name})
+
+    return test_validation, components
