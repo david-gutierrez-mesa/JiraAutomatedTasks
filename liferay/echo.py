@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from helpers import get_property, initialize_subtask_front_end, initialize_subtask_back_end, AUTOMATION_TABLE_HEADER, \
-    initialize_subtask_test_automation, create_poshi_automation_task_for, create_poshi_automation_task_for_bug
+    create_poshi_automation_task_for, create_poshi_automation_task_for_bug
 from jira_liferay import get_jira_connection
 
 
@@ -15,11 +15,6 @@ def __create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tab
                   'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
     print("Poshi task ", new_issue.key, " created for", parent_key)
-
-
-def __initialize_subtask_test_automation(story, components):
-    description = 'Create test automation to validate the critical test scenarios/cases of the related story.'
-    return initialize_subtask_test_automation(story, components, description)
 
 
 def assign_qa_engineer(jira):
