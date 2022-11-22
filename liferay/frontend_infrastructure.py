@@ -19,7 +19,7 @@ def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     print("   * task created: " + new_issue.key)
 
 
-def create_frontend_infra_test_creation_subtask(jira):
+def create_test_creation_subtask(jira):
     stories_without_testing_subtask = jira.search_issues('filter=55092')
     for story in stories_without_testing_subtask:
         print("Creating test scenarios coverage sub-task for story " + story.key)
@@ -51,7 +51,7 @@ def create_frontend_infra_test_creation_subtask(jira):
     print("✓ Test scenarios coverage subtasks are up to date \n")
 
 
-def create_frontend_infra_test_validation_subtask(jira):
+def create_test_validation_subtask(jira):
     stories_without_testing_subtask = jira.search_issues('filter=55093')
     for story in stories_without_testing_subtask:
         print("Creating test validation sub-task for story " + story.key)
@@ -121,6 +121,6 @@ def create_poshi_automation_task(jira):
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
     print("Creating subtasks for Frontend Infra team...\n")
-    create_frontend_infra_test_creation_subtask(jira_connection)
-    create_frontend_infra_test_validation_subtask(jira_connection)
+    create_test_creation_subtask(jira_connection)
+    create_test_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)

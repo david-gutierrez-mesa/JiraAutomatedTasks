@@ -19,7 +19,7 @@ def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     print("Poshi task ", new_issue.key, " created for", parent_key)
 
 
-def create_headless_test_creation_subtask(jira):
+def create_creation_subtask(jira):
     print("Creating test creation subtasks for Headless team...")
     stories_without_testing_subtask = jira.search_issues('filter=54996')
     for story in stories_without_testing_subtask:
@@ -52,7 +52,7 @@ def create_headless_test_creation_subtask(jira):
     print("Subtasks for Headless team are up to date")
 
 
-def create_headless_test_validation_subtask(jira):
+def create_validation_subtask(jira):
     print("Creating test validation subtasks for Headless team...")
     stories_without_testing_subtask = jira.search_issues('filter=54997')
     for story in stories_without_testing_subtask:
@@ -124,6 +124,6 @@ def create_poshi_automation_task(jira):
 
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
-    create_headless_test_creation_subtask(jira_connection)
-    create_headless_test_validation_subtask(jira_connection)
+    create_creation_subtask(jira_connection)
+    create_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)

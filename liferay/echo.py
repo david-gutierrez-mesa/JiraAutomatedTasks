@@ -17,7 +17,7 @@ def __create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tab
     print("Poshi task ", new_issue.key, " created for", parent_key)
 
 
-def __initialize_subtask_test_automation_echo(story, components):
+def __initialize_subtask_test_automation(story, components):
     description = 'Create test automation to validate the critical test scenarios/cases of the related story.'
     return initialize_subtask_test_automation(story, components, description)
 
