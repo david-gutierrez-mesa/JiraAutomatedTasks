@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation
+from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, prepare_test_creation_subtask
 from jira_liferay import get_jira_connection
 
 
@@ -7,15 +7,7 @@ def create_frontend_infra_test_creation_subtask(jira):
     stories_without_testing_subtask = jira.search_issues('filter=55092')
     for story in stories_without_testing_subtask:
         print("Creating test scenarios coverage sub-task for story " + story.key)
-        test_creation = True
-        for subtask in story.fields.subtasks:
-            summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Test Creation':
-                test_creation = False
-
-        components = []
-        for component in story.fields.components:
-            components.append({'name': component.name})
+        test_creation, components = prepare_test_creation_subtask(story)
 
         if test_creation:
             description = '*Output*' \
