@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, prepare_test_creation_subtask, \
-    prepare_test_validation_subtask
+from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
+    prepare_test_creation_subtask, prepare_test_validation_subtask, create_poshi_automation_task_for
 from jira_liferay import get_jira_connection
 
 
@@ -8,29 +8,13 @@ def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     parent_summary = parent_story.get_field('summary')
     print("Creating poshi automation task for story", parent_key)
-    epic_link = parent_story.get_field('customfield_12821')
-    components = []
-    for component in parent_story.fields.components:
-        components.append({'name': component.name})
-    issue_dict = {
-        'project': {'key': 'LPS'},
-        'summary': 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary,
-        'description': 'Create test automation to validate the critical test scenarios/cases of the related '
-                       'story.\n\nThe focus of this task is to implement the CRITICAL, HIGH, and MID tests of the '
-                       'related story, but if you believe that can and have time to implement the LOW and TRIVIAL '
-                       'test cases, please, create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n'
-                       + poshi_automation_table,
-        'issuetype': {'name': 'Testing'},
-        'components': components,
-        'customfield_12821': epic_link
-    }
+    summary = 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary
 
-    new_issue = jira_local.create_issue(fields=issue_dict)
-    jira_local.create_issue_link(
-        type="relates",
-        inwardIssue=new_issue.key,
-        outwardIssue=parent_key,
-    )
+    description = 'Create test automation to validate the critical test scenarios/cases of the related story.\n\nThe ' \
+                  'focus of this task is to implement the CRITICAL, HIGH, and MID tests of the related story, ' \
+                  'but if you believe that can and have time to implement the LOW and TRIVIAL test cases, please, ' \
+                  'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
+    new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
 
     print("   * task created: " + new_issue.key)
 
@@ -116,6 +100,7 @@ def create_frontend_infra_test_validation_subtask(jira):
             print("   * sub-task created: " + child.key)
 
     print("✓ Manual Test Validation subtasks are up to date \n")
+
 
 def create_poshi_automation_task(jira):
     stories_without_poshi_automation_created = jira.search_issues('filter=55095')
