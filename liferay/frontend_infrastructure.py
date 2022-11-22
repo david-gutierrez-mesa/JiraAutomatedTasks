@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, prepare_test_creation_subtask
+from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, prepare_test_creation_subtask, \
+    prepare_test_validation_subtask
 from jira_liferay import get_jira_connection
 
 
@@ -39,15 +40,7 @@ def create_frontend_infra_test_validation_subtask(jira):
     stories_without_testing_subtask = jira.search_issues('filter=55093')
     for story in stories_without_testing_subtask:
         print("Creating test validation sub-task for story " + story.key)
-        test_validation = True
-        for subtask in story.fields.subtasks:
-            summary = subtask.fields.summary
-            if summary == 'Product QA | Test Validation - Round 1':
-                test_validation = False
-
-        components = []
-        for component in story.fields.components:
-            components.append({'name': component.name})
+        test_validation, components = prepare_test_validation_subtask(story)
 
         if test_validation:
             description = '\r\n*Context*' \

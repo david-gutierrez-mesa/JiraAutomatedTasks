@@ -110,3 +110,17 @@ def prepare_test_creation_subtask(story):
         components.append({'name': component.name})
 
     return test_creation, components
+
+
+def prepare_test_validation_subtask(story):
+    test_validation = True
+    for subtask in story.fields.subtasks:
+        summary = subtask.fields.summary
+        if summary == 'Product QA | Test Validation - Round 1':
+            test_validation = False
+
+    components = []
+    for component in story.fields.components:
+        components.append({'name': component.name})
+
+    return test_validation, components
