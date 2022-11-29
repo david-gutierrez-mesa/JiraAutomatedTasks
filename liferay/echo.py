@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from helpers import get_property, initialize_subtask_front_end, initialize_subtask_back_end, AUTOMATION_TABLE_HEADER, \
-    create_poshi_automation_task_for, create_poshi_automation_task_for_bug
+from helpers_jira import get_property, initialize_subtask_front_end, initialize_subtask_back_end, \
+    AUTOMATION_TABLE_HEADER, create_poshi_automation_task_for, create_poshi_automation_task_for_bug
 from jira_liferay import get_jira_connection
 
 
