@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from helpers import initialize_subtask_test_creation, initialize_subtask_test_validation, \
+from helpers_jira import initialize_subtask_test_creation, initialize_subtask_test_validation, \
     prepare_test_creation_subtask, prepare_test_validation_subtask, create_poshi_automation_task_for
 from jira_liferay import get_jira_connection
 
