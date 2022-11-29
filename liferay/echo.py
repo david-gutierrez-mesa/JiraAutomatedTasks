@@ -15,6 +15,7 @@ def __create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tab
                   'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
     print("Poshi task ", new_issue.key, " created for", parent_key)
+    return new_issue
 
 
 def assign_qa_engineer(jira):
@@ -118,7 +119,6 @@ def create_testing_table_for_stories(jira):
 
 
 def create_poshi_automation_task(jira):
-    print("Creating Poshi tasks...")
     output_message = ''
     stories_without_poshi_automation_created = jira.search_issues('filter=54646')
     for story in stories_without_poshi_automation_created:
@@ -149,22 +149,23 @@ def create_poshi_automation_task(jira):
             if skip_story:
                 break
             if is_automation_task_needed:
-                hash_poshi_subtask = [subtask for subtask in story.get_field('subtasks') if subtask.fields.summary ==
-                                      'Product QA | Functional Automation']
-                if hash_poshi_subtask:
-                    output_message += "Story " + story.key + " has already a POSHI subtask.\n"
-                else:
-                    __create_poshi_task_for_story(jira, story, poshi_automation_table)
-
+                poshi_task = __create_poshi_task_for_story(jira, story, poshi_automation_table)
+                for subtask in story.get_field('subtasks'):
+                    if subtask.fields.summary == 'Product QA | Functional Automation':
+                        testing_subtask = subtask.id
+                        jira.transition_issue(testing_subtask, transition='Closed')
+                        jira.add_comment(testing_subtask, 'Closing. Poshi automation is going to be done in '
+                                         + poshi_task.key)
+                        break
             else:
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")
                 story.update(fields={"labels": story.fields.labels})
-                print("Automation task not needed or not possible to create")
+                output_message += "Automation task not needed or not possible to create"
         else:
             output_message += "Story " + story.key + " don't have test table. \n"
 
-    print(output_message)
+    return output_message
 
 
 def create_poshi_automation_task_for_bugs(jira):
@@ -178,7 +179,10 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     assign_qa_engineer(jira_connection)
     creating_testing_subtasks(jira_connection)
+    print("Creating tests table for Echo team...")
     create_testing_table_for_stories(jira_connection)
-    create_poshi_automation_task(jira_connection)
+    print("Creating Poshi automation task for Echo team...")
+    message = create_poshi_automation_task(jira_connection)
+    print(message)
     create_poshi_automation_task_for_bugs(jira_connection)
     close_ready_for_release_bugs(jira_connection)
