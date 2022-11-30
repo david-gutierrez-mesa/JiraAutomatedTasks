@@ -124,3 +124,17 @@ def prepare_test_validation_subtask(story):
         components.append({'name': component.name})
 
     return test_validation, components
+
+
+def read_test_cases_table_from_description(description):
+    table_starring_string = '||Test Scenarios||'
+    table_ending_string = 'h3. Test Cases'
+    table_staring_position = description.find(table_starring_string)
+    table_ending_position = description.find(table_ending_string)
+    if table_staring_position != -1:
+        table = description[table_staring_position:table_ending_position]
+        table_rows = table.split('\r\n')
+        table_rows = [value for value in table_rows if value != '']
+        return table_rows[1:]
+    else:
+        return []
