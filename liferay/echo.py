@@ -175,6 +175,12 @@ def create_poshi_automation_task_for_bugs(jira):
         jira.transition_issue(poshi_task, transition='10022')
 
 
+def transition_story_to_ready_for_pm_review(jira):
+    story_to_ready_for_pm_review = jira.search_issues('filter=55152')
+    for story in story_to_ready_for_pm_review:
+        print("Processing story" + story.key)
+
+
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
     assign_qa_engineer(jira_connection)
