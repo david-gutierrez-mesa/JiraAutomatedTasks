@@ -221,3 +221,4 @@ if __name__ == "__main__":
     print(message)
     create_poshi_automation_task_for_bugs(jira_connection)
     close_ready_for_release_bugs(jira_connection)
+    transition_story_to_ready_for_pm_review(jira_connection)
