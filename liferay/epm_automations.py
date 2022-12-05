@@ -60,8 +60,6 @@ def _line_data(line, components_full_info, deep, children):
         if component.name == line.get('name'):
             if hasattr(component, 'lead'):
                 lead = component.lead.displayName
-            else:
-                print("\"", component.name, "\" has not lead")
             archived = component.archived
             break
     if lead == '':
