@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from helpers_google_sheet import set_update_time_in_cell
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
+
 
 SUB_COMPONENTS_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents/LPS.json'
 
@@ -130,6 +132,8 @@ def update_components_sheet(jira):
     sheet.batchUpdate(
         spreadsheetId=EPM_SPREADSHEET_ID,
         body=body).execute()
+
+    set_update_time_in_cell(sheet, EPM_SPREADSHEET_ID, 'B1')
 
 
 if __name__ == "__main__":
