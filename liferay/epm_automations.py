@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
 
