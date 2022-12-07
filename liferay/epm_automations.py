@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-from helpers_google_sheet import set_update_time_in_cell
+from helpers_google_sheet import set_update_time_in_cell, create_collapse_group_body
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
-
 
 SUB_COMPONENTS_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents/LPS.json'
 
@@ -12,19 +11,6 @@ EPM_TAB_BY_LEVEL_ID = '1959442404'
 EPM_BY_LEVEL_TABLE_START_INDEX = '4'
 EPM_BY_LEVEL_SPREADSHEET_RANGE = EPM_TAB_BY_LEVEL_NAME + '!B' + EPM_BY_LEVEL_TABLE_START_INDEX + ':K'
 EPM_BY_LEVEL_FIRST_LEVEL_RANGE = EPM_TAB_BY_LEVEL_NAME + '!B' + EPM_BY_LEVEL_TABLE_START_INDEX + ':B'
-
-
-def _create_collapse_group_body(local_requests, sheet_id, start, end):
-    local_requests.append([{
-        "addDimensionGroup": {
-            "range": {
-                "sheetId": sheet_id,
-                "dimension": "ROWS",
-                "startIndex": start,
-                "endIndex": end
-            }
-        }
-    }])
 
 
 def _delete_all_raw_groups(sheet, spreadsheet_id, sheet_id):
@@ -121,9 +107,10 @@ def update_components_sheet(jira):
             if level1[1][0] != '':
                 if start >= 0:
                     if level1[0] - start > 1:
-                        _create_collapse_group_body(local_requests, EPM_TAB_BY_LEVEL_ID,
-                                                    start + int(EPM_BY_LEVEL_TABLE_START_INDEX),
-                                                    level1[0] + int(EPM_BY_LEVEL_TABLE_START_INDEX) - 1)
+                        local_requests.append(
+                            create_collapse_group_body(EPM_TAB_BY_LEVEL_ID,
+                                                       start + int(EPM_BY_LEVEL_TABLE_START_INDEX),
+                                                       level1[0] + int(EPM_BY_LEVEL_TABLE_START_INDEX) - 1))
 
                 start = level1[0]
     body = {
