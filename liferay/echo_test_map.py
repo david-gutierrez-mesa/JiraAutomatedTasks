@@ -4,10 +4,8 @@ from liferay.helpers_testmap import is_mapped, get_mapped_stories, insert_lines_
 from liferay.testmap_jira import get_testmap_connection
 
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
-ECHO_TESTMAP_SHEET_NAME = 'Test Map-II'
-ECHO_TESTMAP_SHEET_ID = '1133133213'
-# ECHO_TESTMAP_SHEET_NAME = 'Test Map'
-# ECHO_TESTMAP_SHEET_ID = '540408560'
+ECHO_TESTMAP_SHEET_NAME = 'Test Map'
+ECHO_TESTMAP_SHEET_ID = '540408560'
 ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
