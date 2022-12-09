@@ -7,7 +7,7 @@ from jira_liferay import get_jira_connection
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
 
 
-def __create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
+def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     print("Creating automation task for ", parent_key)
     summary = parent_key + ' - Product QA | Test Automation Creation'
@@ -152,7 +152,7 @@ def create_poshi_automation_task(jira):
             if skip_story:
                 break
             if is_automation_task_needed:
-                poshi_task = __create_poshi_task_for_story(jira, story, poshi_automation_table)
+                poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                 for subtask in story.get_field('subtasks'):
                     if subtask.fields.summary == 'Product QA | Functional Automation':
                         testing_subtask = subtask.id

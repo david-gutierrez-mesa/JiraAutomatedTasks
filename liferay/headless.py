@@ -4,7 +4,7 @@ from helpers_jira import initialize_subtask_test_creation, initialize_subtask_te
 from jira_liferay import get_jira_connection
 
 
-def __create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
+def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     parent_summary = parent_story.get_field('summary')
     print("Creating poshi automation task for story", parent_key)
@@ -117,7 +117,7 @@ def create_poshi_automation_task(jira):
                 table_ending_string = '*Exploratory'
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_staring_position:table_ending_position - 1]
-                __create_poshi_task_for(jira, story, poshi_automation_table)
+                _create_poshi_task_for(jira, story, poshi_automation_table)
                 output_message = output_message + "Automation Test Creation created for " + story.get_field('summary')
     print(output_message)
 

@@ -4,5 +4,6 @@
 .DS_Store
 .gradle
 /**/**.iml
+/liferay/token.json
 /liferay/test.py
 /liferay/token.json
