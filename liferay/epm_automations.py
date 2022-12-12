@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import getopt
+import sys
+
 from helpers_google_sheet import set_update_time_in_cell, create_collapse_group_body
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
@@ -92,13 +95,15 @@ def _process_line(body_values, line, components_full_info, deep):
         _process_line(body_values, child, components_full_info, deep + 1)
 
 
-def update_components_sheet(jira):
+def update_components_sheet(jira, spreadsheet_id):
+    if spreadsheet_id == '':
+        spreadsheet_id = EPM_SPREADSHEET_ID
     components = jira._get_json("", None, SUB_COMPONENTS_JSON_URL)['subcomponents']
     components_full_info = jira.project_components("LPS")
     sheet = get_testmap_connection()
     sheet.values().clear(
-        spreadsheetId=EPM_SPREADSHEET_ID, range=EPM_BY_LEVEL_SPREADSHEET_RANGE).execute()
-    _delete_all_raw_groups(sheet, EPM_SPREADSHEET_ID, EPM_BY_LEVEL_SPREADSHEET_RANGE)
+        spreadsheetId=spreadsheet_id, range=EPM_BY_LEVEL_SPREADSHEET_RANGE).execute()
+    _delete_all_raw_groups(sheet, spreadsheet_id, EPM_BY_LEVEL_SPREADSHEET_RANGE)
     body_values = []
     for component in components:
         _process_line(body_values, component, components_full_info, 0)
@@ -107,10 +112,10 @@ def update_components_sheet(jira):
         'values': body_values
     }
     sheet.values().append(
-        spreadsheetId=EPM_SPREADSHEET_ID, range=EPM_BY_LEVEL_SPREADSHEET_RANGE, valueInputOption='USER_ENTERED',
+        spreadsheetId=spreadsheet_id, range=EPM_BY_LEVEL_SPREADSHEET_RANGE, valueInputOption='USER_ENTERED',
         body=body).execute()
 
-    l1_list = sheet.values().get(spreadsheetId=EPM_SPREADSHEET_ID, range=EPM_BY_LEVEL_FIRST_LEVEL_RANGE).execute() \
+    l1_list = sheet.values().get(spreadsheetId=spreadsheet_id, range=EPM_BY_LEVEL_FIRST_LEVEL_RANGE).execute() \
         .get('values', [])
     start = -1
     local_requests = []
@@ -129,12 +134,25 @@ def update_components_sheet(jira):
         'requests': local_requests
     }
     sheet.batchUpdate(
-        spreadsheetId=EPM_SPREADSHEET_ID,
+        spreadsheetId=spreadsheet_id,
         body=body).execute()
 
-    set_update_time_in_cell(sheet, EPM_SPREADSHEET_ID, 'B1')
+    set_update_time_in_cell(sheet, spreadsheet_id, 'B1')
+
+
+def main(argv):
+    spreadsheet_id = ''
+    opts, args = getopt.getopt(argv, "hs:", ["sheet_id="])
+    for opt, arg in opts:
+        if opt == '-h':
+            print('epm_automations.py -s <sheet_id>')
+            sys.exit()
+        elif opt in ("-s", "--sheet_id"):
+            spreadsheet_id = arg
+    jira_connection = get_jira_connection()
+    update_components_sheet(jira_connection, spreadsheet_id)
 
 
 if __name__ == "__main__":
-    jira_connection = get_jira_connection()
-    update_components_sheet(jira_connection)
+    main(sys.argv[1:])
+
