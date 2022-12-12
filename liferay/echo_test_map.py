@@ -122,9 +122,10 @@ def add_test_cases_to_test_map(jira):
         else:
             print(story.key, 'is already mapped')
     output_message += _insert_lines_in_component(sheet, components_testcases_dict)
-    f = open(OUTPUT_MESSAGE_FILE_NAME, "w")
-    f.write(output_message)
-    f.close()
+    if output_message != '':
+        f = open(OUTPUT_MESSAGE_FILE_NAME, "w")
+        f.write(output_message)
+        f.close()
 
 
 if __name__ == "__main__":
