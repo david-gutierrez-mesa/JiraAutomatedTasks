@@ -6,7 +6,11 @@ from helpers_google_sheet import set_update_time_in_cell, create_collapse_group_
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
 
-SUB_COMPONENTS_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents/LPS.json'
+SUB_COMPONENTS_LPS_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents/LPS.json'
+SUB_COMPONENTS_COMMERCE_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents' \
+                                   '/COMMERCE.json'
+SUB_COMPONENTS_LRAC_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents' \
+                               '/LRAC.json'
 
 EPM_SPREADSHEET_ID = '1azJIucqKawYB7TMCnUIfmNac9iQEfkPDR5JKM6Nzia0'
 EPM_TAB_BY_LEVEL_NAME = 'By Top Level Grouping'
@@ -26,6 +30,13 @@ COLUMN_CONTENT_SLACK_CHANNEL = '=if(INDIRECT(ADDRESS(ROW(),COLUMN()-1))="","",if
                                'ROW(),COLUMN()-1)),\'Team Information\'!B:E,2,false),VLOOKUP(concatenate(INDIRECT(' \
                                'ADDRESS(ROW(),COLUMN()-8)):INDIRECT(ADDRESS(ROW(),COLUMN()-5))),' \
                                '\'Team Information\'!G:J,3,false)))'
+
+
+def _add_project_components_to_body_values(jira, body_values, json_url, component_name):
+    components = jira._get_json("", None, json_url)['subcomponents']
+    components_full_info = jira.project_components(component_name)
+    for component in components:
+        _process_line(body_values, component, components_full_info, 0, component_name)
 
 
 def _delete_all_raw_groups(sheet, spreadsheet_id, sheet_id):
@@ -56,7 +67,7 @@ def _get_all_row_groups(sheet, spreadsheet_id, range_metadata):
     return metadata.get('sheets')[0].get('rowGroups')
 
 
-def _line_data(line, components_full_info, deep, children):
+def _line_data(line, components_full_info, deep, children, component_name):
     lead = ''
     archived = False
     for component in components_full_info:
@@ -73,40 +84,44 @@ def _line_data(line, components_full_info, deep, children):
         status = 'Active'
     match deep:
         case 0:
-            return [line.get('id'), line.get('name'), '', '', '', len(children), line.get('type').capitalize(),
+            return [line.get('id'), component_name, line.get('name'), '', '', '', len(children), line.get('type').capitalize(),
                     status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case 1:
-            return ['', '', line.get('name'), '', '', len(children), line.get('type').capitalize(), status,
+            return ['', '', '',line.get('name'), '', '', len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case 2:
-            return ['', '', '', line.get('name'), '', len(children), line.get('type').capitalize(), status,
+            return ['', '', '', '',line.get('name'), '', len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case _:
-            return ['', '', '', '', line.get('name'), len(children), line.get('type').capitalize(), status,
+            return ['', '', '', '', '',line.get('name'), len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
 
 
-def _process_line(body_values, line, components_full_info, deep):
+def _process_line(body_values, line, components_full_info, deep, component_name):
     children = line.get('children', {})
-    body_values.append(_line_data(line, components_full_info, deep, children))
+    body_values.append(_line_data(line, components_full_info, deep, children, component_name))
 
     for child in children:
-        _process_line(body_values, child, components_full_info, deep + 1)
+        _process_line(body_values, child, components_full_info, deep + 1, component_name)
 
 
 def update_components_sheet(jira, spreadsheet_id):
     if spreadsheet_id == '':
         spreadsheet_id = EPM_SPREADSHEET_ID
-    components = jira._get_json("", None, SUB_COMPONENTS_JSON_URL)['subcomponents']
-    components_full_info = jira.project_components("LPS")
+
+    body_values = []
+
+    _add_project_components_to_body_values(jira, body_values, SUB_COMPONENTS_COMMERCE_JSON_URL, "COMMERCE")
+
+    _add_project_components_to_body_values(jira, body_values, SUB_COMPONENTS_LPS_JSON_URL, "LPS")
+
+    _add_project_components_to_body_values(jira, body_values, SUB_COMPONENTS_LRAC_JSON_URL, "LRAC")
+
     sheet = get_testmap_connection()
     sheet.values().clear(
         spreadsheetId=spreadsheet_id, range=EPM_BY_LEVEL_SPREADSHEET_RANGE).execute()
     _delete_all_raw_groups(sheet, spreadsheet_id, EPM_BY_LEVEL_SPREADSHEET_RANGE)
-    body_values = []
-    for component in components:
-        _process_line(body_values, component, components_full_info, 0)
 
     body = {
         'values': body_values
