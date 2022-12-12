@@ -9,8 +9,20 @@ EPM_SPREADSHEET_ID = '1azJIucqKawYB7TMCnUIfmNac9iQEfkPDR5JKM6Nzia0'
 EPM_TAB_BY_LEVEL_NAME = 'By Top Level Grouping'
 EPM_TAB_BY_LEVEL_ID = '1959442404'
 EPM_BY_LEVEL_TABLE_START_INDEX = '4'
-EPM_BY_LEVEL_SPREADSHEET_RANGE = EPM_TAB_BY_LEVEL_NAME + '!B' + EPM_BY_LEVEL_TABLE_START_INDEX + ':K'
+EPM_BY_LEVEL_SPREADSHEET_RANGE = EPM_TAB_BY_LEVEL_NAME + '!B' + EPM_BY_LEVEL_TABLE_START_INDEX + ':M'
 EPM_BY_LEVEL_FIRST_LEVEL_RANGE = EPM_TAB_BY_LEVEL_NAME + '!B' + EPM_BY_LEVEL_TABLE_START_INDEX + ':B'
+
+COLUMN_CONTENT_GIT_HUB_REPO = '=if(INDIRECT(ADDRESS(ROW(),COLUMN()-2))="","",if(INDIRECT(ADDRESS(ROW(),' \
+                              'COLUMN()-2))<>"Product Team Business Process Management",VLOOKUP(INDIRECT(ADDRESS(' \
+                              'ROW(),COLUMN()-2)),\'Team Information\'!B:E,3,false),VLOOKUP(concatenate(INDIRECT(' \
+                              'ADDRESS(ROW(),COLUMN()-9)):INDIRECT(ADDRESS(ROW(),COLUMN()-6))),' \
+                              '\'Team Information\'!G:J,4,false)))'
+
+COLUMN_CONTENT_SLACK_CHANNEL = '=if(INDIRECT(ADDRESS(ROW(),COLUMN()-1))="","",if(INDIRECT(ADDRESS(ROW(),' \
+                               'COLUMN()-1))<>"Product Team Business Process Management",VLOOKUP(INDIRECT(ADDRESS(' \
+                               'ROW(),COLUMN()-1)),\'Team Information\'!B:E,2,false),VLOOKUP(concatenate(INDIRECT(' \
+                               'ADDRESS(ROW(),COLUMN()-8)):INDIRECT(ADDRESS(ROW(),COLUMN()-5))),' \
+                               '\'Team Information\'!G:J,3,false)))'
 
 
 def _delete_all_raw_groups(sheet, spreadsheet_id, sheet_id):
@@ -60,16 +72,16 @@ def _line_data(line, components_full_info, deep, children):
         case 0:
             return [line.get('id'), line.get('name'), '', '', '', len(children), line.get('type').capitalize(),
                     status,
-                    lead, line.get('description')]
+                    lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case 1:
             return ['', '', line.get('name'), '', '', len(children), line.get('type').capitalize(), status,
-                    lead, line.get('description')]
+                    lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case 2:
             return ['', '', '', line.get('name'), '', len(children), line.get('type').capitalize(), status,
-                    lead, line.get('description')]
+                    lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case _:
             return ['', '', '', '', line.get('name'), len(children), line.get('type').capitalize(), status,
-                    lead, line.get('description')]
+                    lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
 
 
 def _process_line(body_values, line, components_full_info, deep):
