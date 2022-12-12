@@ -11,6 +11,7 @@ ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
+OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
 
 
@@ -121,7 +122,9 @@ def add_test_cases_to_test_map(jira):
         else:
             print(story.key, 'is already mapped')
     output_message += _insert_lines_in_component(sheet, components_testcases_dict)
-    return output_message
+    f = open(OUTPUT_MESSAGE_FILE_NAME, "w")
+    f.write(output_message)
+    f.close()
 
 
 if __name__ == "__main__":
