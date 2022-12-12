@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from helpers_jira import read_test_cases_table_from_description
 from jira_liferay import get_jira_connection
-from liferay.helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline
-from liferay.testmap_jira import get_testmap_connection
+from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline
+from testmap_jira import get_testmap_connection
 
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
