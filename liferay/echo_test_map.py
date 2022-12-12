@@ -106,7 +106,7 @@ def add_test_cases_to_test_map(jira):
                         needs_manual_review = False
                         break
                 if needs_manual_review:
-                    output_message += str(story.key) + " needs manual review\n"
+                    output_message += "* " + str(story.key) + " needs manual review\n"
 
             else:
                 test_cases_table = read_test_cases_table_from_description(story.fields.description)
