@@ -68,8 +68,8 @@ def insert_lines_in_component(sheet, spreadsheet_id, sheet_id, sheet_name, sheet
         start, end = get_group_start_and_end_position(component, matrix, header_length)
 
         if start == -1:
-            output_message += 'Component "' + component + '" does not exist on ' + sheet_name +\
-                              ' please consider to add it manually\n'
+            output_message += '* Component "' + component + '" does not exist on ' + sheet_name +\
+                              '. Please consider to add it manually\n'
         else:
             if start != end:
                 expand_group(sheet, spreadsheet_id, sheet_id, start, end)
