@@ -12,6 +12,7 @@ ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
+OUTPUT_INFO_FILE_NAME = "output_info.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
 
 
@@ -67,6 +68,7 @@ def add_test_cases_to_test_map(jira):
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
     components_testcases_dict = dict([])
     output_message = ''
+    output_info = ''
     for story in stories_to_check:
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
@@ -92,21 +94,25 @@ def add_test_cases_to_test_map(jira):
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
+                            output_info += "* Added tests for story " + story.key +\
+                                           "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
                             lines = []
                             for test_case in test_cases_table:
                                 test_case_list = test_case.split('|')
-                                test_type = 'Manual'
-                                test_status = 'Needs Automation'
                                 lines.append(
-                                    _line_data(story.key, test_case_list[1], test_case_list[2], test_type, test_status,
-                                               '', '', '', '', test_case_list[4], test_case_list[5]))
+                                    _line_data(story.key, test_case_list[1], test_case_list[2], 'Manual',
+                                               'Needs Automation', '', '', '', '', test_case_list[4],
+                                               test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
+                            output_info += "* Added tests for story " + story.key +\
+                                           "(https://issues.liferay.com/browse/" + story.key + "): Poshi in progress\n"
                         needs_manual_review = False
                         break
                 if needs_manual_review:
-                    output_message += "* " + str(story.key) + " needs manual review\n"
+                    output_message += "* " + str(story.key) + \
+                                      " (https://issues.liferay.com/browse/" + story.key + ") needs manual review\n "
 
             else:
                 test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -118,6 +124,7 @@ def add_test_cases_to_test_map(jira):
                     lines.append(_line_data(story.key, test_case_list[1], test_case_list[2], test_type, test_status, '',
                                             '', '', '', test_case_list[4], test_case_list[5]))
                 _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
+                output_info += "* Added tests for story " + story.key + ": Poshi not needed\n"
 
         else:
             print(story.key, 'is already mapped')
@@ -125,6 +132,10 @@ def add_test_cases_to_test_map(jira):
     if output_message != '':
         f = open(OUTPUT_MESSAGE_FILE_NAME, "w")
         f.write(output_message)
+        f.close()
+    if output_info != '':
+        f = open(OUTPUT_INFO_FILE_NAME, "w")
+        f.write(output_info)
         f.close()
 
 
