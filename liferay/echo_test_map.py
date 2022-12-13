@@ -61,14 +61,12 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
     return line
 
 
-def add_test_cases_to_test_map(jira):
+def add_test_cases_to_test_map(jira, output_message, output_info):
     print("Adding stories into echo test map")
     sheet = get_testmap_connection()
     stories_to_check = jira.search_issues('filter=55104', fields="key, issuelinks, labels, components, description")
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
     components_testcases_dict = dict([])
-    output_message = ''
-    output_info = ''
     for story in stories_to_check:
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
@@ -129,17 +127,19 @@ def add_test_cases_to_test_map(jira):
         else:
             print(story.key, 'is already mapped')
     output_message += _insert_lines_in_component(sheet, components_testcases_dict)
-    if output_message != '':
-        f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
-        f.write(output_message)
-        f.close()
-    if output_info != '':
-        f = open(OUTPUT_INFO_FILE_NAME, "a")
-        f.write(output_info)
-        f.close()
+    return output_message, output_info
 
 
 if __name__ == "__main__":
+    message = ''
+    info = ''
     jira_connection = get_jira_connection()
-    add_test_cases_to_test_map(jira_connection)
-    print(add_test_cases_to_test_map(jira_connection))
+    message, info = add_test_cases_to_test_map(jira_connection, message, info)
+    if message != '':
+        f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
+        f.write(message)
+        f.close()
+    if info != '':
+        f = open(OUTPUT_INFO_FILE_NAME, "a")
+        f.write(info)
+        f.close()
