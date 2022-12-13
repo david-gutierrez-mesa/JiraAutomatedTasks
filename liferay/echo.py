@@ -5,6 +5,7 @@ from helpers_jira import get_property, initialize_subtask_front_end, initialize_
 from jira_liferay import get_jira_connection
 
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
+OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
@@ -164,7 +165,7 @@ def create_poshi_automation_task(jira):
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")
                 story.update(fields={"labels": story.fields.labels})
-                output_message += "Automation task not needed or not possible to create"
+                output_message += "Automation task not needed or not possible to create\n"
         else:
             output_message += "Story " + story.key + " don't have test table. \n"
 
@@ -180,6 +181,7 @@ def create_poshi_automation_task_for_bugs(jira):
 
 def transition_story_to_ready_for_pm_review(jira):
     output_message = ''
+    output_info = ''
     story_to_ready_for_pm_review = jira.search_issues('filter=55152')
     for story in story_to_ready_for_pm_review:
         test_cases = read_test_cases_table_from_description(story.fields.description)
@@ -207,18 +209,25 @@ def transition_story_to_ready_for_pm_review(jira):
                         break
             jira.transition_issue(story.id, transition='91')
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
-        return output_message
+            output_info += "* Story " + story.id + " (https://issues.liferay.com/browse/" + story.id + ") has been " \
+                                                                                                       "send for PM " \
+                                                                                                       "review\n"
+        return output_message, output_info
 
 
 if __name__ == "__main__":
     jira_connection = get_jira_connection()
     assign_qa_engineer(jira_connection)
     creating_testing_subtasks(jira_connection)
-    print("Creating tests table for Echo team...")
     create_testing_table_for_stories(jira_connection)
-    print("Creating Poshi automation task for Echo team...")
     message = create_poshi_automation_task(jira_connection)
     print(message)
     create_poshi_automation_task_for_bugs(jira_connection)
     close_ready_for_release_bugs(jira_connection)
-    transition_story_to_ready_for_pm_review(jira_connection)
+    message, info = transition_story_to_ready_for_pm_review(jira_connection)
+    print(message)
+
+    if info != '':
+        f = open(OUTPUT_INFO_FILE_NAME, "w")
+        f.write(info)
+        f.close()
