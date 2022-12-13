@@ -212,7 +212,7 @@ def transition_story_to_ready_for_pm_review(jira):
             output_info += "* Story " + story.id + " (https://issues.liferay.com/browse/" + story.id + ") has been " \
                                                                                                        "send for PM " \
                                                                                                        "review\n"
-        return output_message, output_info
+    return output_message, output_info
 
 
 if __name__ == "__main__":
