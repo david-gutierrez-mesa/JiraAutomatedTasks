@@ -228,6 +228,6 @@ if __name__ == "__main__":
     print(message)
 
     if info != '':
-        f = open(OUTPUT_INFO_FILE_NAME, "w")
+        f = open(OUTPUT_INFO_FILE_NAME, "a")
         f.write(info)
         f.close()
