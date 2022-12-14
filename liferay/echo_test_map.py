@@ -142,7 +142,6 @@ def check_need_automation_test_cases(sheet, jira, output_message, output_info):
         'values', [])
     for lps in lps_list:
         story = jira.issue(lps[0])
-        is_automated = True
         component = story.get_field("components")[0].name
         for link in story.fields.issuelinks:
             linked_issue_key = ""
@@ -168,12 +167,9 @@ def check_need_automation_test_cases(sheet, jira, output_message, output_info):
                     output_info += "* Added tests for story " + story.key + \
                                    "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
                     collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
-
-                is_automated = False
-                break
-        if is_automated:
-            output_info += "* " + str(story.key) + \
-                           " (https://issues.liferay.com/browse/" + story.key + ") is still not automated\n "
+                else:
+                    output_info += "* " + str(story.key) + \
+                                   " (https://issues.liferay.com/browse/" + story.key + ") is still not automated\n "
 
     return output_message, output_info
 
