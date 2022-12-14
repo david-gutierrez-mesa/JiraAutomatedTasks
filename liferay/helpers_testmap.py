@@ -100,8 +100,8 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
                 end):
     position = get_line_position_by_test_case_name(lps_list, header_length, line[0][8], start, end)
     if position == -1:
-        return '* Test iwt summary "' + line[0][8] + '" in story ' + line[0][6] + "(https://issues.liferay.com/browse/" \
-               + line[0][6] + ")"
+        return '* Test with summary "' + line[0][8] + '" not found in story ' + line[0][6] + \
+               "(https://issues.liferay.com/browse/" + line[0][6] + ")\n"
     body = {
         'values': line
     }
