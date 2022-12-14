@@ -96,5 +96,16 @@ def insert_lines_in_component(sheet, spreadsheet_id, sheet_id, sheet_name, sheet
     return output_message
 
 
+def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_length, line, sheet_last_column, start,
+                end):
+    position = get_line_position_by_test_case_name(lps_list, header_length, line[0][8], start, end)
+    body = {
+        'values': line
+    }
+    range_name = test_map_sheet_name + '!A' + str(position) + ':' + sheet_last_column + str(position)
+    sheet.values().update(
+        spreadsheetId=spreadsheet_id, range=range_name, valueInputOption="USER_ENTERED", body=body).execute()
+
+
 def remove_underline(string):
     return string.strip('-')
