@@ -162,9 +162,9 @@ def check_need_automation_test_cases(sheet, jira, output_message, output_info):
                         line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
                                           'Automated', test_case_list[7], test_case_list[8], '', '',
                                           test_case_list[4], test_case_list[5])
-                        update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME, ECHO_TESTMAP_ID,
-                                    ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line, ECHO_TESTMAP_SHEET_LAST_COLUMN,
-                                    start, end)
+                        output_message += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
+                                                      ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
+                                                      ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
                     output_info += "* Added tests for story " + story.key + \
                                    "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
                     collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
