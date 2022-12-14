@@ -1,3 +1,5 @@
+from itertools import islice
+
 from helpers_google_sheet import *
 
 
@@ -19,6 +21,16 @@ def get_group_start_and_end_position(component, matrix, header_length):
         return 0, 0
     else:
         return -1, -1
+
+
+def get_line_position_by_test_case_name(lps_list, header_length, test_case_name, start, end):
+    for pos, matrix_i in islice(enumerate(lps_list), start, end):
+        if len(matrix_i) != 0:
+            if len(matrix_i[0]) != 0:
+                value = matrix_i[0].strip()
+                if value == test_case_name.strip():
+                    return pos + header_length
+    return -1
 
 
 def get_mapped_stories(sheet, test_map_id, test_map_range):
@@ -82,6 +94,17 @@ def insert_lines_in_component(sheet, spreadsheet_id, sheet_id, sheet_name, sheet
             collapse_group(sheet, spreadsheet_id, sheet_id, start, end + len(test_cases))
 
     return output_message
+
+
+def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_length, line, sheet_last_column, start,
+                end):
+    position = get_line_position_by_test_case_name(lps_list, header_length, line[0][8], start, end)
+    body = {
+        'values': line
+    }
+    range_name = test_map_sheet_name + '!A' + str(position) + ':' + sheet_last_column + str(position)
+    sheet.values().update(
+        spreadsheetId=spreadsheet_id, range=range_name, valueInputOption="USER_ENTERED", body=body).execute()
 
 
 def remove_underline(string):

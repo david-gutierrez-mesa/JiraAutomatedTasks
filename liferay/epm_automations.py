@@ -84,17 +84,17 @@ def _line_data(line, components_full_info, deep, children, component_name):
         status = 'Active'
     match deep:
         case 0:
-            return [line.get('id'), component_name, line.get('name'), '', '', '', len(children), line.get('type').capitalize(),
-                    status,
-                    lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
+            return [line.get('id'), component_name, line.get('name'), '', '', '', len(children), line.get('type')
+                    .capitalize(), status, lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO,
+                    line.get('description')]
         case 1:
-            return ['', '', '',line.get('name'), '', '', len(children), line.get('type').capitalize(), status,
+            return ['', '', '', line.get('name'), '', '', len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case 2:
-            return ['', '', '', '',line.get('name'), '', len(children), line.get('type').capitalize(), status,
+            return ['', '', '', '', line.get('name'), '', len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
         case _:
-            return ['', '', '', '', '',line.get('name'), len(children), line.get('type').capitalize(), status,
+            return ['', '', '', '', '', line.get('name'), len(children), line.get('type').capitalize(), status,
                     lead, COLUMN_CONTENT_SLACK_CHANNEL, COLUMN_CONTENT_GIT_HUB_REPO, line.get('description')]
 
 
@@ -170,4 +170,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-

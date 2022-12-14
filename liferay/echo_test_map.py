@@ -1,9 +1,13 @@
 #!/usr/bin/env python
+from helpers_google_sheet import expand_group, collapse_group
 from helpers_jira import read_test_cases_table_from_description
 from jira_liferay import get_jira_connection
-from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline
+from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline, update_line, \
+    get_group_start_and_end_position
 from testmap_jira import get_testmap_connection
 
+CONTROL_PANEL_SHEET_NAME = 'Control panel'
+CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B10:B'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
@@ -61,14 +65,11 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
     return line
 
 
-def add_test_cases_to_test_map(jira):
+def add_test_cases_to_test_map(sheet, jira, output_message, output_info):
     print("Adding stories into echo test map")
-    sheet = get_testmap_connection()
     stories_to_check = jira.search_issues('filter=55104', fields="key, issuelinks, labels, components, description")
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
     components_testcases_dict = dict([])
-    output_message = ''
-    output_info = ''
     for story in stories_to_check:
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
@@ -94,7 +95,7 @@ def add_test_cases_to_test_map(jira):
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story " + story.key +\
+                            output_info += "* Added tests for story " + story.key + \
                                            "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -106,7 +107,7 @@ def add_test_cases_to_test_map(jira):
                                                'Needs Automation', '', '', '', '', test_case_list[4],
                                                test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story " + story.key +\
+                            output_info += "* Added tests for story " + story.key + \
                                            "(https://issues.liferay.com/browse/" + story.key + "): Poshi in progress\n"
                         needs_manual_review = False
                         break
@@ -129,17 +130,66 @@ def add_test_cases_to_test_map(jira):
         else:
             print(story.key, 'is already mapped')
     output_message += _insert_lines_in_component(sheet, components_testcases_dict)
-    if output_message != '':
-        f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
-        f.write(output_message)
-        f.close()
-    if output_info != '':
-        f = open(OUTPUT_INFO_FILE_NAME, "a")
-        f.write(output_info)
-        f.close()
+    return output_message, output_info
+
+
+def check_need_automation_test_cases(sheet, jira, output_message, output_info):
+    lps_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
+        .get('values', [])
+    test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
+                     str(ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER) + ':' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN
+    current_test_cases_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=test_map_range).execute().get(
+        'values', [])
+    for lps in lps_list:
+        story = jira.issue(lps[0])
+        is_automated = True
+        component = story.get_field("components")[0].name
+        for link in story.fields.issuelinks:
+            linked_issue_key = ""
+            if hasattr(link, "inwardIssue"):
+                linked_issue_key = link.inwardIssue
+            elif hasattr(link, "outwardIssue"):
+                linked_issue_key = link.outwardIssue
+            if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
+                if linked_issue_key.fields.status.name == 'Closed':
+                    linked_issue = jira.issue(linked_issue_key.key)
+                    test_cases_table = read_test_cases_table_from_description(linked_issue.fields.description)
+                    start, end = get_group_start_and_end_position(component, current_test_cases_list,
+                                                                  ECHO_TESTMAP_SHEET_HEADER_LENGTH)
+                    expand_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
+                    for test_case in test_cases_table:
+                        test_case_list = test_case.split('|')
+                        line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
+                                          'Automated', test_case_list[7], test_case_list[8], '', '',
+                                          test_case_list[4], test_case_list[5])
+                        update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME, ECHO_TESTMAP_ID,
+                                    ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line, ECHO_TESTMAP_SHEET_LAST_COLUMN,
+                                    start, end)
+                    output_info += "* Added tests for story " + story.key + \
+                                   "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
+                    collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
+
+                is_automated = False
+                break
+        if is_automated:
+            output_info += "* " + str(story.key) + \
+                           " (https://issues.liferay.com/browse/" + story.key + ") is still not automated\n "
+
+    return output_message, output_info
 
 
 if __name__ == "__main__":
+    message = ''
+    info = ''
     jira_connection = get_jira_connection()
-    add_test_cases_to_test_map(jira_connection)
-    print(add_test_cases_to_test_map(jira_connection))
+    sheet_connection = get_testmap_connection()
+    message, info = check_need_automation_test_cases(sheet_connection, jira_connection, message, info)
+    message, info = add_test_cases_to_test_map(sheet_connection, jira_connection, message, info)
+    if message != '':
+        f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
+        f.write(message)
+        f.close()
+    if info != '':
+        f = open(OUTPUT_INFO_FILE_NAME, "a")
+        f.write(info)
+        f.close()
