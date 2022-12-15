@@ -7,7 +7,7 @@ from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_compo
 from testmap_jira import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
-CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B10:B'
+CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
