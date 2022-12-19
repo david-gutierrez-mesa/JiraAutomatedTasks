@@ -151,7 +151,7 @@ def create_poshi_automation_task(jira):
                 else:
                     break
             if skip_story:
-                break
+                continue
             if is_automation_task_needed:
                 poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                 for subtask in story.get_field('subtasks'):
