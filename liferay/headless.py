@@ -19,39 +19,38 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
 
 
 def update_creation_subtask(jira):
-    print("Creating test creation subtasks for Headless team...")
+    print("Updating test creation subtasks for Headless team...")
     stories_with_test_creation_subtask = jira.search_issues('filter=54996')
     for story in stories_with_test_creation_subtask:
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             key = subtask.key
-            test_creation_subtask_details = jira.search_issues("key =" + key)
-            assignee = test_creation_subtask_details[0].fields.assignee
+            test_creation_subtask_details = jira.issue(key, fields='assignee')
+            assignee = test_creation_subtask_details[0].fields.assignee.displayName
             if summary == 'Test Scenarios Coverage | Test Creation':
                 print("Updating "+key+" ...")
                 if subtask.fields.status.name == "Open":
-                    description = '*Output*' \
-                                  '\r\n # Our table with the Test scenarios/test cases to be validated in the ' \
-                                  'validation phase.' \
-                                  '\r\n # After being reviewed by the team, add a finalized table to the parent story ' \
-                                  'description' \
-                                  '\r\n # Add test cases to [Test ' \
-                                  'Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY' \
-                                  '/edit#gid=2145200593]' \
+                    description = '*Output*\r\n' \
+                                  ' # Our table with the Test scenarios/test cases to be validated in the \r\n' \
+                                  'validation phase.\r\n' \
+                                  ' # After being reviewed by the team, add a finalized table to the parent story \r\n' \
+                                  'description\r\n' \
+                                  ' # Add test cases to [Test \r\n' \
+                                  'Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY\r\n' \
+                                  '/edit#gid=2145200593]\r\n' \
                                   '\r\n' \
-                                  '\r\n*Test Scenarios:*' \
-                                  '\r\n||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (' \
-                                  'business impact)||' \
-                                  '\r\n| | | | |' \
+                                  '*Test Scenarios:*\r\n' \
+                                  '||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (\r\n' \
+                                  'business impact)||\r\n' \
+                                  '| | | | |\r\n' \
                                   '\r\n' \
-                                  '\r\n*Exploratory testing to consider:*' \
-                                  '\r\n||Requirement||Test Scenarios||Test Priority (business impact)||Covered by ' \
-                                  'frontend/backend Unit Test?||' \
-                                  '\r\n| | | | |'
+                                  '*Exploratory testing to consider:*\r\n' \
+                                  '||Requirement||Test Scenarios||Test Priority (business impact)||Covered by \r\n' \
+                                  'frontend/backend Unit Test?||\r\n' \
+                                  '| | | | |\r\n'
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
                         jira.assign_issue(subtask.id, 'support-qa')
-                        break
                     break
     print("Subtasks Test Creation for Headless team are up to date")
 
@@ -63,52 +62,51 @@ def update_validation_subtask(jira):
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             key = subtask.key
-            test_validation_subtask_details = jira.search_issues("key =" + key)
-            assignee = test_validation_subtask_details[0].fields.assignee
+            test_validation_subtask_details = jira.issue(key, fields='assignee')
+            assignee = test_validation_subtask_details[0].fields.assignee.displayName
             if summary == 'Product QA | Test Validation - Round 1':
                 print("Updating "+key+" ...")
                 if subtask.fields.status.name == "Open":
-                    description = '\r\n*Context*' \
-                                  '\r\nExecute the tests of the parent story, and use the information in the *Test ' \
-                                  'Information* section to perform the tests.' \
+                    description = '*Context*\r\n' \
+                                  'Execute the tests of the parent story, and use the information in the *Test \r\n' \
+                                  'Information* section to perform the tests.\r\n' \
                                   '\r\n' \
-                                  '\r\n*Output*' \
-                                  '\r\nTell in one comment (in the story ticket) the final status of this first round, ' \
-                                  'and in this ticket, fill the bug section.' \
-                                  '\r\nRemember to link the bug (if you discover it) with the Story ticket.' \
-                                  '\r\n{code:java}' \
-                                  '\r\n*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
-                                  'color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.' \
+                                  '*Output*\r\n' \
+                                  'Tell in one comment (in the story ticket) the final status of this first round, \r\n' \
+                                  'and in this ticket, fill the bug section.\r\n' \
+                                  'Remember to link the bug (if you discover it) with the Story ticket.\r\n' \
+                                  '{code:java}\r\n' \
+                                  '*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{\r\n' \
+                                  'color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.\r\n' \
                                   '\r\n' \
-                                  '\r\n*Verified on:*' \
-                                  '\r\n*Environment*: localhost' \
-                                  '\r\n*Github*: https://github.com/liferay/liferay-portal.git' \
-                                  '\r\n*Branch*: master' \
-                                  '\r\n*Bundle*: Liferay DXP' \
-                                  '\r\n*Database*: MySQL 5.7.22' \
-                                  '\r\n*Last Commit*: ? ' \
+                                  '*Verified on:*\r\n' \
+                                  '*Environment*: localhost\r\n' \
+                                  '*Github*: https://github.com/liferay/liferay-portal.git\r\n' \
+                                  '*Branch*: master\r\n' \
+                                  '*Bundle*: Liferay DXP\r\n' \
+                                  '*Database*: MySQL 5.7.22\r\n' \
+                                  '*Last Commit*: ? \r\n' \
                                   '\r\n' \
-                                  '\r\n|| Test Scenarios || Test Result ||' \
-                                  '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
-                                  'color:#59afe1}BLOCKED{color}*|' \
-                                  '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
-                                  'color:#59afe1}BLOCKED{color}*|' \
-                                  '\r\n...' \
-                                  '\r\n{code}' \
-                                  '\r\n*Bugs:*' \
-                                  '\r\n (/)- PASS' \
-                                  '\r\n (!)- To Do' \
-                                  '\r\n (x)- FAIL' \
-                                  '\r\n * *Impeditive:*' \
-                                  '\r\n||Ticket||Title||' \
-                                  '\r\n|?|?|' \
-                                  '\r\n * *Not Impeditive:*' \
-                                  '\r\n||Ticket||Title||' \
-                                  '\r\n|?|?|'
+                                  '|| Test Scenarios || Test Result ||\r\n' \
+                                  '| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{\r\n' \
+                                  'color:#59afe1}BLOCKED{color}*|\r\n' \
+                                  '| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{\r\n' \
+                                  'color:#59afe1}BLOCKED{color}*|\r\n' \
+                                  '...\r\n' \
+                                  '{code}\r\n' \
+                                  '*Bugs:*\r\n' \
+                                  ' (/)- PASS\r\n' \
+                                  ' (!)- To Do\r\n' \
+                                  ' (x)- FAIL\r\n' \
+                                  ' * *Impeditive:*\r\n' \
+                                  '||Ticket||Title||\r\n' \
+                                  '|?|?|\r\n' \
+                                  ' * *Not Impeditive:*\r\n' \
+                                  '||Ticket||Title||\r\n' \
+                                  '|?|?|\r\n'
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
                         jira.assign_issue(subtask.id, 'support-qa')
-                        break
                     break
     print("Validation subtasks for Headless team are up to date")
 
