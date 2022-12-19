@@ -25,22 +25,24 @@ def update_creation_subtask(jira):
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             key = subtask.key
-            test_creation_subtask_details = jira.issue(key, fields='assignee')
-            assignee = test_creation_subtask_details[0].fields.assignee.displayName
+            assignee = jira.issue(key, fields='assignee')
             if summary == 'Test Scenarios Coverage | Test Creation':
                 print("Updating "+key+" ...")
                 if subtask.fields.status.name == "Open":
                     description = '*Output*\r\n' \
                                   ' # Our table with the Test scenarios/test cases to be validated in the \r\n' \
                                   'validation phase.\r\n' \
-                                  ' # After being reviewed by the team, add a finalized table to the parent story \r\n' \
+                                  ' # After being reviewed by the team, add a finalized table ' \
+                                  'to the parent story \r\n' \
                                   'description\r\n' \
-                                  ' # Add test cases to [Test \r\n' \
-                                  'Map|https://docs.google.com/spreadsheets/d/19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY\r\n' \
+                                  ' # Add test cases to [Test ' \
+                                  'Map|https://docs.google.com/spreadsheets/d/' \
+                                  '19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY' \
                                   '/edit#gid=2145200593]\r\n' \
                                   '\r\n' \
                                   '*Test Scenarios:*\r\n' \
-                                  '||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (\r\n' \
+                                  '||Requirement||Test Case||Covered by unit/integration test? (Yes/No)' \
+                                  '||Test Priority (\r\n' \
                                   'business impact)||\r\n' \
                                   '| | | | |\r\n' \
                                   '\r\n' \
@@ -62,8 +64,7 @@ def update_validation_subtask(jira):
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             key = subtask.key
-            test_validation_subtask_details = jira.issue(key, fields='assignee')
-            assignee = test_validation_subtask_details[0].fields.assignee.displayName
+            assignee = jira.issue(key, fields='assignee')
             if summary == 'Product QA | Test Validation - Round 1':
                 print("Updating "+key+" ...")
                 if subtask.fields.status.name == "Open":
@@ -72,12 +73,14 @@ def update_validation_subtask(jira):
                                   'Information* section to perform the tests.\r\n' \
                                   '\r\n' \
                                   '*Output*\r\n' \
-                                  'Tell in one comment (in the story ticket) the final status of this first round, \r\n' \
+                                  'Tell in one comment (in the story ticket) ' \
+                                  'the final status of this first round, \r\n' \
                                   'and in this ticket, fill the bug section.\r\n' \
                                   'Remember to link the bug (if you discover it) with the Story ticket.\r\n' \
                                   '{code:java}\r\n' \
                                   '*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{\r\n' \
-                                  'color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.\r\n' \
+                                  'color:#59afe1}BLOCKED{color}* ' \
+                                  'Manual Testing following the steps in the description.\r\n' \
                                   '\r\n' \
                                   '*Verified on:*\r\n' \
                                   '*Environment*: localhost\r\n' \
