@@ -7,7 +7,7 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
     parent_summary = parent_story.get_field('summary')
     print("Creating poshi automation task for story", parent_key)
-    summary = 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary
+    summary = 'Product QA | Functional Automation - ' + parent_key + ' - ' + parent_summary
 
     description = 'Create test automation to validate the critical test scenarios/cases of the related story.\n\nThe ' \
                   'focus of this task is to implement the CRITICAL, HIGH, and MID tests of the related story, ' \
@@ -127,7 +127,7 @@ def create_poshi_automation_task(jira):
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_staring_position:table_ending_position - 1]
                 _create_poshi_task_for(jira, story, poshi_automation_table)
-                output_message = output_message + "Automation Test Creation created for " + story.get_field('summary')
+                output_message = output_message + "Functional Automation created for " + story.get_field('summary')
     print(output_message)
 
 
