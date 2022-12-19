@@ -8,6 +8,7 @@ from testmap_jira import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
+CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
@@ -133,6 +134,15 @@ def add_test_cases_to_test_map(sheet, jira, output_message, output_info):
     return output_message, output_info
 
 
+def check_control_panel_tab(sheet, output_message):
+    summary_status = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
+        .get('values', [])
+    for status in summary_status:
+        if status[0] != "FINE":
+            output_message += '* Please check Control Panel: ' + status[0] + '\n'
+    return output_message
+
+
 def check_need_automation_test_cases(sheet, jira, output_message, output_info):
     lps_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
         .get('values', [])
@@ -181,6 +191,7 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     message, info = check_need_automation_test_cases(sheet_connection, jira_connection, message, info)
     message, info = add_test_cases_to_test_map(sheet_connection, jira_connection, message, info)
+    message = check_control_panel_tab(sheet_connection, message)
     if message != '':
         f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
         f.write(message)
