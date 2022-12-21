@@ -59,6 +59,11 @@ def _create_group(sheet, spreadsheet_id, group_range, l1_list=None):
                                                        i + int(EPM_BY_LEVEL_TABLE_START_INDEX) - 1))
 
                 start = i
+    if not l1_list:
+        local_requests.append(
+            create_collapse_group_body(EPM_TAB_BY_LEVEL_ID,
+                                       start + int(EPM_BY_LEVEL_TABLE_START_INDEX),
+                                       len(l2_list) + int(EPM_BY_LEVEL_TABLE_START_INDEX)))
     body = {
         'requests': local_requests
     }
