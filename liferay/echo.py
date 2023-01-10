@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+from helpers import create_output_files
 from helpers_jira import get_property, initialize_subtask_front_end, initialize_subtask_back_end, \
     AUTOMATION_TABLE_HEADER, create_poshi_automation_task_for, create_poshi_automation_task_for_bug, \
     read_test_cases_table_from_description
 from jira_liferay import get_jira_connection
 
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
+OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
 
@@ -22,16 +24,17 @@ def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tabl
     return new_issue
 
 
-def assign_qa_engineer(jira):
-    print("Assigning QA Engineer to LPS tasks...")
-    stories_without_qa_engineer = jira.search_issues('filter=54607', fields="assignee, customfield_24852")
+def assign_qa_engineer(jira, output_info):
+    stories_without_qa_engineer = jira.search_issues('filter=54607', fields="key, assignee, customfield_24852")
     for story in stories_without_qa_engineer:
         qa_engineer = [{'name': story.fields.assignee.name}]
         story.update(
             fields={'customfield_24852': qa_engineer}
         )
+        output_info += "* " + story.fields.assignee.name + " has been assigned as QA for " + story.key + \
+                       "(https://issues.liferay.com/browse/" + story.key + ")\n"
 
-    print("LPS have QA Engineer field up to date")
+    return output_info
 
 
 def close_ready_for_release_bugs(jira):
@@ -96,8 +99,7 @@ def creating_testing_subtasks(jira):
     print("Subtasks for Echo team are up to date")
 
 
-def create_testing_table_for_stories(jira):
-    print("Creating tests table for Echo team...")
+def create_testing_table_for_stories(jira, output_info):
     stories_without_testing_table = jira.search_issues('filter=54772')
     for story in stories_without_testing_table:
         current_description = story.fields.description
@@ -116,14 +118,13 @@ def create_testing_table_for_stories(jira):
                 break
 
         updated_description = current_description + '\r\n\r\nh3. Test Scenarios\r\n' + poshi_automation_table
-        print("Crating table for story " + story.key)
+        output_info += "* Testing table created for story " + story.key + \
+                       "(https://issues.liferay.com/browse/" + story.key + ")\n"
         story.update(fields={'description': updated_description})
+    return output_info
 
-    print("All stories have testing table")
 
-
-def create_poshi_automation_task(jira):
-    output_message = ''
+def create_poshi_automation_task(jira, output_warning, output_info):
     stories_without_poshi_automation_created = jira.search_issues('filter=54646')
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
@@ -141,7 +142,8 @@ def create_poshi_automation_task(jira):
                     if cells[2].casefold() == 'TBD'.casefold() \
                             or cells[4].casefold() == 'TBD'.casefold() \
                             or cells[5].casefold() == 'TBD'.casefold():
-                        output_message += "Table for story " + story.key + " is not uptodate. Skipping.\n"
+                        output_info += "Table for story " + story.key + "(https://issues.liferay.com/browse/" \
+                                          + story.key + ") is not up to date. Skipping.\n"
                         skip_story = True
                         break
                     elif (cells[4].casefold() == 'No'.casefold() and cells[5].casefold() == 'No'.casefold()) \
@@ -154,6 +156,8 @@ def create_poshi_automation_task(jira):
                 break
             if is_automation_task_needed:
                 poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
+                output_info += "* Automation task created for story" + story.key + \
+                               "(https://issues.liferay.com/browse/" + story.key + ")\n"
                 for subtask in story.get_field('subtasks'):
                     if subtask.fields.summary == 'Product QA | Functional Automation':
                         testing_subtask = subtask.id
@@ -165,23 +169,25 @@ def create_poshi_automation_task(jira):
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")
                 story.update(fields={"labels": story.fields.labels})
-                output_message += "Automation task not needed or not possible to create\n"
+                output_info += "* Automation task not needed or not possible to create for story" + story.key + \
+                               "(https://issues.liferay.com/browse/" + story.key + ")\n"
         else:
-            output_message += "Story " + story.key + " don't have test table. \n"
+            output_warning += "Story " + story.key + " don't have test table. \n"
 
-    return output_message
+    return output_warning, output_info
 
 
-def create_poshi_automation_task_for_bugs(jira):
+def create_poshi_automation_task_for_bugs(jira, output_info):
     bugs_without_poshi_automation_created = jira.search_issues('filter=51790')
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
         jira.transition_issue(poshi_task, transition='10022')
+        output_info += "* Automation task created for bug " + bug.key + \
+                       "(https://issues.liferay.com/browse/" + bug.key + ")\n"
+    return output_info
 
 
-def transition_story_to_ready_for_pm_review(jira):
-    output_message = ''
-    output_info = ''
+def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
     story_to_ready_for_pm_review = jira.search_issues('filter=55152')
     for story in story_to_ready_for_pm_review:
         test_cases = read_test_cases_table_from_description(story.fields.description)
@@ -192,7 +198,7 @@ def transition_story_to_ready_for_pm_review(jira):
                 if cells[2].casefold() == 'TBD'.casefold() \
                         or cells[4].casefold() == 'TBD'.casefold() \
                         or cells[5].casefold() == 'TBD'.casefold():
-                    output_message += "Table for story " + story.key + " is not uptodate. Skipping.\n"
+                    output_warning += "Table for story " + story.key + " is not uptodate. Skipping.\n"
                     can_be_closed = False
                     break
         if can_be_closed:
@@ -212,22 +218,19 @@ def transition_story_to_ready_for_pm_review(jira):
             output_info += "* Story " + story.id + " (https://issues.liferay.com/browse/" + story.id + ") has been " \
                                                                                                        "send for PM " \
                                                                                                        "review\n"
-    return output_message, output_info
+    return output_warning, output_info
 
 
 if __name__ == "__main__":
+    warning = ''
+    info = ''
     jira_connection = get_jira_connection()
-    assign_qa_engineer(jira_connection)
+    info = assign_qa_engineer(jira_connection, info)
     creating_testing_subtasks(jira_connection)
-    create_testing_table_for_stories(jira_connection)
-    message = create_poshi_automation_task(jira_connection)
-    print(message)
-    create_poshi_automation_task_for_bugs(jira_connection)
+    info = create_testing_table_for_stories(jira_connection, info)
+    warning, info = create_poshi_automation_task(jira_connection, warning, info)
+    info = create_poshi_automation_task_for_bugs(jira_connection, info)
     close_ready_for_release_bugs(jira_connection)
-    message, info = transition_story_to_ready_for_pm_review(jira_connection)
-    print(message)
+    warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
-    if info != '':
-        f = open(OUTPUT_INFO_FILE_NAME, "a")
-        f.write(info)
-        f.close()
+    create_output_files(warning, info, OUTPUT_MESSAGE_FILE_NAME, OUTPUT_INFO_FILE_NAME)
