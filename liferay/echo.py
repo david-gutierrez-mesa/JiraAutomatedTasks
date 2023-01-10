@@ -215,7 +215,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                         break
             jira.transition_issue(story.id, transition='91')
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
-            output_info += "* Story " + story.id + " (https://issues.liferay.com/browse/" + story.id + ") has been " \
+            output_info += "* Story " + story.key + " (https://issues.liferay.com/browse/" + story.key + ") has been " \
                                                                                                        "send for PM " \
                                                                                                        "review\n"
     return output_warning, output_info
