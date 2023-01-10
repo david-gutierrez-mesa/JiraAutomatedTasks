@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from helpers import create_output_files
 from helpers_google_sheet import expand_group, collapse_group
 from helpers_jira import read_test_cases_table_from_description
 from jira_liferay import get_jira_connection
@@ -66,7 +67,7 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
     return line
 
 
-def add_test_cases_to_test_map(sheet, jira, output_message, output_info):
+def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
     print("Adding stories into echo test map")
     stories_to_check = jira.search_issues('filter=55104', fields="key, issuelinks, labels, components, description")
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
@@ -113,7 +114,7 @@ def add_test_cases_to_test_map(sheet, jira, output_message, output_info):
                         needs_manual_review = False
                         break
                 if needs_manual_review:
-                    output_message += "* " + str(story.key) + \
+                    output_warning += "* " + str(story.key) + \
                                       " (https://issues.liferay.com/browse/" + story.key + ") needs manual review\n "
 
             else:
@@ -130,20 +131,20 @@ def add_test_cases_to_test_map(sheet, jira, output_message, output_info):
 
         else:
             print(story.key, 'is already mapped')
-    output_message += _insert_lines_in_component(sheet, components_testcases_dict)
-    return output_message, output_info
+    output_warning += _insert_lines_in_component(sheet, components_testcases_dict)
+    return output_warning, output_info
 
 
-def check_control_panel_tab(sheet, output_message):
+def check_control_panel_tab(sheet, output_warning):
     summary_status = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_message += '* Please check Control Panel: ' + status[0] + '\n'
-    return output_message
+            output_warning += '* Please check Control Panel: ' + status[0] + '\n'
+    return output_warning
 
 
-def check_need_automation_test_cases(sheet, jira, output_message, output_info):
+def check_need_automation_test_cases(sheet, jira, output_warning, output_info):
     lps_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
         .get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
@@ -171,7 +172,7 @@ def check_need_automation_test_cases(sheet, jira, output_message, output_info):
                         line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
                                           'Automated', test_case_list[7], test_case_list[8], '', '',
                                           test_case_list[4], test_case_list[5])
-                        output_message += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
+                        output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
                                                       ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
                                                       ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
                     output_info += "* Added tests for story " + story.key + \
@@ -181,22 +182,16 @@ def check_need_automation_test_cases(sheet, jira, output_message, output_info):
                     output_info += "* " + str(story.key) + \
                                    " (https://issues.liferay.com/browse/" + story.key + ") is still not automated\n "
 
-    return output_message, output_info
+    return output_warning, output_info
 
 
 if __name__ == "__main__":
-    message = ''
+    warning = ''
     info = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
-    message, info = check_need_automation_test_cases(sheet_connection, jira_connection, message, info)
-    message, info = add_test_cases_to_test_map(sheet_connection, jira_connection, message, info)
-    message = check_control_panel_tab(sheet_connection, message)
-    if message != '':
-        f = open(OUTPUT_MESSAGE_FILE_NAME, "a")
-        f.write(message)
-        f.close()
-    if info != '':
-        f = open(OUTPUT_INFO_FILE_NAME, "a")
-        f.write(info)
-        f.close()
+    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, warning, info)
+    warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
+    warning = check_control_panel_tab(sheet_connection, warning)
+
+    create_output_files(warning, info, OUTPUT_MESSAGE_FILE_NAME, OUTPUT_INFO_FILE_NAME)
