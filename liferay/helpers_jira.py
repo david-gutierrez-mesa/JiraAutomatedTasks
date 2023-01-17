@@ -15,6 +15,16 @@ def __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_automation
 
 
+def close_functional_automation_subtask(story, poshi_task, jira):
+    for subtask in story.get_field('subtasks'):
+        if subtask.fields.summary == 'Product QA | Functional Automation':
+            testing_subtask = subtask.id
+            jira.transition_issue(testing_subtask, transition='Closed')
+            jira.add_comment(testing_subtask, 'Closing. Poshi automation is going to be done in '
+                             + poshi_task.key)
+            break
+
+
 def create_poshi_automation_task_for(jira_local, issue, summary, description):
     parent_key = issue.key
     epic_link = issue.get_field('customfield_12821')

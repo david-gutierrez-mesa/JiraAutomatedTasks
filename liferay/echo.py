@@ -2,7 +2,7 @@
 from helpers import create_output_files
 from helpers_jira import get_property, initialize_subtask_front_end, initialize_subtask_back_end, \
     AUTOMATION_TABLE_HEADER, create_poshi_automation_task_for, create_poshi_automation_task_for_bug, \
-    read_test_cases_table_from_description
+    read_test_cases_table_from_description, close_functional_automation_subtask
 from jira_liferay import get_jira_connection
 
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
@@ -158,13 +158,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                 poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                 output_info += "* Automation task created for story" + story.key + \
                                "(https://issues.liferay.com/browse/" + story.key + ")\n"
-                for subtask in story.get_field('subtasks'):
-                    if subtask.fields.summary == 'Product QA | Functional Automation':
-                        testing_subtask = subtask.id
-                        jira.transition_issue(testing_subtask, transition='Closed')
-                        jira.add_comment(testing_subtask, 'Closing. Poshi automation is going to be done in '
-                                         + poshi_task.key)
-                        break
+                close_functional_automation_subtask(story, poshi_task, jira)
             else:
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")

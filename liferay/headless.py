@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from helpers_jira import create_poshi_automation_task_for
+from helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
 from jira_liferay import get_jira_connection
 
 
@@ -16,6 +16,7 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
 
     print("Poshi task ", new_issue.key, " created for", parent_key)
+    return new_issue
 
 
 def update_creation_subtask(jira):
@@ -127,7 +128,8 @@ def create_poshi_automation_task(jira):
                 table_ending_string = '*Exploratory'
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_staring_position:table_ending_position - 1]
-                _create_poshi_task_for(jira, story, poshi_automation_table)
+                poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
+                close_functional_automation_subtask(story, poshi_task, jira)
                 output_message = output_message + "Functional Automation created for " + story.get_field('summary')
     print(output_message)
 
