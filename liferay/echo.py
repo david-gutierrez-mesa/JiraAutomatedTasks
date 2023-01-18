@@ -158,13 +158,14 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                 poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                 output_info += "* Automation task created for story" + story.key + \
                                "(https://issues.liferay.com/browse/" + story.key + ")\n"
-                close_functional_automation_subtask(jira, story, poshi_task)
+                close_functional_automation_subtask(jira, story, poshi_task.key)
             else:
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")
                 story.update(fields={"labels": story.fields.labels})
                 output_info += "* Automation task not needed or not possible to create for story" + story.key + \
                                "(https://issues.liferay.com/browse/" + story.key + ")\n"
+                close_functional_automation_subtask(jira, story)
         else:
             output_warning += "Story " + story.key + " don't have test table. \n"
 
