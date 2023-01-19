@@ -127,7 +127,8 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
                     lines.append(_line_data(story.key, test_case_list[1], test_case_list[2], test_type, test_status, '',
                                             '', '', '', test_case_list[4], test_case_list[5]))
                 _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                output_info += "* Added tests for story " + story.key + ": Poshi not needed\n"
+                output_info += "* Added tests for story " + story.key + "(https://issues.liferay.com/browse/" + \
+                               story.key + "): Poshi not needed\n"
 
         else:
             print(story.key, 'is already mapped')
