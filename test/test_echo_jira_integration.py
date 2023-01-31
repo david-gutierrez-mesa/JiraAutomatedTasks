@@ -27,6 +27,13 @@ class EchoJiraTestCase(unittest.TestCase):
         except Exception:
             self.fail("Test failed unexpectedly!")
 
+    def test_create_testing_table_for_stories(self):
+        jira_connection_test = get_jira_connection()
+        try:
+            create_testing_table_for_stories(jira_connection_test, '')
+        except Exception:
+            self.fail("Test failed unexpectedly!")
+
     def test_transition_story_to_ready_for_pm_review(self):
         jira_connection_test = get_jira_connection()
         try:

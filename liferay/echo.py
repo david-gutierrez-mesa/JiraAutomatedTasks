@@ -9,6 +9,10 @@ DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
+TRANSIT_ISSIE_TO_IN_TESTING = '81'
+TRANSIT_ISSIE_TO_PM_REVIEW = '91'
+READY_FOR_TESTING_STATUS_ID = '10619'
+
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
@@ -183,7 +187,8 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
 
 
 def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
-    story_to_ready_for_pm_review = jira.search_issues('filter=55152')
+    story_to_ready_for_pm_review = jira.search_issues('filter=55152', fields="key, id, description, labels, "
+                                                                             "issuelinks, status")
     for story in story_to_ready_for_pm_review:
         test_cases = read_test_cases_table_from_description(story.fields.description)
         can_be_closed = True
@@ -208,7 +213,9 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                         if linked_issue_key.fields.status.name == 'Open':
                             jira.transition_issue(linked_issue_key.id, transition='11')
                         break
-            jira.transition_issue(story.id, transition='91')
+            if story.get_field("status").id == READY_FOR_TESTING_STATUS_ID:
+                jira.transition_issue(story.id, transition=TRANSIT_ISSIE_TO_IN_TESTING)
+            jira.transition_issue(story.id, transition=TRANSIT_ISSIE_TO_PM_REVIEW)
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
             output_info += "* Story " + story.key + \
                            " (https://issues.liferay.com/browse/" + story.key + ") has been send for PM review\n"

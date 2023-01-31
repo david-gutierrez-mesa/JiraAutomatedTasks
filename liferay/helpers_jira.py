@@ -67,6 +67,7 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
 
 
 def get_property(local_case, property_name):
+    local_case = local_case.replace(' \r\n', '\r\n')
     test_property = 'TBD'
     string_start = local_case.find(property_name) + len(property_name)
     if string_start != -1:
