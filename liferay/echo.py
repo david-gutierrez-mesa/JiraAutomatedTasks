@@ -9,8 +9,6 @@ DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
-TRANSIT_ISSIE_TO_IN_TESTING = '81'
-TRANSIT_ISSIE_TO_PM_REVIEW = '91'
 READY_FOR_TESTING_STATUS_ID = '10619'
 
 
@@ -180,7 +178,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
     bugs_without_poshi_automation_created = jira.search_issues('filter=51790')
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
-        jira.transition_issue(poshi_task, transition='10022')
+        jira.transition_issue(poshi_task, transition='Selected for Development')
         output_info += "* Automation task created for bug " + bug.key + \
                        "(https://issues.liferay.com/browse/" + bug.key + ")\n"
     return output_info
@@ -211,11 +209,11 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                         linked_issue_key = link.outwardIssue
                     if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
                         if linked_issue_key.fields.status.name == 'Open':
-                            jira.transition_issue(linked_issue_key.id, transition='11')
+                            jira.transition_issue(linked_issue_key.id, transition='Selected for Development')
                         break
             if story.get_field("status").id == READY_FOR_TESTING_STATUS_ID:
-                jira.transition_issue(story.id, transition=TRANSIT_ISSIE_TO_IN_TESTING)
-            jira.transition_issue(story.id, transition=TRANSIT_ISSIE_TO_PM_REVIEW)
+                jira.transition_issue(story.id, transition='In Testing')
+            jira.transition_issue(story.id, transition='Ready for Product Review')
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
             output_info += "* Story " + story.key + \
                            " (https://issues.liferay.com/browse/" + story.key + ") has been send for PM review\n"
