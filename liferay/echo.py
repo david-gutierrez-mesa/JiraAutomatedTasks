@@ -109,7 +109,8 @@ def create_testing_table_for_stories(jira, output_info):
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == 'Test Scenarios Coverage | Test Creation':
-                test_definitions = jira.issue(subtask.id, fields='description').fields.description.split('\r\n*Case')
+                test_definitions = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '')\
+                    .split('\r\n*Case ')
                 for case in test_definitions[1:]:
                     case_summary = get_property(case, ':*\r\n')
                     case_priority = get_property(case, 'Test Strategy:')
