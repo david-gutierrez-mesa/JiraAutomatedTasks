@@ -128,8 +128,7 @@ def create_testing_table_for_stories(jira, output_info):
 
 
 def create_poshi_automation_task(jira, output_warning, output_info):
-    # stories_without_poshi_automation_created = jira.search_issues('filter=54646')
-    stories_without_poshi_automation_created = jira.search_issues('filter=55781')
+    stories_without_poshi_automation_created = jira.search_issues('filter=54646')
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
         description = story.fields.description
