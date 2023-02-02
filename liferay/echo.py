@@ -154,9 +154,9 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                         poshi_automation_table += row + ' | |' + '\r\n'
                         is_automation_task_needed = True
                     else:
-                        poshi_automation_table += "|-" + cells[1].strip() + "-|-" + cells[2].strip() + "-|-" + \
-                                                  cells[3].strip() + "-|-" + cells[4].strip() + "-|-" + \
-                                                  cells[5].strip() + "-|-" + cells[6].strip() + '-| |' + '\r\n'
+                        poshi_automation_table += '|-' + cells[1].strip() + '-|-' + cells[2].strip() + '-|-' + \
+                                                  cells[3].strip() + '-|-' + cells[4].strip() + '-|-' + \
+                                                  cells[5].strip() + '-|-' + cells[6].strip() + '-| |' + '\r\n'
                 else:
                     break
             if skip_story:
