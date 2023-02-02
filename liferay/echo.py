@@ -151,8 +151,12 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                         break
                     elif (cells[4].casefold() == 'No'.casefold() and cells[5].casefold() == 'No'.casefold()) \
                             and cells[6].casefold() == 'Yes'.casefold():
+                        poshi_automation_table += row + ' | |' + '\r\n'
                         is_automation_task_needed = True
-                    poshi_automation_table += row + ' | |' + '\r\n'
+                    else:
+                        poshi_automation_table += '|-' + cells[1].strip() + '-|-' + cells[2].strip() + '-|-' + \
+                                                  cells[3].strip() + '-|-' + cells[4].strip() + '-|-' + \
+                                                  cells[5].strip() + '-|-' + cells[6].strip() + '-| |' + '\r\n'
                 else:
                     break
             if skip_story:
