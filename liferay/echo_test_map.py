@@ -10,6 +10,9 @@ from testmap_jira import get_testmap_connection
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
+BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
+BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A4:A13'
+BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C22:G31'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
@@ -19,6 +22,8 @@ ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
+OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message.txt"
+OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
 
 
@@ -136,6 +141,14 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
     return output_warning, output_info
 
 
+def check_bug_threshold(sheet, jira, output_exceed, output_warning):
+    max_values = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_MAX_VALUES).execute() \
+        .get('values', [])
+    components_groups = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS)\
+        .execute().get('values', [])
+    return output_exceed, output_warning
+
+
 def check_control_panel_tab(sheet, output_warning):
     summary_status = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
         .get('values', [])
@@ -189,10 +202,16 @@ def check_need_automation_test_cases(sheet, jira, output_warning, output_info):
 if __name__ == "__main__":
     warning = ''
     info = ''
+    bug_threshold_exceed = ''
+    bug_threshold_warning = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
+    bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
+                                                                      bug_threshold_exceed, bug_threshold_warning)
 
     create_output_files(warning, info, OUTPUT_MESSAGE_FILE_NAME, OUTPUT_INFO_FILE_NAME)
+    create_output_files(bug_threshold_exceed, bug_threshold_warning,
+                        OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME, OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME)
