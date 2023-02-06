@@ -237,4 +237,4 @@ if __name__ == "__main__":
     close_ready_for_release_bugs(jira_connection)
     warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
-    create_output_files(warning, info, OUTPUT_MESSAGE_FILE_NAME, OUTPUT_INFO_FILE_NAME)
+    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME], [info, OUTPUT_INFO_FILE_NAME])
