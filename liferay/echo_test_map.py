@@ -163,11 +163,11 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
             max_value = int(max_values[i][5 - fp])
             current_bug_numbers = count_per_priority[str(fp)]
             if current_bug_numbers > max_value:
-                output_exceed += '* Bug threshold exceed for ' + current_component_group + \
-                                 ' in Fix Priority ' + str(fp) + '\n'
+                output_exceed += '* Bug threshold exceed for <https://issues.liferay.com/issues/?filter=' + \
+                                 filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
             elif max_value != 0 and current_bug_numbers == max_value:
-                output_warning += '* Bug threshold just on the limit for ' + current_component_group + \
-                                 ' in Fix Priority ' + str(fp) + '\n'
+                output_warning += '* Bug threshold just on the limit for <https://issues.liferay.com/issues/?filter=' +\
+                                  filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
 
     return output_exceed, output_warning
 
