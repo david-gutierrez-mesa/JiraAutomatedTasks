@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from collections import Counter
+
 from helpers import create_output_files
 from helpers_google_sheet import expand_group, collapse_group
 from helpers_jira import read_test_cases_table_from_description
@@ -11,7 +13,8 @@ CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
 BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
-BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A4:A13'
+BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A22:A31'
+BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!I4:I13'
 BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C22:G31'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
@@ -144,8 +147,28 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
 def check_bug_threshold(sheet, jira, output_exceed, output_warning):
     max_values = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_MAX_VALUES).execute() \
         .get('values', [])
-    components_groups = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS)\
+    components_groups = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS) \
         .execute().get('values', [])
+    jira_filter_ids = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
+        .execute().get('values', [])
+    for i, filter_id in enumerate(jira_filter_ids):
+        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0], fields="customfield_12523")
+        bugs_fix_priority = []
+        current_component_group = components_groups[i][0]
+        for bug in enumerate(bugs_for_component_group):
+            fix_priority = bug[1].fields.customfield_12523.value
+            bugs_fix_priority.append(fix_priority)
+        count_per_priority = Counter(bugs_fix_priority)
+        for fp in range(1, 6):
+            max_value = int(max_values[i][5 - fp])
+            current_bug_numbers = count_per_priority[str(fp)]
+            if current_bug_numbers > max_value:
+                output_exceed += '* Bug threshold exceed for ' + current_component_group + \
+                                 ' in Fix Priority ' + str(fp) + '\n'
+            elif max_value != 0 and current_bug_numbers == max_value:
+                output_warning += '* Bug threshold just on the limit for ' + current_component_group + \
+                                 ' in Fix Priority ' + str(fp) + '\n'
+
     return output_exceed, output_warning
 
 
