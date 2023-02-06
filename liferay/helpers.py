@@ -1,6 +1,6 @@
-def create_output_files(warning, info, warning_file_name, info_file_name):
-    create_output_file(warning, warning_file_name)
-    create_output_file(info, info_file_name)
+def create_output_files(*args):
+    for message_file in args:
+        create_output_file(message_file[0], message_file[1])
 
 
 def create_output_file(message, message_file_name):
