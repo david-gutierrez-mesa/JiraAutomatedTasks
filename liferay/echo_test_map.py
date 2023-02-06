@@ -229,9 +229,9 @@ if __name__ == "__main__":
     bug_threshold_warning = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
-    # warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, warning, info)
-    # warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
-    # warning = check_control_panel_tab(sheet_connection, warning)
+    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, warning, info)
+    warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
+    warning = check_control_panel_tab(sheet_connection, warning)
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
                                                                       bug_threshold_exceed, bug_threshold_warning)
 
