@@ -3,7 +3,7 @@ from collections import Counter
 
 from helpers import create_output_files
 from helpers_google_sheet import expand_group, collapse_group
-from helpers_jira import read_test_cases_table_from_description
+from helpers_jira import read_test_cases_table_from_description, LIFERAY_JIRA_BROWSE_URL, LIFERAY_JIRA_ISSUES_URL
 from jira_liferay import get_jira_connection
 from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline, update_line, \
     get_group_start_and_end_position
@@ -105,8 +105,8 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story " + story.key + \
-                                           "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
+                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key +\
+                                           "|" + story.key + ">: Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
                             lines = []
@@ -117,13 +117,13 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
                                                'Needs Automation', '', '', '', '', test_case_list[4],
                                                test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story " + story.key + \
-                                           "(https://issues.liferay.com/browse/" + story.key + "): Poshi in progress\n"
+                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                                           "|" + story.key + ">: Poshi in progress\n"
                         needs_manual_review = False
                         break
                 if needs_manual_review:
-                    output_warning += "* " + str(story.key) + \
-                                      " (https://issues.liferay.com/browse/" + story.key + ") needs manual review\n "
+                    output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                                      "|" + story.key + "> needs manual review\n "
 
             else:
                 test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -135,8 +135,8 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
                     lines.append(_line_data(story.key, test_case_list[1], test_case_list[2], test_type, test_status, '',
                                             '', '', '', test_case_list[4], test_case_list[5]))
                 _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                output_info += "* Added tests for story " + story.key + "(https://issues.liferay.com/browse/" + \
-                               story.key + "): Poshi not needed\n"
+                output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                               "|" + story.key + ">: Poshi not needed\n"
 
         else:
             print(story.key, 'is already mapped')
@@ -163,10 +163,10 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
             max_value = int(max_values[i][5 - fp])
             current_bug_numbers = count_per_priority[str(fp)]
             if current_bug_numbers > max_value:
-                output_exceed += '* Bug threshold exceed for <https://issues.liferay.com/issues/?filter=' + \
+                output_exceed += '* Bug threshold exceed for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
                                  filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
             elif max_value != 0 and current_bug_numbers == max_value:
-                output_warning += '* Bug threshold just on the limit for <https://issues.liferay.com/issues/?filter=' +\
+                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' +\
                                   filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
 
     return output_exceed, output_warning
@@ -212,12 +212,12 @@ def check_need_automation_test_cases(sheet, jira, output_warning, output_info):
                         output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
                                                       ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
                                                       ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
-                    output_info += "* Added tests for story " + story.key + \
-                                   "(https://issues.liferay.com/browse/" + story.key + "): Poshi finished\n"
+                    output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                                   "|" + story.key + ">: Poshi finished\n"
                     collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                 else:
-                    output_info += "* " + str(story.key) + \
-                                   " (https://issues.liferay.com/browse/" + story.key + ") is still not automated\n "
+                    output_info += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                                   "|" + story.key + "> is still not automated\n "
 
     return output_warning, output_info
 
