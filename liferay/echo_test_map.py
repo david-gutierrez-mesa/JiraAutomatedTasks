@@ -3,10 +3,11 @@ from collections import Counter
 
 from helpers import create_output_files
 from helpers_google_sheet import expand_group, collapse_group
-from helpers_jira import read_test_cases_table_from_description, LIFERAY_JIRA_BROWSE_URL, LIFERAY_JIRA_ISSUES_URL
+from helpers_jira import read_test_cases_table_from_description, LIFERAY_JIRA_BROWSE_URL, LIFERAY_JIRA_ISSUES_URL, \
+    get_team_components
 from jira_liferay import get_jira_connection
 from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline, update_line, \
-    get_group_start_and_end_position
+    get_group_start_and_end_position, get_component
 from testmap_jira import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
@@ -181,7 +182,7 @@ def check_control_panel_tab(sheet, output_warning):
     return output_warning
 
 
-def check_need_automation_test_cases(sheet, jira, output_warning, output_info):
+def check_need_automation_test_cases(sheet, jira, echo_team_components, output_warning, output_info):
     lps_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
         .get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
@@ -190,7 +191,11 @@ def check_need_automation_test_cases(sheet, jira, output_warning, output_info):
         'values', [])
     for lps in lps_list:
         story = jira.issue(lps[0])
-        component = story.get_field("components")[0].name
+        component = get_component(story, echo_team_components)
+        if not component:
+            output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                           "|" + story.key + "> has a component or components that not belong to the team\n "
+            continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
             if hasattr(link, "inwardIssue"):
@@ -229,7 +234,8 @@ if __name__ == "__main__":
     bug_threshold_warning = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
-    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, warning, info)
+    team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
+    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,

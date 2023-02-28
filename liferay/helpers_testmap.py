@@ -12,6 +12,14 @@ def component_row(component, matrix):
     return position
 
 
+def get_component(story, team_components):
+    components = story.get_field("components")
+    for component in components:
+        if component.name in team_components:
+            return component.name
+    return ''
+
+
 def get_group_start_and_end_position(component, matrix, header_length):
     starting = component_row('Component: ' + component, matrix)
     if starting >= 0:
