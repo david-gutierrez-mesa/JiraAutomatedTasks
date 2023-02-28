@@ -79,6 +79,12 @@ def get_property(local_case, property_name):
     return test_property
 
 
+def get_team_components(jira, project, team_name_in_jira):
+    components_full_info = jira.project_components(project)
+    team_components = [x.name for x in components_full_info if is_component_lead(x, team_name_in_jira)]
+    return team_components
+
+
 def initialize_subtask_back_end(story, components):
     summary = 'Test Scenarios Coverage | Backend'
     description = '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n' \
@@ -113,6 +119,13 @@ def initialize_subtask_test_automation(story, components, description):
     summary = 'Product QA | Automation Test Creation'
     subtask_test_automation = __initialize_subtask_technical_test(story, components, summary, description)
     return subtask_test_automation
+
+
+def is_component_lead(component, team_name_in_jira):
+    if hasattr(component, "lead"):
+        return component.lead.displayName == team_name_in_jira
+    else:
+        return False
 
 
 def prepare_test_creation_subtask(story):

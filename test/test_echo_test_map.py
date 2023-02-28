@@ -2,6 +2,7 @@ import unittest
 
 from echo_test_map import add_test_cases_to_test_map, check_need_automation_test_cases, check_control_panel_tab, \
     check_bug_threshold
+from helpers_jira import get_team_components
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
 
@@ -41,7 +42,9 @@ class EchoTestMapTests(unittest.TestCase):
             info = ''
             jira_connection = get_jira_connection()
             sheet_connection = get_testmap_connection()
-            message, info = check_need_automation_test_cases(sheet_connection, jira_connection, message, info)
+            team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
+            message, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components,
+                                                             message, info)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
