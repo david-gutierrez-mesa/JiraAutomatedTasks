@@ -76,7 +76,7 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
     return line
 
 
-def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
+def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning, output_info):
     print("Adding stories into echo test map")
     stories_to_check = jira.search_issues('filter=55104', fields="key, issuelinks, labels, components, description")
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
@@ -85,7 +85,11 @@ def add_test_cases_to_test_map(sheet, jira, output_warning, output_info):
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
             labels = story.get_field("labels")
-            story_component = story.get_field("components")[0].name
+            story_component = get_component(story, echo_team_components)
+            if not story_component:
+                output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
+                                  "|" + story.key + "> has a component or components that do not belong to the team\n "
+                continue
             if 'poshi_test_not_needed' not in labels:
                 needs_manual_review = True
                 for link in story.fields.issuelinks:
@@ -199,7 +203,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         component = get_component(story, echo_team_components)
         if not component:
             output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                           "|" + story.key + "> has a component or components that not belong to the team\n "
+                           "|" + story.key + "> has a component or components that do not belong to the team\n "
             continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
@@ -241,7 +245,7 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
-    warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, warning, info)
+    warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
                                                                       bug_threshold_exceed, bug_threshold_warning)
