@@ -203,7 +203,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         component = get_component(story, echo_team_components)
         if not component:
             output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                           "|" + story.key + "> has a component or components that not belong to the team\n "
+                           "|" + story.key + "> has a component or components that do not belong to the team\n "
             continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
