@@ -58,6 +58,9 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
     match remove_underline(priority.casefold()):
         case 'low':
             priority_text = '2 - Low'
+            if not (remove_underline(test_case) == ''):
+                test_type = 'Manual'
+                test_status = 'Needs Automation'
         case 'medium':
             priority_text = '3 - Medium'
         case 'high':
@@ -65,7 +68,8 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
         case 'critical':
             priority_text = '5 - Critical'
 
-    if backend_automated.casefold() == 'Yes'.casefold() or frontend_automated.casefold() == 'Yes'.casefold():
+    if remove_underline(backend_automated).casefold() == 'Yes'.casefold() or \
+            remove_underline(frontend_automated).casefold() == 'Yes'.casefold():
         test_type = 'Automation Low Level'
         test_status = 'Automated'
 
