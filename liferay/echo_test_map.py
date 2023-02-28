@@ -153,11 +153,16 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
     jira_filter_ids = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
         .execute().get('values', [])
     for i, filter_id in enumerate(jira_filter_ids):
-        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0], fields="customfield_12523")
+        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0], fields="customfield_12523, key")
         bugs_fix_priority = []
         current_component_group = components_groups[i][0]
         for bug in enumerate(bugs_for_component_group):
-            fix_priority = bug[1].fields.customfield_12523.value
+            if hasattr(bug[1].fields.customfield_12523, "value"):
+                fix_priority = bug[1].fields.customfield_12523.value
+            else:
+                output_warning += "* Bug without fix priority <" + LIFERAY_JIRA_BROWSE_URL + bug[1].key + \
+                                  "|" + bug[1].key + ">\n"
+                continue
             bugs_fix_priority.append(fix_priority)
         count_per_priority = Counter(bugs_fix_priority)
         for fp in range(1, 6):
