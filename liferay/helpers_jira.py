@@ -20,7 +20,8 @@ def __initialize_subtask_technical_test(story, components, summary, description)
 
 def close_functional_automation_subtask(jira_local, story, poshi_task=''):
     for subtask in story.get_field('subtasks'):
-        if subtask.fields.summary == 'Product QA | Functional Automation':
+        if subtask.fields.summary == 'Product QA | Functional Automation' or subtask.fields.summary == 'Automation ' \
+                                                                                                       'Test Creation':
             testing_subtask = subtask.id
             jira_local.transition_issue(testing_subtask, transition='Closed')
             if poshi_task:
