@@ -66,9 +66,9 @@ def update_validation_subtask(jira):
             summary = subtask.fields.summary
             key = subtask.key
             assignee = jira.issue(key, fields='assignee')
-            if summary == 'Product QA | Test Validation' or summary == 'Product QA | Test Validation - Round 1':
-                print("Updating "+key+" ...")
+            if 'Product QA | Test Validation' in summary:
                 if subtask.fields.status.name == "Open":
+                    print("Updating "+key+" ...")
                     description = '*Context*\r\n' \
                                   'Execute the tests of the parent story, and use the information in the *Test \r\n' \
                                   'Information* section to perform the tests.\r\n' \
