@@ -25,7 +25,7 @@ def get_group_start_and_end_position(component, matrix, header_length):
     if starting >= 0:
         for i in range(starting + 1, len(matrix)):
             if len(matrix[i]) != 0:
-                if 'Component:' in matrix[i][0]:
+                if 'Component:' in matrix[i][0] or 'Others:' in matrix[i][0]:
                     return starting + header_length + 1, i + header_length
         return 0, 0
     else:
