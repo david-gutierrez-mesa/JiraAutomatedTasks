@@ -109,7 +109,7 @@ def create_testing_table_for_stories(jira, output_info):
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == 'Test Scenarios Coverage | Test Creation':
-                test_definitions = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '')\
+                test_definitions = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '') \
                     .split('\r\n*Case ')
                 for case in test_definitions[1:]:
                     case_summary = get_property(case, ':*\r\n')
@@ -186,6 +186,16 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
         jira.transition_issue(poshi_task, transition='Selected for Development')
         output_info += "* Automation task created for bug " + bug.key + \
                        "(https://issues.liferay.com/browse/" + bug.key + ")\n"
+    return output_info
+
+
+def fill_round_technical_testing_description(jira, output_info):
+    round_technical_testing_sub_tasks = jira.search_issues('filter=56455', fields="key")
+    for task in round_technical_testing_sub_tasks:
+        updated_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
+                              "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2. Not " \
+                              "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+        task.update(fields={'description': updated_description})
     return output_info
 
 
