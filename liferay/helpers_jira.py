@@ -56,6 +56,19 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
     return new_issue
 
 
+def get_all_issues(jira_local, jql_str, fields):
+    issues = []
+    i = 0
+    chunk_size = 50
+    while True:
+        chunk = jira_local.search_issues(jql_str, startAt=i, maxResults=chunk_size, fields=fields)
+        i += chunk_size
+        issues += chunk.iterable
+        if i >= chunk.total:
+            break
+    return issues
+
+
 def create_poshi_automation_task_for_bug(jira_local, bug):
     parent_key = bug.key
     bug_summary = bug.fields.summary
