@@ -2,12 +2,9 @@
 from collections import Counter
 
 from helpers import create_output_files
-from helpers_google_sheet import expand_group, collapse_group
-from helpers_jira import read_test_cases_table_from_description, LIFERAY_JIRA_BROWSE_URL, LIFERAY_JIRA_ISSUES_URL, \
-    get_team_components
+from helpers_jira import *
 from jira_liferay import get_jira_connection
-from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline, update_line, \
-    get_group_start_and_end_position, get_component
+from helpers_testmap import *
 from testmap_jira import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
@@ -24,6 +21,8 @@ ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
+JIRA_TEST_MAP_TAB = "JIRA-TestMap"
+JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message.txt"
@@ -89,7 +88,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
             labels = story.get_field("labels")
-            story_component = get_component(story, echo_team_components)
+            story_component = get_component_in_team_components(story, echo_team_components)
             if not story_component:
                 output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
                                   "|" + story.key + "> has a component or components that do not belong to the team\n "
@@ -114,7 +113,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key +\
+                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
                                            "|" + story.key + ">: Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -180,7 +179,7 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
                 output_exceed += '* Bug threshold exceed for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
                                  filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
             elif max_value != 0 and current_bug_numbers == max_value:
-                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' +\
+                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
                                   filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
 
     return output_exceed, output_warning
@@ -204,10 +203,10 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         'values', [])
     for lps in lps_list:
         story = jira.issue(lps[0])
-        component = get_component(story, echo_team_components)
+        component = get_component_in_team_components(story, echo_team_components)
         if not component:
             output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                           "|" + story.key + "> has a component or components that do not belong to the team\n "
+                              "|" + story.key + "> has a component or components that do not belong to the team\n "
             continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
@@ -238,6 +237,12 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                                    "|" + story.key + "> is still not automated\n "
 
     return output_warning, output_info
+
+
+def update_echo_test_map(sheet, jira, output_info):
+    output_info = update_test_map(sheet, jira, output_info, 'filter=49998', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB,
+                                  JIRA_TEST_MAP_TAB_RANGE)
+    return output_info
 
 
 if __name__ == "__main__":

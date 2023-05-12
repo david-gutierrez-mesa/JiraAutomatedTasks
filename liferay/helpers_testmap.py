@@ -1,6 +1,7 @@
 from itertools import islice
 
 from helpers_google_sheet import *
+from helpers_jira import get_all_issues
 
 
 def component_row(component, matrix):
@@ -12,7 +13,11 @@ def component_row(component, matrix):
     return position
 
 
-def get_component(story, team_components):
+def get_components(story):
+    return [component.name for component in story.get_field("components")]
+
+
+def get_component_in_team_components(story, team_components):
     components = story.get_field("components")
     for component in components:
         if component.name in team_components:
@@ -118,6 +123,46 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     sheet.values().update(
         spreadsheetId=spreadsheet_id, range=range_name, valueInputOption="USER_ENTERED", body=body).execute()
     return ''
+
+
+def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
+    stories_to_add_to_test_map = get_all_issues(jira, jira_filter,
+                                                ["key", "summary", "issuetype", "status", "labels",
+                                                 "components", "customfield_12821"])
+    body_values = []
+    for story in stories_to_add_to_test_map:
+        components = ', '.join(get_components(story))
+        labels = ','.join(story.get_field('labels'))
+        epic_link = story.get_field('customfield_12821')
+        if epic_link is None:
+            epic = 'n/a'
+        else:
+            epic = jira.issue(epic_link, fields='summary').get_field('summary')
+        body_values.append([story.key,
+                            story.get_field('summary'),
+                            story.get_field('issuetype').name,
+                            story.get_field('status').name,
+                            labels,
+                            components,
+                            epic])
+
+    sheet.values().clear(
+        spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
+
+    body = {
+        'values': body_values
+    }
+    sheet.values().append(
+        spreadsheetId=testmap_id,
+        range=jira_test_map_tab_range,
+        valueInputOption='USER_ENTERED',
+        body=body).execute()
+
+    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
+
+    output_info += 'Test map updated\n'
+
+    return output_info
 
 
 def remove_underline(string):
