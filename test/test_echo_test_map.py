@@ -1,7 +1,6 @@
 import unittest
 
-from echo_test_map import add_test_cases_to_test_map, check_need_automation_test_cases, check_control_panel_tab, \
-    check_bug_threshold
+from echo_test_map import *
 from helpers_jira import get_team_components
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
@@ -11,22 +10,23 @@ class EchoTestMapTests(unittest.TestCase):
     def test_add_test_cases_to_test_map(self):
         try:
             message = ''
-            info = ''
-            jira_connection = get_jira_connection()
-            sheet_connection = get_testmap_connection()
-            team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
-            message, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components,
-                                                       message, info)
+            info_test = ''
+            jira_connection_test = get_jira_connection()
+            sheet_connection_test = get_testmap_connection()
+            team_components_test = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
+            message, info_test = add_test_cases_to_test_map(sheet_connection_test, jira_connection_test,
+                                                            team_components_test,
+                                                            message, info_test)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
     def test_check_bug_threshold(self):
         try:
             message = ''
-            info = ''
-            jira_connection = get_jira_connection()
-            sheet_connection = get_testmap_connection()
-            message, info = check_bug_threshold(sheet_connection, jira_connection, message, info)
+            info_test = ''
+            jira_connection_test = get_jira_connection()
+            sheet_connection_test = get_testmap_connection()
+            message, info_test = check_bug_threshold(sheet_connection_test, jira_connection_test, message, info_test)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
@@ -41,12 +41,12 @@ class EchoTestMapTests(unittest.TestCase):
     def test_check_need_automation_test_cases(self):
         try:
             message = ''
-            info = ''
-            jira_connection = get_jira_connection()
-            sheet_connection = get_testmap_connection()
-            team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
-            message, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components,
-                                                             message, info)
+            info_test = ''
+            jira_connection_test = get_jira_connection()
+            sheet_connection_test = get_testmap_connection()
+            team_components_test = get_team_components(jira_connection_test, 'LPS', 'Product Team Echo')
+            message, info_test = check_need_automation_test_cases(sheet_connection_test, jira_connection,
+                                                                  team_components_test, message, info_test)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
