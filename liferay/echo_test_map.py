@@ -111,7 +111,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key +\
+                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
                                            "|" + story.key + ">: Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -177,7 +177,7 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
                 output_exceed += '* Bug threshold exceed for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
                                  filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
             elif max_value != 0 and current_bug_numbers == max_value:
-                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' +\
+                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
                                   filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
 
     return output_exceed, output_warning
@@ -204,7 +204,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         component = get_component_in_team_components(story, echo_team_components)
         if not component:
             output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                           "|" + story.key + "> has a component or components that do not belong to the team\n "
+                              "|" + story.key + "> has a component or components that do not belong to the team\n "
             continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
