@@ -21,6 +21,8 @@ ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
+JIRA_TEST_MAP_TAB = "JIRA-TestMap"
+JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message.txt"
@@ -235,6 +237,11 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                                    "|" + story.key + "> is still not automated\n "
 
     return output_warning, output_info
+
+
+def update_echo_test_map(sheet, jira, output_info):
+    output_info = update_test_map(sheet, jira, output_info, 'filter=49998', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB_RANGE)
+    return output_info
 
 
 if __name__ == "__main__":
