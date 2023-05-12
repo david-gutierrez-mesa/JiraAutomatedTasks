@@ -1,6 +1,7 @@
 from itertools import islice
 
 from helpers_google_sheet import *
+from helpers_jira import get_all_issues
 
 
 def component_row(component, matrix):
