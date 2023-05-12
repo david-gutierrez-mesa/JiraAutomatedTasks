@@ -240,7 +240,8 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
 
 
 def update_echo_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, 'filter=49998', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB_RANGE)
+    output_info = update_test_map(sheet, jira, output_info, 'filter=49998', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB,
+                                  JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 
 
