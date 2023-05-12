@@ -124,5 +124,43 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     return ''
 
 
+def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab_range):
+    stories_to_add_to_test_map = get_all_issues(jira, jira_filter,
+                                                ["key", "summary", "issuetype", "status", "labels",
+                                                 "components", "customfield_12821"])
+    body_values = []
+    for story in stories_to_add_to_test_map:
+        components = ', '.join(get_components(story))
+        labels = ','.join(story.get_field('labels'))
+        epic_link = story.get_field('customfield_12821')
+        if epic_link is None:
+            epic = 'n/a'
+        else:
+            epic = jira.issue(epic_link, fields='summary').get_field('summary')
+        body_values.append([story.key,
+                            story.get_field('summary'),
+                            story.get_field('issuetype').name,
+                            story.get_field('status').name,
+                            labels,
+                            components,
+                            epic])
+
+    sheet.values().clear(
+        spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
+
+    body = {
+        'values': body_values
+    }
+    sheet.values().append(
+        spreadsheetId=testmap_id,
+        range=jira_test_map_tab_range,
+        valueInputOption='USER_ENTERED',
+        body=body).execute()
+
+    output_info += 'Test map updated\n'
+
+    return output_info
+
+
 def remove_underline(string):
     return string.strip('-')
