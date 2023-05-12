@@ -2,12 +2,9 @@
 from collections import Counter
 
 from helpers import create_output_files
-from helpers_google_sheet import expand_group, collapse_group
-from helpers_jira import read_test_cases_table_from_description, LIFERAY_JIRA_BROWSE_URL, LIFERAY_JIRA_ISSUES_URL, \
-    get_team_components
+from helpers_jira import *
 from jira_liferay import get_jira_connection
-from helpers_testmap import is_mapped, get_mapped_stories, insert_lines_in_component, remove_underline, update_line, \
-    get_group_start_and_end_position, get_component
+from helpers_testmap import *
 from testmap_jira import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
@@ -89,7 +86,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
         if not is_mapped(story.key, lps_list):
             print("Processing ", story.key)
             labels = story.get_field("labels")
-            story_component = get_component(story, echo_team_components)
+            story_component = get_component_in_team_components(story, echo_team_components)
             if not story_component:
                 output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
                                   "|" + story.key + "> has a component or components that do not belong to the team\n "
@@ -204,7 +201,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         'values', [])
     for lps in lps_list:
         story = jira.issue(lps[0])
-        component = get_component(story, echo_team_components)
+        component = get_component_in_team_components(story, echo_team_components)
         if not component:
             output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
                            "|" + story.key + "> has a component or components that do not belong to the team\n "

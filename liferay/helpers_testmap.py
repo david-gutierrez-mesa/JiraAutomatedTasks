@@ -12,7 +12,11 @@ def component_row(component, matrix):
     return position
 
 
-def get_component(story, team_components):
+def get_components(story):
+    return [component.name for component in story.get_field("components")]
+
+
+def get_component_in_team_components(story, team_components):
     components = story.get_field("components")
     for component in components:
         if component.name in team_components:
