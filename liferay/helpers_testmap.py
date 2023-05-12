@@ -125,7 +125,7 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     return ''
 
 
-def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab_range):
+def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
     stories_to_add_to_test_map = get_all_issues(jira, jira_filter,
                                                 ["key", "summary", "issuetype", "status", "labels",
                                                  "components", "customfield_12821"])
@@ -157,6 +157,8 @@ def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test
         range=jira_test_map_tab_range,
         valueInputOption='USER_ENTERED',
         body=body).execute()
+
+    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
 
     output_info += 'Test map updated\n'
 
