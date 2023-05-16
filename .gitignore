@@ -6,6 +6,7 @@
 /**/**.iml
 /liferay/token.json
 /liferay/test.py
+/liferay/output_info.txt
 /liferay/output_message.txt
 /test/token.json
 /liferay/bug_threshold_exceed_message.txt
