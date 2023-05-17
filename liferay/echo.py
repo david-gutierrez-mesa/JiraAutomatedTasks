@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from helpers import create_output_files
-from helpers_jira import get_property, initialize_subtask_front_end, initialize_subtask_back_end, \
-    AUTOMATION_TABLE_HEADER, create_poshi_automation_task_for, create_poshi_automation_task_for_bug, \
-    read_test_cases_table_from_description, close_functional_automation_subtask
+from helpers_jira import *
 from jira_liferay import get_jira_connection
 
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
