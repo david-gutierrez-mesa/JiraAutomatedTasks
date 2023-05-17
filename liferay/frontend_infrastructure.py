@@ -1,13 +1,18 @@
 #!/usr/bin/env python
-from helpers_jira import initialize_subtask_test_creation, initialize_subtask_test_validation, \
-    prepare_test_creation_subtask, prepare_test_validation_subtask, create_poshi_automation_task_for
+from helpers import create_output_files
+from helpers_jira import *
+from helpers_jira import __initialize_subtask_technical_test
 from jira_liferay import get_jira_connection
 
+QA_JIRA_USER = 'carlos.brichete'
+OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
+OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
-def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
+
+def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table, output_info):
     parent_key = parent_story.key
     parent_summary = parent_story.get_field('summary')
-    print("Creating poshi automation task for story", parent_key)
+    output_info += "Creating poshi automation task for story", parent_key
     summary = 'Product QA | Automation Test Creation - ' + parent_key + ' - ' + parent_summary
 
     description = 'Create test automation to validate the critical test scenarios/cases of the related story.\n\nThe ' \
@@ -16,13 +21,13 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
                   'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
 
-    print("   * task created: " + new_issue.key)
+    output_info += "   * task created: " + new_issue.key
 
 
-def create_test_creation_subtask(jira):
+def create_test_creation_subtask(jira, output_info):
     stories_without_testing_subtask = jira.search_issues('filter=55092')
     for story in stories_without_testing_subtask:
-        print("Creating test scenarios coverage sub-task for story " + story.key)
+        output_info += "Creating test scenarios coverage sub-task for story " + story.key
         test_creation, components = prepare_test_creation_subtask(story)
 
         if test_creation:
@@ -46,15 +51,16 @@ def create_test_creation_subtask(jira):
                           '\r\n| | | | |'
             subtask_test_creation = initialize_subtask_test_creation(story, components, description)
             child = jira.create_issue(fields=subtask_test_creation)
-            print("   * sub-task created: " + child.key)
+            output_info += "   * sub-task created: " + child.key
 
-    print("✓ Test scenarios coverage subtasks are up to date \n")
+    output_info += "✓ Test scenarios coverage subtasks are up to date \n"
+    return output_info
 
 
-def create_test_validation_subtask(jira):
+def create_test_validation_subtask(jira, output_info):
     stories_without_testing_subtask = jira.search_issues('filter=55093')
     for story in stories_without_testing_subtask:
-        print("Creating test validation sub-task for story " + story.key)
+        output_info += "Creating test validation sub-task for story " + story.key
         test_validation, components = prepare_test_validation_subtask(story)
 
         if test_validation:
@@ -97,12 +103,13 @@ def create_test_validation_subtask(jira):
                           '\r\n|?|?|'
             subtask_test_validation = initialize_subtask_test_validation(story, components, description)
             child = jira.create_issue(fields=subtask_test_validation)
-            print("   * sub-task created: " + child.key)
+            output_info += "   * sub-task created: " + child.key
 
-    print("✓ Manual Test Validation subtasks are up to date \n")
+    output_info += "✓ Manual Test Validation subtasks are up to date \n"
+    return output_info
 
 
-def create_poshi_automation_task(jira):
+def create_poshi_automation_task(jira, output_info):
     stories_without_poshi_automation_created = jira.search_issues('filter=55095')
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
@@ -113,14 +120,35 @@ def create_poshi_automation_task(jira):
                 table_ending_string = '*Exploratory'
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_starting_position:table_ending_position - 1]
-                _create_poshi_task_for(jira, story, poshi_automation_table)
+                _create_poshi_task_for(jira, story, poshi_automation_table, output_info)
 
-    print("✓ Poshi automation tasks are up to date \n")
+    output_info += "✓ Poshi automation tasks are up to date \n"
+    return output_info
+
+
+def create_technical_sub_task_test_scope_out_of_scope_creation(jira, output_info):
+    issues_to_update = jira.search_issues('filter=56504', fields="key, components")
+    summary = "Test Scenarios Coverage | Test Scope/out of Scope Creation"
+    description = ""
+    for story in issues_to_update:
+        components = []
+        for component in story.fields.components:
+            components.append({'name': component.name})
+        subtask_fields = __initialize_subtask_technical_test(story, components, summary, description)
+        child = jira.create_issue(fields=subtask_fields)
+        output_info += "   * sub-task created " + child.key + " created for story " + story.key
+        jira.assign_issue(child.id, QA_JIRA_USER)
+
+    return output_info
 
 
 if __name__ == "__main__":
+    warning = ''
+    info = ''
     jira_connection = get_jira_connection()
-    print("Creating subtasks for Frontend Infra team...\n")
-    create_test_creation_subtask(jira_connection)
-    create_test_validation_subtask(jira_connection)
-    create_poshi_automation_task(jira_connection)
+    info = create_test_creation_subtask(jira_connection, info)
+    info = create_test_validation_subtask(jira_connection, info)
+    info = create_poshi_automation_task(jira_connection, info)
+    create_technical_sub_task_test_scope_out_of_scope_creation(jira_connection, info)
+
+    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME], [info, OUTPUT_INFO_FILE_NAME])
