@@ -4,6 +4,7 @@ from helpers_jira import *
 from helpers_jira import __initialize_subtask_technical_test
 from jira_liferay import get_jira_connection
 
+QA_JIRA_USER = 'carlos.brichete'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
@@ -128,8 +129,11 @@ def create_poshi_automation_task(jira, output_info):
 
 
 if __name__ == "__main__":
+    warning = ''
+    info = ''
     jira_connection = get_jira_connection()
-    print("Creating subtasks for Frontend Infra team...\n")
-    create_test_creation_subtask(jira_connection)
-    create_test_validation_subtask(jira_connection)
-    create_poshi_automation_task(jira_connection)
+    info = create_test_creation_subtask(jira_connection, info)
+    info = create_test_validation_subtask(jira_connection, info)
+    info = create_poshi_automation_task(jira_connection, info)
+
+    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME], [info, OUTPUT_INFO_FILE_NAME])
