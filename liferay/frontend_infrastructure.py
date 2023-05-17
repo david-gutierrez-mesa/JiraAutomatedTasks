@@ -130,6 +130,7 @@ def create_technical_sub_task_test_scope_out_of_scope_creation(jira, output_info
     issues_to_update = jira.search_issues('filter=56504', fields="key, components")
     summary = "Test Scenarios Coverage | Test Scope/out of Scope Creation"
     description = ""
+    output_info += "Creating \"Test Scope/out of Scope Creation\" sub tasks"
     for story in issues_to_update:
         components = []
         for component in story.fields.components:
