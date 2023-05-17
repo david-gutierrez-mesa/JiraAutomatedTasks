@@ -125,7 +125,21 @@ def create_poshi_automation_task(jira, output_info):
     output_info += "✓ Poshi automation tasks are up to date \n"
     return output_info
 
-    print("✓ Poshi automation tasks are up to date \n")
+
+def create_technical_sub_task_test_scope_out_of_scope_creation(jira, output_info):
+    issues_to_update = jira.search_issues('filter=56504', fields="key, components")
+    summary = "Test Scenarios Coverage | Test Scope/out of Scope Creation"
+    description = ""
+    for story in issues_to_update:
+        components = []
+        for component in story.fields.components:
+            components.append({'name': component.name})
+        subtask_fields = __initialize_subtask_technical_test(story, components, summary, description)
+        child = jira.create_issue(fields=subtask_fields)
+        output_info += "   * sub-task created " + child.key + " created for story " + story.key
+        jira.assign_issue(child.id, QA_JIRA_USER)
+
+    return output_info
 
 
 if __name__ == "__main__":
