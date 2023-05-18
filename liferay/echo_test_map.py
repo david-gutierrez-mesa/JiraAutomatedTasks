@@ -3,6 +3,7 @@ from collections import Counter
 
 from helpers import create_output_files
 from helpers_jira import *
+from jira_constants import Filter
 from jira_liferay import get_jira_connection
 from helpers_testmap import *
 from testmap_jira import get_testmap_connection
@@ -81,7 +82,8 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
 
 def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning, output_info):
     print("Adding stories into echo test map")
-    stories_to_check = jira.search_issues('filter=55104', fields="key, issuelinks, labels, components, description")
+    stories_to_check = jira.search_issues(Filter.Stories_to_add_into_test_map,
+                                          fields=['key', 'issuelinks', 'labels', 'components', 'description'])
     lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
     components_testcases_dict = dict([])
     for story in stories_to_check:
@@ -102,7 +104,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                     elif hasattr(link, "outwardIssue"):
                         linked_issue_key = link.outwardIssue
                     if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
-                        if linked_issue_key.fields.status.name == 'Closed':
+                        if linked_issue_key.fields.status.name == Status.Closed:
                             linked_issue = jira.issue(linked_issue_key.key)
                             test_cases_table = read_test_cases_table_from_description(linked_issue.fields.description)
                             lines = []
@@ -160,12 +162,13 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
     jira_filter_ids = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
         .execute().get('values', [])
     for i, filter_id in enumerate(jira_filter_ids):
-        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0], fields="customfield_12523, key")
+        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0],
+                                                      fields=[CustomField.Fix_Priority, 'key'])
         bugs_fix_priority = []
         current_component_group = components_groups[i][0]
         for bug in enumerate(bugs_for_component_group):
-            if hasattr(bug[1].fields.customfield_12523, "value"):
-                fix_priority = bug[1].fields.customfield_12523.value
+            if hasattr(bug[1].get_field(CustomField.Fix_Priority), "value"):
+                fix_priority = bug[1].get_field(CustomField.Fix_Priority).value
             else:
                 output_warning += "* Bug without fix priority <" + LIFERAY_JIRA_BROWSE_URL + bug[1].key + \
                                   "|" + bug[1].key + ">\n"
@@ -215,7 +218,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
             elif hasattr(link, "outwardIssue"):
                 linked_issue_key = link.outwardIssue
             if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
-                if linked_issue_key.fields.status.name == 'Closed':
+                if linked_issue_key.fields.status.name == Status.Closed:
                     linked_issue = jira.issue(linked_issue_key.key)
                     test_cases_table = read_test_cases_table_from_description(linked_issue.fields.description)
                     start, end = get_group_start_and_end_position(component, current_test_cases_list,
@@ -240,8 +243,8 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
 
 
 def update_echo_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, 'filter=49998', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB,
-                                  JIRA_TEST_MAP_TAB_RANGE)
+    output_info = update_test_map(sheet, jira, output_info, Filter.Echo_7_4_CE_GA_All, ECHO_TESTMAP_ID,
+                                  JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 
 
