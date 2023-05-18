@@ -2,6 +2,7 @@ from itertools import islice
 
 from helpers_google_sheet import *
 from helpers_jira import get_all_issues
+from jira_constants import CustomField
 
 
 def component_row(component, matrix):
@@ -95,7 +96,7 @@ def insert_lines_in_component(sheet, spreadsheet_id, sheet_id, sheet_name, sheet
 
         if start == -1:
             output_message += '* Component "' + component + '" does not exist on ' + sheet_name +\
-                              '. Please consider to add it manually\n'
+                              '. Please consider adding it manually\n'
         else:
             if start != end:
                 expand_group(sheet, spreadsheet_id, sheet_id, start, end)
@@ -128,12 +129,12 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
 def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
     stories_to_add_to_test_map = get_all_issues(jira, jira_filter,
                                                 ["key", "summary", "issuetype", "status", "labels",
-                                                 "components", "customfield_12821"])
+                                                 "components", CustomField.Epic_Link])
     body_values = []
     for story in stories_to_add_to_test_map:
         components = ', '.join(get_components(story))
         labels = ','.join(story.get_field('labels'))
-        epic_link = story.get_field('customfield_12821')
+        epic_link = story.get_field(CustomField.Epic_Link)
         if epic_link is None:
             epic = 'n/a'
         else:

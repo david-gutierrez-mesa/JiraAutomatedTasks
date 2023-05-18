@@ -2,6 +2,7 @@
 from helpers import create_output_files
 from helpers_jira import *
 from helpers_jira import __initialize_subtask_technical_test
+from jira_constants import Filter
 from jira_liferay import get_jira_connection
 
 QA_JIRA_USER = 'carlos.brichete'
@@ -25,7 +26,7 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table, out
 
 
 def create_test_creation_subtask(jira, output_info):
-    stories_without_testing_subtask = jira.search_issues('filter=55092')
+    stories_without_testing_subtask = jira.search_issues(Filter.FI_Stories_without_test_creation_subtask)
     for story in stories_without_testing_subtask:
         output_info += "Creating test scenarios coverage sub-task for story " + story.key
         test_creation, components = prepare_test_creation_subtask(story)
@@ -58,7 +59,7 @@ def create_test_creation_subtask(jira, output_info):
 
 
 def create_test_validation_subtask(jira, output_info):
-    stories_without_testing_subtask = jira.search_issues('filter=55093')
+    stories_without_testing_subtask = jira.search_issues(Filter.FI_Ready_for_Testing_Stories_without_Test_Validation)
     for story in stories_without_testing_subtask:
         output_info += "Creating test validation sub-task for story " + story.key
         test_validation, components = prepare_test_validation_subtask(story)
@@ -110,7 +111,7 @@ def create_test_validation_subtask(jira, output_info):
 
 
 def create_poshi_automation_task(jira, output_info):
-    stories_without_poshi_automation_created = jira.search_issues('filter=55095')
+    stories_without_poshi_automation_created = jira.search_issues(Filter.FI_Ready_to_Create_poshi_tasks)
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
@@ -127,7 +128,8 @@ def create_poshi_automation_task(jira, output_info):
 
 
 def create_technical_sub_task_test_scope_out_of_scope_creation(jira, output_info):
-    issues_to_update = jira.search_issues('filter=56504', fields="key, components")
+    issues_to_update = jira.search_issues(Filter.FI_Test_Scope_out_of_Scope_Creation_task_creation,
+                                          fields=['key', 'components'])
     summary = "Test Scenarios Coverage | Test Scope/out of Scope Creation"
     description = ""
     output_info += "Creating \"Test Scope/out of Scope Creation\" sub tasks"
