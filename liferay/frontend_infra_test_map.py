@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from helpers import create_output_files
+from jira_constants import Filter
 from jira_liferay import get_jira_connection
 from helpers_testmap import *
 from testmap_jira import get_testmap_connection
@@ -13,8 +14,8 @@ OUTPUT_INFO_FILE_NAME = "output_info.txt"
 
 
 def update_frontend_infra_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, 'filter=50189', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB,
-                                  JIRA_TEST_MAP_TAB_RANGE)
+    output_info = update_test_map(sheet, jira, output_info, Filter.GSheets_FI_7_4_CE_GA_All, ECHO_TESTMAP_ID,
+                                  JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 
 

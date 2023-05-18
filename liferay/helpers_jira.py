@@ -1,3 +1,5 @@
+from jira_constants import CustomField, Status
+
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
                           'JS-Unit)||Is it covered by BackEnd ? (unit or integration)||Could it be covered by ' \
                           'POSHI?||'
@@ -23,7 +25,7 @@ def close_functional_automation_subtask(jira_local, story, poshi_task=''):
         if subtask.fields.summary == 'Product QA | Functional Automation' or subtask.fields.summary == 'Automation ' \
                                                                                                        'Test Creation':
             testing_subtask = subtask.id
-            jira_local.transition_issue(testing_subtask, transition='Closed')
+            jira_local.transition_issue(testing_subtask, transition=Status.Closed)
             if poshi_task:
                 jira_local.add_comment(testing_subtask, 'Closing. Poshi automation is going to be done in '
                                        + poshi_task)
@@ -34,7 +36,7 @@ def close_functional_automation_subtask(jira_local, story, poshi_task=''):
 
 def create_poshi_automation_task_for(jira_local, issue, summary, description):
     parent_key = issue.key
-    epic_link = issue.get_field('customfield_12821')
+    epic_link = issue.get_field(CustomField.Epic_Link)
     components = []
     for component in issue.fields.components:
         components.append({'name': component.name})
@@ -44,7 +46,7 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
         'description': description,
         'issuetype': {'name': 'Testing'},
         'components': components,
-        'customfield_12821': epic_link
+        CustomField.Epic_Link: epic_link
     }
 
     new_issue = jira_local.create_issue(fields=issue_dict)

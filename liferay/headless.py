@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
+from jira_constants import Status, Filter
 from jira_liferay import get_jira_connection
 
 
@@ -21,7 +22,8 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
 
 def update_creation_subtask(jira):
     print("Updating test creation subtasks for Headless team...")
-    stories_with_test_creation_subtask = jira.search_issues('filter=54996')
+    stories_with_test_creation_subtask = \
+        jira.search_issues(Filter.Integration_In_Development_Sub_task_creation_Headless_team)
     for story in stories_with_test_creation_subtask:
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
@@ -29,7 +31,7 @@ def update_creation_subtask(jira):
             assignee = jira.issue(key, fields='assignee')
             if summary == 'Test Scenarios Coverage | Test Creation':
                 print("Updating "+key+" ...")
-                if subtask.fields.status.name == "Open":
+                if subtask.fields.status.name == Status.Open:
                     description = '*Output*\r\n' \
                                   ' # Our table with the Test scenarios/test cases to be validated in the \r\n' \
                                   'validation phase.\r\n' \
@@ -60,14 +62,14 @@ def update_creation_subtask(jira):
 
 def update_validation_subtask(jira):
     print("Updating test validation subtasks for Headless team...")
-    stories_with_test_validation_subtask = jira.search_issues('filter=55398')
+    stories_with_test_validation_subtask = jira.search_issues(Filter.Product_QA_Test_Validation_Round_1)
     for story in stories_with_test_validation_subtask:
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             key = subtask.key
             assignee = jira.issue(key, fields='assignee')
             if 'Product QA | Test Validation' in summary:
-                if subtask.fields.status.name == "Open":
+                if subtask.fields.status.name == Status.Open:
                     print("Updating "+key+" ...")
                     description = '*Context*\r\n' \
                                   'Execute the tests of the parent story, and use the information in the *Test \r\n' \
@@ -118,7 +120,8 @@ def update_validation_subtask(jira):
 def create_poshi_automation_task(jira):
     print("Creating Poshi tasks...")
     output_message = ''
-    stories_without_poshi_automation_created = jira.search_issues('filter=54999')
+    stories_without_poshi_automation_created = \
+        jira.search_issues(Filter.Headless_Team_Ready_to_create_POSHI_Automation_Task)
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':

@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 from helpers import create_output_files
 from helpers_jira import *
+from jira_constants import Status, CustomField, Filter
 from jira_liferay import get_jira_connection
 
 DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
-
-READY_FOR_TESTING_STATUS_ID = '10619'
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
@@ -25,11 +24,12 @@ def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tabl
 
 
 def assign_qa_engineer(jira, output_info):
-    stories_without_qa_engineer = jira.search_issues('filter=54607', fields="key, assignee, customfield_24852")
+    stories_without_qa_engineer = jira.search_issues(Filter.Assign_QA_Engineer,
+                                                     fields=['key', 'assignee', CustomField.QA_Engineer])
     for story in stories_without_qa_engineer:
         qa_engineer = [{'name': story.fields.assignee.name}]
         story.update(
-            fields={'customfield_24852': qa_engineer}
+            fields={CustomField.QA_Engineer: qa_engineer}
         )
         output_info += "* " + story.fields.assignee.name + " has been assigned as QA for " + story.key + \
                        "(https://issues.liferay.com/browse/" + story.key + ")\n"
@@ -39,7 +39,7 @@ def assign_qa_engineer(jira, output_info):
 
 def close_ready_for_release_bugs(jira):
     print("Closing bugs in Ready for Release status...")
-    bugs_in_ready_for_release = jira.search_issues('filter=54632')
+    bugs_in_ready_for_release = jira.search_issues(Filter.All_bugs_in_Ready_for_Release)
     all_bugs_closed = True
     for bug in bugs_in_ready_for_release:
         bug_id = bug.id
@@ -52,11 +52,11 @@ def close_ready_for_release_bugs(jira):
         can_be_closed = True
         for subtask in bug.fields.subtasks:
             status = subtask.fields.status.name
-            if status != 'Closed':
+            if status != Status.Closed:
                 can_be_closed = False
                 break
         if can_be_closed:
-            jira.transition_issue(bug_id, transition='Closed')
+            jira.transition_issue(bug_id, transition=Status.Closed)
             jira.add_comment(bug_id, 'Closing directly since we are not considering Ready for Release status so far',
                              visibility={'type': 'group', 'value': 'liferay-qa'})
         else:
@@ -70,7 +70,7 @@ def close_ready_for_release_bugs(jira):
 
 def creating_testing_subtasks(jira):
     print("Creating subtasks for Echo team...")
-    stories_without_testing_subtask = jira.search_issues('filter=54572')
+    stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation)
     for story in stories_without_testing_subtask:
         print("Creating sub-task for story " + story.id)
         needs_backend = True
@@ -100,7 +100,7 @@ def creating_testing_subtasks(jira):
 
 
 def create_testing_table_for_stories(jira, output_info):
-    stories_without_testing_table = jira.search_issues('filter=54772')
+    stories_without_testing_table = jira.search_issues(Filter.Ready_to_create_test_table_on_description)
     for story in stories_without_testing_table:
         current_description = story.fields.description
         poshi_automation_table = AUTOMATION_TABLE_HEADER + '\r\n'
@@ -126,7 +126,7 @@ def create_testing_table_for_stories(jira, output_info):
 
 
 def create_poshi_automation_task(jira, output_warning, output_info):
-    stories_without_poshi_automation_created = jira.search_issues('filter=54646')
+    stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task)
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
         description = story.fields.description
@@ -178,17 +178,18 @@ def create_poshi_automation_task(jira, output_warning, output_info):
 
 
 def create_poshi_automation_task_for_bugs(jira, output_info):
-    bugs_without_poshi_automation_created = jira.search_issues('filter=51790')
+    bugs_without_poshi_automation_created = \
+        jira.search_issues(Filter.Closed_Bugs_with_FP4_and_FP5_without_automation_task)
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
-        jira.transition_issue(poshi_task, transition='Selected for Development')
+        jira.transition_issue(poshi_task, transition=Status.Selected_for_development)
         output_info += "* Automation task created for bug " + bug.key + \
                        "(https://issues.liferay.com/browse/" + bug.key + ")\n"
     return output_info
 
 
 def fill_round_technical_testing_description(jira, output_info):
-    round_technical_testing_sub_tasks = jira.search_issues('filter=56455', fields="key")
+    round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields="key")
     for task in round_technical_testing_sub_tasks:
         updated_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
                               "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2. Not " \
@@ -198,8 +199,9 @@ def fill_round_technical_testing_description(jira, output_info):
 
 
 def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
-    story_to_ready_for_pm_review = jira.search_issues('filter=55152', fields="key, id, description, labels, "
-                                                                             "issuelinks, status")
+    story_to_ready_for_pm_review = jira.search_issues(Filter.Stories_ready_to_be_closed,
+                                                      fields=['key', 'id', 'description', 'labels',
+                                                              'issuelinks', 'status'])
     for story in story_to_ready_for_pm_review:
         test_cases = read_test_cases_table_from_description(story.fields.description)
         can_be_closed = True
@@ -222,11 +224,11 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                         linked_issue_key = link.outwardIssue
                     if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
                         if linked_issue_key.fields.status.name == 'Open':
-                            jira.transition_issue(linked_issue_key.id, transition='Selected for Development')
+                            jira.transition_issue(linked_issue_key.id, transition=Status.Selected_for_development)
                         break
-            if story.get_field("status").id == READY_FOR_TESTING_STATUS_ID:
-                jira.transition_issue(story.id, transition='In Testing')
-            jira.transition_issue(story.id, transition='Ready for Product Review')
+            if story.get_field("status").id == Status.Ready_for_testing:
+                jira.transition_issue(story.id, transition=Status.In_Testing)
+            jira.transition_issue(story.id, transition=Status.Ready_for_Product_Review)
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
             output_info += "* Story " + story.key + \
                            " (https://issues.liferay.com/browse/" + story.key + ") has been send for PM review\n"
