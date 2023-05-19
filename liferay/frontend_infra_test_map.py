@@ -14,10 +14,12 @@ OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
 
+
 def update_frontend_infra_bug_threshold(sheet, jira, output_info):
     output_info = update_bug_threshold(sheet, jira, output_info, 'filter=56141', ECHO_TESTMAP_ID, BUG_THRESHOLD_TAB,
-                                  BUG_THRESHOLD_TAB_RANGE)
+                                       BUG_THRESHOLD_TAB_RANGE)
     return output_info
+
 
 def update_frontend_infra_test_map(sheet, jira, output_info):
     output_info = update_test_map(sheet, jira, output_info, 'filter=50189', ECHO_TESTMAP_ID, JIRA_TEST_MAP_TAB,
