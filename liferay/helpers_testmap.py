@@ -156,7 +156,7 @@ def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira
                             story.get_field('status').name,
                             labels,
                             components,
-                            story.get_field(CustomField.Fix_Priority).name])
+                            story.get_field(CustomField.Fix_Priority).value])
 
     _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
