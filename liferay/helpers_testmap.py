@@ -145,7 +145,7 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
 def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
     stories_to_add_to_test_map_bug_threshold = get_all_issues(jira, jira_filter,
                                                 ["key", "summary", "issuetype", "status", "labels",
-                                                 "components", "customfield_12523"])
+                                                 "components", CustomField.Fix_Priority])
     body_values = []
     for story in stories_to_add_to_test_map_bug_threshold:
         components = ', '.join(get_components(story))
@@ -156,7 +156,7 @@ def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira
                             story.get_field('status').name,
                             labels,
                             components,
-                            story.get_field('customfield_12523').name])
+                            story.get_field(CustomField.Fix_Priority).name])
 
     _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
