@@ -125,7 +125,7 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     return ''
 
 
-def update_bug_threshold(sheet, jira, bug_threshold_output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
+def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
     stories_to_add_to_test_map_bug_threshold = get_all_issues(jira, jira_filter,
                                                 ["key", "summary", "issuetype", "status", "labels",
                                                  "components", "customfield_12523"])
@@ -155,9 +155,9 @@ def update_bug_threshold(sheet, jira, bug_threshold_output_info, jira_filter, te
 
     set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
 
-    bug_threshold_output_info += 'Bug Threshold from Test Map Updated\n'
+    output_info += 'Bug Threshold from Test Map Updated\n'
 
-    return bug_threshold_output_info
+    return output_info
 
 
 def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
