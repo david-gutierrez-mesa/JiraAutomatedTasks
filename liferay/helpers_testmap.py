@@ -150,13 +150,16 @@ def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira
     for story in stories_to_add_to_test_map_bug_threshold:
         components = ', '.join(get_components(story))
         labels = ','.join(story.get_field('labels'))
+        fix_priority = ''
+        if story.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = story.get_field(CustomField.Fix_Priority).value
         body_values.append([story.key,
                             story.get_field('summary'),
                             story.get_field('issuetype').name,
                             story.get_field('status').name,
                             labels,
                             components,
-                            story.get_field(CustomField.Fix_Priority).value])
+                            fix_priority])
 
     _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
