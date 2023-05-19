@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
-from jira_constants import Status, Filter
 from jira_liferay import get_jira_connection
 
 
@@ -22,8 +21,7 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
 
 def update_creation_subtask(jira):
     print("Updating test creation subtasks for Headless team...")
-    stories_with_test_creation_subtask = \
-        jira.search_issues(Filter.Integration_In_Development_Sub_task_creation_Headless_team)
+    stories_with_test_creation_subtask = jira.search_issues('filter=54996')
     for story in stories_with_test_creation_subtask:
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
