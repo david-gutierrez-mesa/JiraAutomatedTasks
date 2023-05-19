@@ -15,10 +15,10 @@ OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
 OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
 
-def update_frontend_infra_bug_threshold(sheet, jira, bug_threshold_output_info):
-    bug_threshold_output_info = update_bug_threshold(sheet, jira, bug_threshold_output_info, 'filter=56141', ECHO_TESTMAP_ID, BUG_THRESHOLD_TAB,
+def update_frontend_infra_bug_threshold(sheet, jira, output_info):
+    output_info = update_bug_threshold(sheet, jira, output_info, 'filter=56141', ECHO_TESTMAP_ID, BUG_THRESHOLD_TAB,
                                   BUG_THRESHOLD_TAB_RANGE)
-    return bug_threshold_output_info
+    return output_info
 
 def update_frontend_infra_test_map(sheet, jira, output_info):
     output_info = update_test_map(sheet, jira, output_info, Filter.GSheets_FI_7_4_CE_GA_All, ECHO_TESTMAP_ID,
@@ -33,8 +33,7 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_frontend_infra_test_map(sheet_connection, jira_connection, info)
-    bug_threshold_info = update_frontend_infra_bug_threshold(sheet_connection, jira_connection, bug_threshold_info)
+    info = update_frontend_infra_bug_threshold(sheet_connection, jira_connection, info)
 
     create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME],
-                        [info, OUTPUT_INFO_FILE_NAME],
-                        [bug_threshold_info, OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME])
+                        [info, OUTPUT_INFO_FILE_NAME])
