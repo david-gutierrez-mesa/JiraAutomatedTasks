@@ -31,7 +31,6 @@ def update_frontend_infra_test_map(sheet, jira, output_info):
 if __name__ == "__main__":
     warning = ''
     info = ''
-    bug_threshold_info = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_frontend_infra_test_map(sheet_connection, jira_connection, info)
