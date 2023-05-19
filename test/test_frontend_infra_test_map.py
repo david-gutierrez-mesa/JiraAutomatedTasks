@@ -7,7 +7,7 @@ from testmap_jira import get_testmap_connection
 
 class EchoTestMapTests(unittest.TestCase):
 
-    def test_echo_update_test_map(self):
+    def test_update_frontend_infra_test_map(self):
         try:
             info_test = ''
             jira_connection_test = get_jira_connection()
