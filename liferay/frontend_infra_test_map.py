@@ -17,8 +17,8 @@ OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
 
 
 def update_frontend_infra_bug_threshold(sheet, jira, output_info):
-    output_info = update_bug_threshold(sheet, jira, output_info, 'filter=56141', ECHO_TESTMAP_ID, BUG_THRESHOLD_TAB,
-                                       BUG_THRESHOLD_TAB_RANGE)
+    output_info = update_bug_threshold(sheet, jira, output_info, Filter.FI_ALL_bugs_unresolved_Manoel, ECHO_TESTMAP_ID,
+                                       BUG_THRESHOLD_TAB, BUG_THRESHOLD_TAB_RANGE)
     return output_info
 
 
