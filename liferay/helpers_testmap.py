@@ -5,6 +5,22 @@ from helpers_jira import get_all_issues
 from jira_constants import CustomField
 
 
+def _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab):
+    sheet.values().clear(
+        spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
+
+    body = {
+        'values': body_values
+    }
+    sheet.values().append(
+        spreadsheetId=testmap_id,
+        range=jira_test_map_tab_range,
+        valueInputOption='USER_ENTERED',
+        body=body).execute()
+
+    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
+
+
 def component_row(component, matrix):
     position = -1
     for i, matrix_i in enumerate(matrix):
@@ -142,19 +158,7 @@ def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira
                             components,
                             story.get_field('customfield_12523').name])
 
-    sheet.values().clear(
-        spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
-
-    body = {
-        'values': body_values
-    }
-    sheet.values().append(
-        spreadsheetId=testmap_id,
-        range=jira_test_map_tab_range,
-        valueInputOption='USER_ENTERED',
-        body=body).execute()
-
-    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
+    _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
     output_info += 'Bug Threshold from Test Map Updated\n'
 
@@ -182,19 +186,7 @@ def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test
                             components,
                             epic])
 
-    sheet.values().clear(
-        spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
-
-    body = {
-        'values': body_values
-    }
-    sheet.values().append(
-        spreadsheetId=testmap_id,
-        range=jira_test_map_tab_range,
-        valueInputOption='USER_ENTERED',
-        body=body).execute()
-
-    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
+    _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
     output_info += 'Test map updated\n'
 
