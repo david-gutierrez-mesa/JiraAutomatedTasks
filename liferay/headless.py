@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
+from jira_constants import Status, Filter
 from jira_liferay import get_jira_connection
 
 
