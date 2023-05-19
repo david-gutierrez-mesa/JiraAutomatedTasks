@@ -7,7 +7,7 @@ from helpers_testmap import *
 from testmap_jira import get_testmap_connection
 
 BUG_THRESHOLD_TAB = 'JIRA-BUGS'
-BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B2:L'
+BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B3:L'
 FI_TESTMAP_ID = '1_liLRC1XHBydH_mfeeDifgKxBWN3kfRtX7uqbKgJ72k'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
