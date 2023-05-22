@@ -33,12 +33,11 @@ def get_credentials():
 
     else:
         print('The file', path_to_user, 'does not exist')
-        print("No user for Jira access set as environment variable. Please set one.")
-        print("Enter User and password to access Jira instance https://issues.liferay.com\n")
+        print("Enter e-mail and token to access Jira instance. Password is not allowed anymore.\n")
         username = input("Username: ")
         password = getpass.getpass("Password: ")
 
-        key = RSA.generate(1024)
+        key = RSA.generate(2048)
         encryptor = PKCS1_OAEP.new(key)
         encrypted_password = encryptor.encrypt(password.encode())
 

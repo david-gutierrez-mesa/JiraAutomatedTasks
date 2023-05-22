@@ -26,6 +26,11 @@ class Filter:
     Stories_to_add_into_test_map = 'filter=55104'
 
 
+class Instance:
+    Jira_URL = "https://issues.liferay.com"
+    Type = "Server"
+
+
 class Status:
     Closed = 'Closed'
     In_Testing = 'In Testing'
