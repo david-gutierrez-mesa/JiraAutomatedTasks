@@ -8,4 +8,4 @@ googleapis-common-protos==1.57.0
 pycryptodome==3.15.0
 pytz==2022.7
 setuptools==60.2.0
-jira==3.4.1
+jira==3.5.0
