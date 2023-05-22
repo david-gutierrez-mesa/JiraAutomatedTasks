@@ -72,7 +72,7 @@ def creating_testing_subtasks(jira):
     print("Creating subtasks for Echo team...")
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation)
     for story in stories_without_testing_subtask:
-        print("Creating sub-task for story " + story.id)
+        print("Creating sub-task for story " + story.key)
         needs_backend = True
         needs_frontend = True
         for subtask in story.fields.subtasks:
