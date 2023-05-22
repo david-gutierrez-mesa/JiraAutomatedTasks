@@ -193,7 +193,9 @@ def check_control_panel_tab(sheet, output_warning):
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_warning += '* Please check Control Panel: ' + status[0] + '\n'
+            output_warning += '* Please check < https://docs.google.com/spreadsheets/d/1-7-qJE-J3' \
+                              '-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0/edit#gid=664716482|Control Panel>: ' + status[0] + \
+                              '\n '
     return output_warning
 
 
