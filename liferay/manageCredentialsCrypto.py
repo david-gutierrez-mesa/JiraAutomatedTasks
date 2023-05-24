@@ -17,16 +17,14 @@ def get_credentials():
 
     if path_to_user.is_file():
 
-        f = open(private_key_file, 'rb')
-        key = RSA.import_key(f.read())
+        with open(private_key_file, 'rb') as f:
+            key = RSA.import_key(f.read())
 
-        f = open(path_to_user, 'rb')
-        username = f.readline().decode().rstrip()
-        f.close()
+        with open(path_to_user, 'rb') as f:
+            username = f.readline().decode().rstrip()
 
-        f = open(path_to_password, 'rb')
-        encrypted_password = f.read()
-        f.close()
+        with open(path_to_password, 'rb') as f:
+            encrypted_password = f.read()
 
         decryptor = PKCS1_OAEP.new(key)
         password = decryptor.decrypt(encrypted_password).decode()
