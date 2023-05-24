@@ -33,8 +33,9 @@ def main():
                     '[IMPORTED] Filter "' + filter_to_import.name + '" did NOT exists in destination asn was imported')
                 imported += 1
             except JIRAError as err:
-                print('[ERROR] Filter "' + filter_to_import.name + '" can not be automatically imported. Please '
-                                                                   'create it manually:\n    ' + filter_to_import.jql)
+                print('[ERROR] Filter "' + filter_to_import.name +
+                      '" can not be automatically imported. Please create it manually:\n    ' + filter_to_import.jql +
+                      '    Log:\n', err)
                 error += 1
     print('\n\nTOTAL RESULTS:\n'
           '   Successfully imported = ' + str(imported) + '\n' +
