@@ -3,14 +3,14 @@ import getopt
 import sys
 
 from helpers_google_sheet import set_update_time_in_cell, create_collapse_group_body
+from jira_constants import Instance
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
 
-SUB_COMPONENTS_LPS_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents/LPS.json'
-SUB_COMPONENTS_COMMERCE_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents' \
-                                   '/COMMERCE.json'
-SUB_COMPONENTS_LRAC_JSON_URL = 'https://issues.liferay.com/rest/net.brokenbuild.subcomponents/1.0/subcomponents' \
-                               '/LRAC.json'
+SUB_COMPONENTS_URL = Instance.Jira_URL + '/rest/net.brokenbuild.subcomponents/1.0/subcomponents'
+SUB_COMPONENTS_COMMERCE_JSON_URL = SUB_COMPONENTS_URL + '/COMMERCE.json'
+SUB_COMPONENTS_LPS_JSON_URL = SUB_COMPONENTS_URL + '/LPS.json'
+SUB_COMPONENTS_LRAC_JSON_URL = SUB_COMPONENTS_URL + '/LRAC.json'
 
 EPM_SPREADSHEET_ID = '1azJIucqKawYB7TMCnUIfmNac9iQEfkPDR5JKM6Nzia0'
 EPM_TAB_BY_LEVEL_NAME = 'By Top Level Grouping'
