@@ -13,7 +13,7 @@ JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message_fi.txt"
 OUTPUT_INFO_FILE_NAME = "output_info_fi.txt"
-OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
+OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info_fi.txt"
 
 
 def update_frontend_infra_bug_threshold(sheet, jira, output_info):

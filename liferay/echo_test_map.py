@@ -26,8 +26,8 @@ JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
 OUTPUT_INFO_FILE_NAME = "output_info.txt"
-OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message.txt"
-OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message.txt"
+OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
+OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
 
 
