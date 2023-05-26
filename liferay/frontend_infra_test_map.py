@@ -11,8 +11,8 @@ BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B3:L'
 FI_TESTMAP_ID = '1_liLRC1XHBydH_mfeeDifgKxBWN3kfRtX7uqbKgJ72k'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
-OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
-OUTPUT_INFO_FILE_NAME = "output_info.txt"
+OUTPUT_MESSAGE_FILE_NAME = "output_message_fi.txt"
+OUTPUT_INFO_FILE_NAME = "output_info_fi.txt"
 OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
 
 
