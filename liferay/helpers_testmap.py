@@ -132,7 +132,7 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     position = get_line_position_by_test_case_name(lps_list, header_length, line[0][8], start, end)
     if position == -1:
         return '* Test with summary "' + line[0][8] + '" not found in story ' + line[0][6] + \
-               "(https://issues.liferay.com/browse/" + line[0][6] + ")\n"
+               "(" + Instance.Jira_URL + "/browse/" + line[0][6] + ")\n"
     body = {
         'values': line
     }
