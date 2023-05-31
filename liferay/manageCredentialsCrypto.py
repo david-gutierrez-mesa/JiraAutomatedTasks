@@ -6,11 +6,20 @@ import os
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from os.path import expanduser
+from shutil import rmtree
+
+FOLDER_NAME = ".jira_user"
+
+
+def delete_credentials():
+    home = Path(expanduser("~"))
+    folder = home / FOLDER_NAME
+    rmtree(folder)
 
 
 def get_credentials():
     home = Path(expanduser("~"))
-    folder = home / ".jira_user"
+    folder = home / FOLDER_NAME
     path_to_user = folder / "user"
     path_to_password = folder / "credentials"
     private_key_file = folder / "keys"
@@ -59,5 +68,6 @@ def get_credentials():
 
 if __name__ == "__main__":
     print("Set the credentials to be used when accessing jira.")
+    delete_credentials()
     get_credentials()
     print("Credentials set.")
