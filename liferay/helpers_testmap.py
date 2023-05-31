@@ -2,7 +2,7 @@ from itertools import islice
 
 from helpers_google_sheet import *
 from helpers_jira import get_all_issues
-from jira_constants import CustomField
+from jira_constants import CustomField, Instance
 
 
 def _update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab):
@@ -181,7 +181,7 @@ def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test
             epic = 'n/a'
         else:
             epic = jira.issue(epic_link, fields='summary').get_field('summary')
-        body_values.append([story.key,
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + story.key + '","' + story.key + '")',
                             story.get_field('summary'),
                             story.get_field('issuetype').name,
                             story.get_field('status').name,
