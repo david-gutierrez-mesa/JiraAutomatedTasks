@@ -51,8 +51,8 @@ def _insert_lines_in_component(sheet, components_testcases_dict):
 def _line_data(lps, summary, priority, test_type, test_status, test_case, test_name, comments, blocked_reason,
                backend_automated, frontend_automated):
     link_text = '=IF(REGEXMATCH(INDIRECT(ADDRESS(ROW(),COLUMN()-1)), ","), HYPERLINK(CONCATENATE(' \
-                '"https://issues.liferay.com/issues/?jql=key%20in%20(", INDIRECT(ADDRESS(ROW(),COLUMN()-1)), ")" ),' \
-                '"Here"), HYPERLINK(CONCAT("https://issues.liferay.com/browse/",INDIRECT(ADDRESS(ROW(),COLUMN()-1))),' \
+                '"' + Instance.Jira_URL + '/issues/?jql=key%20in%20(", INDIRECT(ADDRESS(ROW(),COLUMN()-1)), ")" ),' \
+                '"Here"), HYPERLINK(CONCAT("' + Instance.Jira_URL + '/browse/",INDIRECT(ADDRESS(ROW(),COLUMN()-1))),' \
                 '"Here")) '
     priority_text = ''
     match remove_underline(priority.casefold()):

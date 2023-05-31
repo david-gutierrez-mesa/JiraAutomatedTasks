@@ -32,7 +32,7 @@ def assign_qa_engineer(jira, output_info):
             fields={CustomField.QA_Engineer: qa_engineer}
         )
         output_info += "* " + story.fields.assignee.name + " has been assigned as QA for " + story.key + \
-                       "(https://issues.liferay.com/browse/" + story.key + ")\n"
+                       "(" + Instance.Jira_URL + "/browse/" + story.key + ")\n"
 
     return output_info
 
@@ -120,7 +120,7 @@ def create_testing_table_for_stories(jira, output_info):
 
         updated_description = current_description + '\r\n\r\nh3. Test Scenarios\r\n' + poshi_automation_table
         output_info += "* Testing table created for story " + story.key + \
-                       "(https://issues.liferay.com/browse/" + story.key + ")\n"
+                       "(" + Instance.Jira_URL + "/browse/" + story.key + ")\n"
         story.update(fields={'description': updated_description})
     return output_info
 
@@ -143,7 +143,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                     if cells[2].casefold() == 'TBD'.casefold() \
                             or cells[4].casefold() == 'TBD'.casefold() \
                             or cells[5].casefold() == 'TBD'.casefold():
-                        output_info += "Table for story " + story.key + "(https://issues.liferay.com/browse/" \
+                        output_info += "Table for story " + story.key + "(" + Instance.Jira_URL + "/browse/" \
                                        + story.key + ") is not up to date. Skipping.\n"
                         skip_story = True
                         break
@@ -162,14 +162,14 @@ def create_poshi_automation_task(jira, output_warning, output_info):
             if is_automation_task_needed:
                 poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                 output_info += "* Automation task created for story" + story.key + \
-                               "(https://issues.liferay.com/browse/" + story.key + ")\n"
+                               "(" + Instance.Jira_URL + "/browse/" + story.key + ")\n"
                 close_functional_automation_subtask(jira, story, poshi_task.key)
             else:
                 jira.add_comment(story, "No Poshi automation is needed.")
                 story.fields.labels.append("poshi_test_not_needed")
                 story.update(fields={"labels": story.fields.labels})
                 output_info += "* Automation task not needed or not possible to create for story" + story.key + \
-                               "(https://issues.liferay.com/browse/" + story.key + ")\n"
+                               "(" + Instance.Jira_URL + "/browse/" + story.key + ")\n"
                 close_functional_automation_subtask(jira, story)
         else:
             output_warning += "Story " + story.key + " don't have test table. \n"
@@ -184,7 +184,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
         jira.transition_issue(poshi_task, transition=Status.Selected_for_development)
         output_info += "* Automation task created for bug " + bug.key + \
-                       "(https://issues.liferay.com/browse/" + bug.key + ")\n"
+                       "(" + Instance.Jira_URL + "/browse/" + bug.key + ")\n"
     return output_info
 
 
@@ -231,7 +231,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
             jira.transition_issue(story.id, transition=Status.Ready_for_Product_Review)
             jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
             output_info += "* Story " + story.key + \
-                           " (https://issues.liferay.com/browse/" + story.key + ") has been send for PM review\n"
+                           " (" + Instance.Jira_URL + "/browse/" + story.key + ") has been send for PM review\n"
     return output_warning, output_info
 
 
