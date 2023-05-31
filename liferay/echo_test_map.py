@@ -193,7 +193,7 @@ def check_control_panel_tab(sheet, output_warning):
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_warning += '* Please check < https://docs.google.com/spreadsheets/d/1-7-qJE-J3' \
+            output_warning += '* Please check <https://docs.google.com/spreadsheets/d/1-7-qJE-J3' \
                               '-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0/edit#gid=664716482|Control Panel>: ' + status[0] + \
                               '\n '
     return output_warning
@@ -258,10 +258,10 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
+    info = update_echo_test_map(sheet_connection, jira_connection, info)
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
-    info = update_echo_test_map(sheet_connection, jira_connection, info)
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
                                                                       bug_threshold_exceed, bug_threshold_warning)
 
