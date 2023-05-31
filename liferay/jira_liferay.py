@@ -4,13 +4,13 @@ from jira_constants import Instance
 from manageCredentialsCrypto import get_credentials
 
 
-def get_jira_connection():
+def get_jira_connection(instance_url=Instance.Jira_URL, instance_type=Instance.Type):
     login = get_credentials()
     try:
-        if Instance.Type == "Cloud":
-            jira = JIRA(Instance.Jira_URL, basic_auth=login)
-        elif Instance.Type == "Server":
-            jira = JIRA(Instance.Jira_URL, token_auth=login[1])
+        if instance_type == "Cloud":
+            jira = JIRA(instance_url, basic_auth=login)
+        elif instance_type == "Server":
+            jira = JIRA(instance_url, token_auth=login[1])
         else:
             raise Exception("Sorry, only Cloud and Server are valid values for Instance.Type")
     except Exception as err:
