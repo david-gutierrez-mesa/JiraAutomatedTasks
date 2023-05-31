@@ -1,11 +1,10 @@
-from jira_constants import CustomField, Status
+from jira_constants import CustomField, Status, Instance
 
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
                           'JS-Unit)||Is it covered by BackEnd ? (unit or integration)||Could it be covered by ' \
                           'POSHI?||'
-LIFERAY_JIRA_URL = "https://issues.liferay.com/"
-LIFERAY_JIRA_BROWSE_URL = LIFERAY_JIRA_URL + "browse/"
-LIFERAY_JIRA_ISSUES_URL = LIFERAY_JIRA_URL + "issues/"
+LIFERAY_JIRA_BROWSE_URL = Instance.Jira_URL + "/browse/"
+LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
 def __initialize_subtask_technical_test(story, components, summary, description):
