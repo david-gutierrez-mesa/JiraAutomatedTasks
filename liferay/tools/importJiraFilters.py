@@ -11,10 +11,9 @@ from utils.jira_helpers import set_filter_permissions
 
 def main():
     print("Please, enter the URL of Jira instance where you want to import your filters\n")
-    # jira_url = input("Jira URL: ")
-    jira_url = "https://liferay-sandbox-822.atlassian.net"
+    jira_url = input("Jira URL: ")
     jira_type = "Cloud"
-    # delete_credentials()
+    delete_credentials()
     jira_connection = get_jira_connection(jira_url, jira_type)
     user_id = jira_connection.user(jira_connection.current_user()).emailAddress.split('@')[0]
     file_name = user_id + '_filters.pkl'
@@ -41,7 +40,7 @@ def main():
                 print(
                     '[IMPORTED] Filter "' + filter_to_import.name + '" did NOT exists in destination and was imported')
                 for permission in filter_to_import.sharePermissions:
-                    set_filter_permissions(jira_connection, jira_url, new_filter.id, permission)
+                    set_filter_permissions(jira_connection, jira_url, new_filter, permission)
                 imported += 1
             except JIRAError as err:
                 print('[ERROR] Filter "' + filter_to_import.name +

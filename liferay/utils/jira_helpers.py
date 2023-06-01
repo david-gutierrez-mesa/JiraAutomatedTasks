@@ -5,7 +5,8 @@ from requests.auth import HTTPBasicAuth
 from manageCredentialsCrypto import get_credentials
 
 
-def set_filter_permissions(jira_connection, jira_url, filter_id, permission):
+def set_filter_permissions(jira_connection, jira_url, new_filter, permission):
+    filter_id = new_filter.id
     url = jira_url + "/rest/api/2/filter/" + filter_id
 
     credentials = get_credentials()
@@ -20,7 +21,54 @@ def set_filter_permissions(jira_connection, jira_url, filter_id, permission):
 
     permission_type = permission.type
 
-    if permission.view:
+    if permission.edit:
+
+        if permission_type == 'group':
+            payload = json.dumps({
+                "editPermissions": [
+                    {
+                        "type": "group",
+                        "group":
+                            {
+                                "name": permission.group.name
+                            }
+                    }
+                ],
+                "id": filter_id,
+                "name": new_filter.name
+            })
+        elif permission_type == 'project':
+            project_id = jira_connection.project(permission.project)
+            payload = json.dumps({
+                "editPermissions": [
+                    {
+                        "type": "project",
+                        "project":
+                            {
+                                "id": project_id
+                            }
+                    }
+                ],
+                "id": filter_id,
+                "name": new_filter.name
+            })
+        elif permission_type == 'user':
+            account_id = jira_connection.search_users(query=permission.user.key)[0].accountId
+            payload = json.dumps({
+                "editPermissions": [
+                    {
+                        "type": "user",
+                        "user":
+                            {
+                                "accountId": account_id
+                            }
+                    }
+                ],
+                "id": filter_id,
+                "name": new_filter.name
+            })
+        request_type = "PUT"
+    elif permission.view:
         url += "/permission"
         if permission_type == 'group':
             payload = json.dumps({
@@ -34,36 +82,7 @@ def set_filter_permissions(jira_connection, jira_url, filter_id, permission):
                 "rights": 1,
                 "type": "project"
             })
-            request_type = "POST"
-    elif permission.edit:
-        edit_permissions = ''
-        if permission_type == 'group':
-            group = json.dumps({
-                "name": permission.group.name
-            })
-            edit_permissions = json.dumps({
-                "group": group
-            })
-        elif permission_type == 'project':
-            project_id = jira_connection.project(permission.project)
-            project = json.dumps({
-                "id": project_id
-            })
-            edit_permissions = json.dumps({
-                "project": project
-            })
-        elif permission_type == 'user':
-            account_id = jira_connection.search_users(user=permission.user)[0].id
-            user = json.dumps({
-                "accountId": account_id
-            })
-            edit_permissions = json.dumps({
-                "user": user
-            })
-        payload = json.dumps({
-            "editPermissions": edit_permissions
-        })
-        request_type = "PUT"
+        request_type = "POST"
 
     response = requests.request(
         request_type,
