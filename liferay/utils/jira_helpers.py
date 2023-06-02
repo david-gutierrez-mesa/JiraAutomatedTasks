@@ -5,7 +5,18 @@ from requests.auth import HTTPBasicAuth
 from manageCredentialsCrypto import get_credentials
 
 
-def set_filter_permissions(jira_connection, jira_url, new_filter, permission):
+def _parse_permission(permissions):
+    parsed_permission = []
+    for permission in permissions:
+        current_permission = {
+            "id": permission.id,
+            "type": permission.type
+        }
+        parsed_permission.append(current_permission)
+    return parsed_permission
+
+
+def set_filter_permissions(jira_connection, jira_url, new_filter, permissions, error_message=''):
     filter_id = new_filter.id
     url = jira_url + "/rest/api/2/filter/" + filter_id
 
@@ -16,80 +27,69 @@ def set_filter_permissions(jira_connection, jira_url, new_filter, permission):
         "Accept": "application/json",
         "Content-Type": "application/json"
     }
-    payload = ''
-    request_type = ''
-
-    permission_type = permission.type
-
-    if permission.edit:
+    for permission in permissions:
+        current_filter = jira_connection.filter(filter_id)
+        edit_permissions = _parse_permission(current_filter.editPermissions)
+        share_permissions = _parse_permission(current_filter.sharePermissions)
+        permission_type = permission.type
+        current_permission = dict()
 
         if permission_type == 'group':
-            payload = json.dumps({
-                "editPermissions": [
+            current_permission = {
+                "type": "group",
+                "group":
                     {
-                        "type": "group",
-                        "group":
-                            {
-                                "name": permission.group.name
-                            }
+                        "name": permission.group.name
                     }
-                ],
-                "id": filter_id,
-                "name": new_filter.name
-            })
+            }
         elif permission_type == 'project':
-            project_id = jira_connection.project(permission.project)
-            payload = json.dumps({
-                "editPermissions": [
+            project_id = jira_connection.project(permission.project).id
+            current_permission = {
+                "type": "project",
+                "project":
                     {
-                        "type": "project",
-                        "project":
-                            {
-                                "id": project_id
-                            }
+                        "id": project_id
                     }
-                ],
-                "id": filter_id,
-                "name": new_filter.name
-            })
+            }
         elif permission_type == 'user':
-            account_id = jira_connection.search_users(query=permission.user.key)[0].accountId
-            payload = json.dumps({
-                "editPermissions": [
+            list_of_users = jira_connection.search_users(query=permission.user.key)
+            if list_of_users:
+                account_id = list_of_users[0].accountId
+            else:
+                error_message += '  User does not exist: ' + permission.user.displayName
+                continue
+            current_permission = {
+                "type": "user",
+                "user":
                     {
-                        "type": "user",
-                        "user":
-                            {
-                                "accountId": account_id
-                            }
+                        "accountId": account_id
                     }
-                ],
-                "id": filter_id,
-                "name": new_filter.name
-            })
-        request_type = "PUT"
-    elif permission.view:
-        url += "/permission"
-        if permission_type == 'group':
-            payload = json.dumps({
-                "groupname": permission.group.name,
-                "rights": 1,
-                "type": "group"
-            })
-        elif permission_type == 'project':
-            payload = json.dumps({
-                "projectId": permission.project.name,
-                "rights": 1,
-                "type": "project"
-            })
-        request_type = "POST"
+            }
+        elif permission_type == 'loggedin':
+            current_permission = {
+                "type": "authenticated"
+            }
 
-    response = requests.request(
-        request_type,
-        url,
-        data=payload,
-        headers=headers,
-        auth=auth
-    )
+        if permission.edit:
+            edit_permissions.append(current_permission)
+        elif permission.view:
+            share_permissions.append(current_permission)
 
-    print(response)
+        payload = json.dumps({
+            "editPermissions": edit_permissions,
+            "id": filter_id,
+            "name": new_filter.name,
+            "sharePermissions": share_permissions
+        })
+        response = requests.request(
+            "PUT",
+            url,
+            data=payload,
+            headers=headers,
+            auth=auth
+        )
+
+        if not response.ok:
+            error_message += '  Permission no created: ' + response.text
+
+    return error_message
