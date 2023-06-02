@@ -3,10 +3,14 @@ from __future__ import print_function
 import pickle
 
 from jira_liferay import get_jira_connection
+from manageCredentialsCrypto import delete_credentials
 
 
 def main():
-    jira_connection = get_jira_connection()
+    jira_url = "https://issues.liferay.com"
+    jira_type = "Server"
+    delete_credentials()
+    jira_connection = get_jira_connection(jira_url, jira_type)
     favorite_filters = jira_connection.favourite_filters()
     user_id = jira_connection.current_user()
     file_name = user_id + '_filters.pkl'
