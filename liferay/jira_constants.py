@@ -9,6 +9,7 @@ class Filter:
     Assign_QA_Engineer = 'filter=54607'
     Closed_Bugs_with_FP4_and_FP5_without_automation_task = 'filter=51790'
     Echo_7_4_CE_GA_All = 'filter=49998'
+    Echo_bug_threshold = 'filter=56598'
     FI_ALL_bugs_unresolved_Manoel = 'filter=56141'
     FI_Ready_for_Testing_Stories_without_Test_Validation = 'filter=55093'
     FI_Ready_to_Create_poshi_tasks = 'filter=55095'
