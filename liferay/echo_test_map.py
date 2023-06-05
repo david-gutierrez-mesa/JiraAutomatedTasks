@@ -15,6 +15,9 @@ BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
 BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
 BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!I4:I14'
 BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
+ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
+ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
+ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!B4:F'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
@@ -22,6 +25,7 @@ ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
+GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
@@ -190,8 +194,8 @@ def check_control_panel_tab(sheet, output_warning):
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_warning += '* Please check <https://docs.google.com/spreadsheets/d/1-7-qJE-J3' \
-                              '-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0/edit#gid=664716482|Control Panel>: ' + status[0] + \
+            output_warning += '* Please check <' + GOOGLE_SHEET_URL + ECHO_TESTMAP_ID + \
+                              '/edit#gid=664716482|Control Panel>: ' + status[0] + \
                               '\n '
     return output_warning
 
@@ -239,6 +243,32 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
     return output_warning, output_info
 
 
+def update_echo_bug_threshold(sheet, jira, output_info):
+    currently_open_bugs = get_all_issues(jira, Filter.Echo_bug_threshold,
+                                         ["key", "summary", "status", CustomField.Fix_Priority, "components"])
+    body_values = []
+    for bug in currently_open_bugs:
+        components = ', '.join(get_components(bug))
+        fix_priority = ''
+        if bug.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = bug.get_field(CustomField.Fix_Priority).value
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
+                            bug.get_field('summary'),
+                            bug.get_field('status').name,
+                            fix_priority,
+                            components])
+
+    update_table(sheet,
+                 ECH0_DASHBOARD_V3_0,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
+                 body_values,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
+
+    output_info += '<Dashboard v3.0| ' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '> updated\n'
+
+    return output_info
+
+
 def update_echo_test_map(sheet, jira, output_info):
     output_info = update_test_map(sheet, jira, output_info, Filter.Echo_7_4_CE_GA_All, ECHO_TESTMAP_ID,
                                   JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
@@ -254,6 +284,7 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
     info = update_echo_test_map(sheet_connection, jira_connection, info)
+    info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
