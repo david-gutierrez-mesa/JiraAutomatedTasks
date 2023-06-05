@@ -284,6 +284,7 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
     info = update_echo_test_map(sheet_connection, jira_connection, info)
+    info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
