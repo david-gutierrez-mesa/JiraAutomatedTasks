@@ -15,6 +15,9 @@ BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
 BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
 BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!I4:I14'
 BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
+ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
+ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
+ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!B4:F'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
 ECHO_TESTMAP_SHEET_ID = '540408560'
@@ -238,6 +241,32 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                     output_info += "* Story " + html_issue_with_link(story) + " is still not automated\n "
 
     return output_warning, output_info
+
+
+def update_echo_bug_threshold(sheet, jira, output_info):
+    currently_open_bugs = get_all_issues(jira, Filter.Echo_bug_threshold,
+                                         ["key", "summary", "status", CustomField.Fix_Priority, "components"])
+    body_values = []
+    for bug in currently_open_bugs:
+        components = ', '.join(get_components(bug))
+        fix_priority = ''
+        if bug.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = bug.get_field(CustomField.Fix_Priority).value
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
+                            bug.get_field('summary'),
+                            bug.get_field('status').name,
+                            fix_priority,
+                            components])
+
+    update_table(sheet,
+                 ECH0_DASHBOARD_V3_0,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
+                 body_values,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
+
+    output_info += '<Dashboard v3.0| ' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '> updated\n'
+
+    return output_info
 
 
 def update_echo_test_map(sheet, jira, output_info):
