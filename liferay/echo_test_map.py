@@ -92,8 +92,8 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
             labels = story.get_field("labels")
             story_component = get_component_in_team_components(story, echo_team_components)
             if not story_component:
-                output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                  "|" + story.key + "> has a component or components that do not belong to the team\n "
+                output_warning += "* Story " + html_issue_with_link(story) + \
+                                  " has a component or components that do not belong to the team\n "
                 continue
             if 'poshi_test_not_needed' not in labels:
                 needs_manual_review = True
@@ -115,8 +115,8 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                                                'Automated', test_case_list[7], test_case_list[8], '', '',
                                                test_case_list[4], test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                           "|" + story.key + ">: Poshi finished\n"
+                            output_info += "* Added tests for story " + html_issue_with_link(story) + \
+                                           ": Poshi finished\n"
                         else:
                             test_cases_table = read_test_cases_table_from_description(story.fields.description)
                             lines = []
@@ -127,13 +127,12 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                                                'Needs Automation', '', '', '', '', test_case_list[4],
                                                test_case_list[5]))
                             _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                            output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                           "|" + story.key + ">: Poshi in progress\n"
+                            output_info += "* Added tests for story " + html_issue_with_link(story) + \
+                                           ": Poshi in progress\n"
                         needs_manual_review = False
                         break
                 if needs_manual_review:
-                    output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                      "|" + story.key + "> needs manual review\n "
+                    output_warning += "* Story " + html_issue_with_link(story) + " needs manual review\n "
 
             else:
                 test_cases_table = read_test_cases_table_from_description(story.fields.description)
@@ -145,8 +144,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
                     lines.append(_line_data(story.key, test_case_list[1], test_case_list[2], test_type, test_status, '',
                                             '', '', '', test_case_list[4], test_case_list[5]))
                 _add_lines_to_components_dic(components_testcases_dict, story_component, lines)
-                output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                               "|" + story.key + ">: Poshi not needed\n"
+                output_info += "* Added tests for story " + html_issue_with_link(story) + ": Poshi not needed\n"
 
         else:
             print(story.key, 'is already mapped')
@@ -170,8 +168,7 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
             if hasattr(bug[1].get_field(CustomField.Fix_Priority), "value"):
                 fix_priority = bug[1].get_field(CustomField.Fix_Priority).value
             else:
-                output_warning += "* Bug without fix priority <" + LIFERAY_JIRA_BROWSE_URL + bug[1].key + \
-                                  "|" + bug[1].key + ">\n"
+                output_warning += "* Bug without fix priority " + html_issue_with_link(bug[1]) + "\n"
                 continue
             bugs_fix_priority.append(fix_priority)
         count_per_priority = Counter(bugs_fix_priority)
@@ -210,8 +207,8 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         story = jira.issue(lps[0])
         component = get_component_in_team_components(story, echo_team_components)
         if not component:
-            output_warning += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                              "|" + story.key + "> has a component or components that do not belong to the team\n "
+            output_warning += "* Story " + html_issue_with_link(story) + \
+                              " has a component or components that do not belong to the team\n "
             continue
         for link in story.fields.issuelinks:
             linked_issue_key = ""
@@ -234,12 +231,10 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                         output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
                                                       ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
                                                       ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
-                    output_info += "* Added tests for story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                   "|" + story.key + ">: Poshi finished\n"
+                    output_info += "* Added tests for story " + html_issue_with_link(story) + ": Poshi finished\n"
                     collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                 else:
-                    output_info += "* Story <" + LIFERAY_JIRA_BROWSE_URL + story.key + \
-                                   "|" + story.key + "> is still not automated\n "
+                    output_info += "* Story " + html_issue_with_link(story) + " is still not automated\n "
 
     return output_warning, output_info
 
