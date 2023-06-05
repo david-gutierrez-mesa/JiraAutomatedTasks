@@ -100,6 +100,10 @@ def get_team_components(jira, project, team_name_in_jira):
     return team_components
 
 
+def html_issue_with_link(issue):
+    return "<" + LIFERAY_JIRA_BROWSE_URL + issue.key + "|" + issue.key + ">"
+
+
 def initialize_subtask_back_end(story, components):
     summary = 'Test Scenarios Coverage | Backend'
     description = '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n' \
