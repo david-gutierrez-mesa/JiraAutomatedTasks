@@ -16,6 +16,8 @@ BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
 BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!I4:I14'
 BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
 ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
+ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
+ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
 ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!B4:F'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
@@ -33,6 +35,52 @@ OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
 OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
 OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
+
+
+def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
+    currently_open_bugs = get_all_issues(jira, Filter.Echo_bug_threshold,
+                                         ["key", "summary", "status", CustomField.Fix_Priority, "components"])
+    body_values = []
+    for bug in currently_open_bugs:
+        components = ', '.join(get_components(bug))
+        fix_priority = ''
+        if bug.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = bug.get_field(CustomField.Fix_Priority).value
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
+                            bug.get_field('summary'),
+                            bug.get_field('status').name,
+                            fix_priority,
+                            components])
+
+    update_table(sheet,
+                 ECH0_DASHBOARD_V3_0,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
+                 body_values,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
+
+
+def _update_echo_bug_actionable_bugs_tab(sheet, jira):
+    currently_open_bugs = get_all_issues(jira, Filter.Echo_Dashboard_v3_0_Actionable_bugs,
+                                         ["key", "summary", "status", CustomField.Fix_Priority, "components",
+                                          "created"])
+    body_values = []
+    for bug in currently_open_bugs:
+        components = ', '.join(get_components(bug))
+        fix_priority = ''
+        if bug.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = bug.get_field(CustomField.Fix_Priority).value
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
+                            bug.get_field('summary'),
+                            bug.get_field('status').name,
+                            fix_priority,
+                            components,
+                            bug.get_field('created')])
+
+    update_table(sheet,
+                 ECH0_DASHBOARD_V3_0,
+                 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE,
+                 body_values,
+                 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB)
 
 
 def _add_lines_to_components_dic(components_testcases_dict, story_component, lines):
@@ -56,8 +104,10 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
                backend_automated, frontend_automated):
     link_text = '=IF(REGEXMATCH(INDIRECT(ADDRESS(ROW(),COLUMN()-1)), ","), HYPERLINK(CONCATENATE(' \
                 '"' + Instance.Jira_URL + '/issues/?jql=key%20in%20(", INDIRECT(ADDRESS(ROW(),COLUMN()-1)), ")" ),' \
-                '"Here"), HYPERLINK(CONCAT("' + Instance.Jira_URL + '/browse/",INDIRECT(ADDRESS(ROW(),COLUMN()-1))),' \
-                '"Here")) '
+                                          '"Here"), HYPERLINK(CONCAT("' + Instance.Jira_URL + '/browse/",INDIRECT(' \
+                                                                                              'ADDRESS(ROW(),' \
+                                                                                              'COLUMN()-1))),' \
+                                                                                              '"Here")) '
     priority_text = ''
     match remove_underline(priority.casefold()):
         case 'low':
@@ -244,28 +294,10 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
 
 
 def update_echo_bug_threshold(sheet, jira, output_info):
-    currently_open_bugs = get_all_issues(jira, Filter.Echo_bug_threshold,
-                                         ["key", "summary", "status", CustomField.Fix_Priority, "components"])
-    body_values = []
-    for bug in currently_open_bugs:
-        components = ', '.join(get_components(bug))
-        fix_priority = ''
-        if bug.get_field(CustomField.Fix_Priority) is not None:
-            fix_priority = bug.get_field(CustomField.Fix_Priority).value
-        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
-                            bug.get_field('summary'),
-                            bug.get_field('status').name,
-                            fix_priority,
-                            components])
+    _update_echo_bug_threshold_bug_per_area_tab(sheet, jira)
+    _update_echo_bug_actionable_bugs_tab(sheet, jira)
 
-    update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
-                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
-                 body_values,
-                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
-
-    output_info += '<Dashboard v3.0| ' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '> updated\n'
-
+    output_info += '<' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '|Dashboard v3.0 > updated\n'
     return output_info
 
 
