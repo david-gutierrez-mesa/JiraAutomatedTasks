@@ -22,6 +22,7 @@ ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
+GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
 OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
@@ -190,8 +191,8 @@ def check_control_panel_tab(sheet, output_warning):
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_warning += '* Please check <https://docs.google.com/spreadsheets/d/1-7-qJE-J3' \
-                              '-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0/edit#gid=664716482|Control Panel>: ' + status[0] + \
+            output_warning += '* Please check <' + GOOGLE_SHEET_URL + ECHO_TESTMAP_ID + \
+                              '/edit#gid=664716482|Control Panel>: ' + status[0] + \
                               '\n '
     return output_warning
 
