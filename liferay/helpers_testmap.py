@@ -5,6 +5,10 @@ from helpers_jira import get_all_issues
 from jira_constants import CustomField, Instance
 
 
+def _get_field_list(story, field):
+    return [component.name for component in story.get_field(field)]
+
+
 def component_row(component, matrix):
     position = -1
     for i, matrix_i in enumerate(matrix):
@@ -14,8 +18,12 @@ def component_row(component, matrix):
     return position
 
 
+def get_affected_version(story):
+    return _get_field_list(story, "versions")
+
+
 def get_components(story):
-    return [component.name for component in story.get_field("components")]
+    return _get_field_list(story, "components")
 
 
 def get_component_in_team_components(story, team_components):
@@ -126,7 +134,8 @@ def update_line(sheet, lps_list, test_map_sheet_name, spreadsheet_id, header_len
     return ''
 
 
-def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
+def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range,
+                         update_data_time=True):
     stories_to_add_to_test_map_bug_threshold = get_all_issues(jira, jira_filter,
                                                 ["key", "summary", "issuetype", "status", "labels",
                                                  "components", CustomField.Fix_Priority])
@@ -145,14 +154,14 @@ def update_bug_threshold(sheet, jira, output_info, jira_filter, testmap_id, jira
                             components,
                             fix_priority])
 
-    update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
+    update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab, update_data_time)
 
     output_info += 'Bug Threshold from Test Map Updated\n'
 
     return output_info
 
 
-def update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab):
+def update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab, update_data_time=True):
     sheet.values().clear(
         spreadsheetId=testmap_id, range=jira_test_map_tab_range).execute()
 
@@ -165,7 +174,8 @@ def update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_t
         valueInputOption='USER_ENTERED',
         body=body).execute()
 
-    set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
+    if update_data_time:
+        set_update_time_in_cell(sheet, testmap_id, jira_test_map_tab + '!A1')
 
 
 def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test_map_tab, jira_test_map_tab_range):
