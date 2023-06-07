@@ -5,6 +5,10 @@ from helpers_jira import get_all_issues
 from jira_constants import CustomField, Instance
 
 
+def _get_field_list(story, field):
+    return [component.name for component in story.get_field(field)]
+
+
 def component_row(component, matrix):
     position = -1
     for i, matrix_i in enumerate(matrix):
@@ -14,8 +18,12 @@ def component_row(component, matrix):
     return position
 
 
+def get_affected_version(story):
+    return _get_field_list(story, "versions")
+
+
 def get_components(story):
-    return [component.name for component in story.get_field("components")]
+    return _get_field_list(story, "components")
 
 
 def get_component_in_team_components(story, team_components):
