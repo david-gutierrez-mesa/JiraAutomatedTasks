@@ -13,3 +13,5 @@
 /liferay/bug_threshold_warning_message.txt
 /liferay/tools/*_filters.pkl
 /**/*.log
+/liferay/bug_threshold_warning_message_*.txt
+/liferay/output_info_*.txt

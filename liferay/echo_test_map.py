@@ -15,18 +15,6 @@ BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
-ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
-ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
-ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
-ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!B4:F'
-ECH0_DASHBOARD_ESCALATED_SECURITY = 'Escalates & Sec. Vuln. details'
-ECH0_DASHBOARD_ESCALATED_SECURITY_ACTIONABLE_IMPEDIBUG_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!AR8:AV'
-ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_CRITICAL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!C8:G'
-ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_ESCALATIONS_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!AJ8:AN'
-ECH0_DASHBOARD_ESCALATED_SECURITY_NON_CURRENT_CRITICAL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!L8:Q'
-ECH0_DASHBOARD_ESCALATED_SECURITY_NON_SECURITY_VUL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!AB8:AF'
-ECH0_DASHBOARD_ESCALATED_SECURITY_PENDING_BACKPORTS_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!U8:Y'
-ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
 ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
@@ -93,137 +81,6 @@ def _line_data(lps, summary, priority, test_type, test_status, test_case, test_n
              remove_underline(test_case), remove_underline(test_name), remove_underline(comments),
              remove_underline(blocked_reason)]]
     return line
-
-
-def _update_echo_bug_actionable_bugs_tab(sheet, jira):
-    currently_open_bugs = get_all_issues(jira, Filter.Echo_Dashboard_v3_0_Actionable_bugs,
-                                         ["key", "summary", "status", CustomField.Fix_Priority, "components",
-                                          "created"])
-    body_values = []
-    for bug in currently_open_bugs:
-        components = ', '.join(get_components(bug))
-        fix_priority = ''
-        if bug.get_field(CustomField.Fix_Priority) is not None:
-            fix_priority = bug.get_field(CustomField.Fix_Priority).value
-        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
-                            bug.get_field('summary'),
-                            bug.get_field('status').name,
-                            fix_priority,
-                            components,
-                            bug.get_field('created')])
-
-    update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
-                 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE,
-                 body_values,
-                 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB)
-
-
-def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
-    currently_open_bugs = get_all_issues(jira, Filter.Echo_bug_threshold,
-                                         ["key", "summary", "status", CustomField.Fix_Priority, "components"])
-    body_values = []
-    for bug in currently_open_bugs:
-        components = ', '.join(get_components(bug))
-        fix_priority = ''
-        if bug.get_field(CustomField.Fix_Priority) is not None:
-            fix_priority = bug.get_field(CustomField.Fix_Priority).value
-        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
-                            bug.get_field('summary'),
-                            bug.get_field('status').name,
-                            fix_priority,
-                            components])
-
-    update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
-                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
-                 body_values,
-                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
-
-
-def _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira, jql, sheet_range):
-    currently_open_bugs = get_all_issues(jira, jql,
-                                         [CustomField.Fix_Priority, "status", "summary", "affectedVersion"])
-    body_values = []
-    for bug in currently_open_bugs:
-        affected_version = ', '.join(get_affected_version(bug))
-        fix_priority = ''
-        if bug.get_field(CustomField.Fix_Priority) is not None:
-            fix_priority = bug.get_field(CustomField.Fix_Priority).value
-        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
-                            fix_priority,
-                            bug.get_field('status').name,
-                            bug.get_field('summary'),
-                            affected_version])
-
-    update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
-                 sheet_range,
-                 body_values,
-                 ECH0_DASHBOARD_ESCALATED_SECURITY,
-                 False)
-
-
-def _update_echo_bug_threshold_actionable_bugs(sheet, jira):
-    currently_open_bugs = get_all_issues(jira, Filter.Echo_Dashboard_v3_0_Impedibugs,
-                                         ["status", "summary", "assignee", "created"])
-    body_values = []
-    for bug in currently_open_bugs:
-        assignee = ''
-        if bug.get_field('assignee') is not None:
-            assignee = bug.get_field('assignee').name
-        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
-                            bug.get_field('status').name,
-                            bug.get_field('summary'),
-                            assignee,
-                            bug.get_field('created')
-                            ])
-
-    update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
-                 ECH0_DASHBOARD_ESCALATED_SECURITY_ACTIONABLE_IMPEDIBUG_RANGE,
-                 body_values,
-                 ECH0_DASHBOARD_ESCALATED_SECURITY,
-                 True)
-
-
-def _update_echo_bug_threshold_current_critical_sec_vulnerabilities(sheet, jira):
-    _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira,
-                                              Filter.Echo_Dashboard_v3_0_Current_Critical_Sec_Vul,
-                                              ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_CRITICAL_RANGE)
-
-
-def _update_echo_bug_threshold_current_escalations(sheet, jira):
-    _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira,
-                                              Filter.Echo_Dashboard_v3_0_Escalations,
-                                              ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_ESCALATIONS_RANGE)
-
-
-def _update_echo_bug_threshold_non_current_critical_sec_vulnerabilities(sheet, jira):
-    _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira,
-                                              Filter.Echo_Dashboard_v3_0_None_Critical_Security_Vulnerabilities,
-                                              ECH0_DASHBOARD_ESCALATED_SECURITY_NON_CURRENT_CRITICAL_RANGE)
-
-
-def _update_echo_bug_threshold_non_security_vul_wit_lps(sheet, jira):
-    _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira,
-                                              Filter.Echo_Dashboard_v3_0_Non_Critical_Security_Vulnerabilities_with_LPP,
-                                              ECH0_DASHBOARD_ESCALATED_SECURITY_NON_SECURITY_VUL_RANGE)
-
-
-def _update_echo_bug_threshold_pending_backports(sheet, jira):
-    _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira,
-                                              Filter.Echo_Dashboard_v3_0_Esc_Sec_Vul_Pending_Backports,
-                                              ECH0_DASHBOARD_ESCALATED_SECURITY_PENDING_BACKPORTS_RANGE)
-
-
-def _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira):
-    _update_echo_bug_threshold_actionable_bugs(sheet, jira)
-    _update_echo_bug_threshold_current_critical_sec_vulnerabilities(sheet, jira)
-    _update_echo_bug_threshold_current_escalations(sheet, jira)
-    _update_echo_bug_threshold_non_current_critical_sec_vulnerabilities(sheet, jira)
-    _update_echo_bug_threshold_non_security_vul_wit_lps(sheet, jira)
-    _update_echo_bug_threshold_pending_backports(sheet, jira)
 
 
 def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning, output_info):
@@ -385,15 +242,6 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
     return output_warning, output_info
 
 
-def update_echo_bug_threshold(sheet, jira, output_info):
-    _update_echo_bug_threshold_bug_per_area_tab(sheet, jira)
-    _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira)
-    _update_echo_bug_actionable_bugs_tab(sheet, jira)
-
-    output_info += '<' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '|Dashboard v3.0 > updated\n'
-    return output_info
-
-
 def update_echo_test_map(sheet, jira, output_info):
     output_info = update_test_map(sheet, jira, output_info, Filter.Echo_7_4_CE_GA_All, ECHO_TESTMAP_ID,
                                   JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
@@ -409,7 +257,6 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
     info = update_echo_test_map(sheet_connection, jira_connection, info)
-    info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
