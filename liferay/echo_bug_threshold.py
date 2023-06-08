@@ -10,6 +10,7 @@ ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
 ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
 ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!B4:F'
+ECH0_DASHBOARD_BUGS_PER_AREA_LAST_MONTH_RANGE = ECH0_DASHBOARD_BUGS_PER_AREA_TAB + '!W4:AA'
 ECH0_DASHBOARD_ESCALATED_SECURITY = 'Escalates & Sec. Vuln. details'
 ECH0_DASHBOARD_ESCALATED_SECURITY_ACTIONABLE_IMPEDIBUG_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!AR8:AV'
 ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_CRITICAL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!C8:G'
@@ -67,6 +68,28 @@ def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
     update_table(sheet,
                  ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
+                 body_values,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
+
+    currently_open_bugs_last_month = get_all_issues(jira, Filter.Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs,
+                                                    ["key", "status", CustomField.Fix_Priority,
+                                                     "components", "resolution"])
+    body_values = []
+    for bug in currently_open_bugs_last_month:
+        components = ', '.join(get_components(bug))
+        fix_priority = ''
+        if bug.get_field(CustomField.Fix_Priority) is not None:
+            fix_priority = bug.get_field(CustomField.Fix_Priority).value
+        body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
+                            bug.get_field('status').name,
+                            fix_priority,
+                            components,
+                            bug.get_field('resolution').name
+                            ])
+
+    update_table(sheet,
+                 ECH0_DASHBOARD_V3_0,
+                 ECH0_DASHBOARD_BUGS_PER_AREA_LAST_MONTH_RANGE,
                  body_values,
                  ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
 

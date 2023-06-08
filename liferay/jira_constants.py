@@ -10,6 +10,7 @@ class Filter:
     Closed_Bugs_with_FP4_and_FP5_without_automation_task = 'filter=51790'
     Echo_7_4_CE_GA_All = 'filter=49998'
     Echo_Dashboard_v3_0_Actionable_bugs = 'filter=56599'
+    Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs = 'filter=56633'
     Echo_Dashboard_v3_0_Current_Critical_Sec_Vul = 'filter=56603'
     Echo_Dashboard_v3_0_Esc_Sec_Vul_Pending_Backports = 'filter=56605'
     Echo_Dashboard_v3_0_Escalations = 'filter=56606'
