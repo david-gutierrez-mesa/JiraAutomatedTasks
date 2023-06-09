@@ -1,10 +1,10 @@
 #!/usr/bin/env python
+from echo_constants import Roles
 from helpers import create_output_files
 from helpers_jira import *
 from jira_constants import Status, CustomField, Filter
 from jira_liferay import get_jira_connection
 
-DESIGN_LEAD_JIRA_USER = 'carolina.rodriguez'
 OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
 
@@ -228,7 +228,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
             if story.get_field("status").id == Status.Ready_for_testing:
                 jira.transition_issue(story.id, transition=Status.In_Testing)
             jira.transition_issue(story.id, transition=Status.Ready_for_Product_Review)
-            jira.assign_issue(story.id, DESIGN_LEAD_JIRA_USER)
+            jira.assign_issue(story.id, Roles.Design_lead)
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info
 
