@@ -1,4 +1,5 @@
 class CustomField:
+    Bug_type = 'customfield_18920'
     Epic_Link = 'customfield_12821'
     Fix_Priority = 'customfield_12523'
     QA_Engineer = 'customfield_24852'
@@ -12,6 +13,20 @@ class Filter:
     Echo_Dashboard_v3_0_Actionable_bugs = 'filter=56599'
     Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs = 'filter=56633'
     Echo_Dashboard_v3_0_Current_Critical_Sec_Vul = 'filter=56603'
+    Echo_Dashboard_v3_0_Current_month_closed_bugs = 'project = LPS AND filter = "Components | LPS-Echo" AND (' \
+                                                    'issuetype = Bug OR issuetype = "Regression Bug") AND filter = ' \
+                                                    '"Misc | Bug Version Filtering" AND status changed to Closed ' \
+                                                    'after startOfMonth({month}) before endOfMonth({month})  AND ' \
+                                                    'status = Closed '
+    Echo_Dashboard_v3_0_Current_month_reported_bugs = 'project = LPS AND filter = "Components | LPS-Echo" AND (' \
+                                                      'issuetype = Bug OR issuetype = "Regression Bug") AND filter = ' \
+                                                      '"Misc | Bug Version Filtering" AND (status changed to ' \
+                                                      'verified after startOfMonth({month}) before endOfMonth({' \
+                                                      'month})  AND NOT status changed to verified before endofmonth(' \
+                                                      '{last_month})  OR status changed to "In progress" from open ' \
+                                                      'after startOfMonth({month}) before endOfMonth({month})  AND ' \
+                                                      'created >= startOfMonth({month}) AND created <= endOfMonth({' \
+                                                      'month})) '
     Echo_Dashboard_v3_0_Esc_Sec_Vul_Pending_Backports = 'filter=56605'
     Echo_Dashboard_v3_0_Escalations = 'filter=56606'
     Echo_Dashboard_v3_0_Impedibugs = 'filter=56607'
