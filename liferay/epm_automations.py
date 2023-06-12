@@ -22,15 +22,15 @@ EPM_BY_LEVEL_SECOND_LEVEL_RANGE = EPM_TAB_BY_LEVEL_NAME + '!E' + EPM_BY_LEVEL_TA
 
 COLUMN_CONTENT_GIT_HUB_REPO = '=if(INDIRECT(ADDRESS(ROW(),COLUMN()-2))="","",if(INDIRECT(ADDRESS(ROW(),' \
                               'COLUMN()-2))<>"Product Team Business Process Management",VLOOKUP(INDIRECT(ADDRESS(' \
-                              'ROW(),COLUMN()-2)),\'Team Information\'!B:E,3,false),VLOOKUP(concatenate(INDIRECT(' \
+                              'ROW(),COLUMN()-2)),\'Team Information\'!C:F,3,false),VLOOKUP(concatenate(INDIRECT(' \
                               'ADDRESS(ROW(),COLUMN()-9)):INDIRECT(ADDRESS(ROW(),COLUMN()-6))),' \
-                              '\'Team Information\'!G:J,4,false)))'
+                              '\'Team Information\'!H:K,4,false)))'
 
 COLUMN_CONTENT_SLACK_CHANNEL = '=if(INDIRECT(ADDRESS(ROW(),COLUMN()-1))="","",if(INDIRECT(ADDRESS(ROW(),' \
                                'COLUMN()-1))<>"Product Team Business Process Management",VLOOKUP(INDIRECT(ADDRESS(' \
-                               'ROW(),COLUMN()-1)),\'Team Information\'!B:E,2,false),VLOOKUP(concatenate(INDIRECT(' \
+                               'ROW(),COLUMN()-1)),\'Team Information\'!C:F,2,false),VLOOKUP(concatenate(INDIRECT(' \
                                'ADDRESS(ROW(),COLUMN()-8)):INDIRECT(ADDRESS(ROW(),COLUMN()-5))),' \
-                               '\'Team Information\'!G:J,3,false)))'
+                               '\'Team Information\'!H:K,3,false)))'
 
 
 def _add_project_components_to_body_values(jira, body_values, json_url, component_name):
