@@ -1,6 +1,6 @@
 import unittest
 
-from echo_bug_threshold import update_echo_bug_threshold
+from echo_team.echo_bug_threshold import update_echo_bug_threshold
 from jira_liferay import get_jira_connection
 from testmap_jira import get_testmap_connection
 

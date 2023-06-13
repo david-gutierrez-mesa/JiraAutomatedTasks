@@ -1,6 +1,6 @@
 import unittest
 
-from liferay.echo import *
+from echo_team.echo import *
 from liferay.jira_liferay import get_jira_connection
 
 
