@@ -7,8 +7,8 @@ class Squads:
     Devs = Front + Back
     Design = ['carolina.rodriguez', 'maria.arce']
     PO = ['julia.molano', 'mateo.hermosin', 'benicio.herrero@liferay.com', 'javier.burgueno@liferay.com']
-    PM = ['maria.muriel']
-    Discovery = Design + PO + PM
+    EPM = ['maria.muriel']
+    Discovery = Design + PO + EPM
 
 
 class Roles:
