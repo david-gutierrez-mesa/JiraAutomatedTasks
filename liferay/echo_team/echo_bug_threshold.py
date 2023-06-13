@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from echo_team.echo_constants import Squads
+from liferay.echo_team.echo_constants import Squads
 from helpers import create_output_files
 from jira_constants import Filter
 from jira_liferay import get_jira_connection

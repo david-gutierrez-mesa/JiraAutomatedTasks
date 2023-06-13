@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from echo_team.echo_constants import Roles
+from liferay.echo_team.echo_constants import Roles
 from helpers import create_output_files
 from helpers_jira import *
 from jira_constants import Status, CustomField, Filter
