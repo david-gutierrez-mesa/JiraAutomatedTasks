@@ -5,8 +5,8 @@ from helpers_jira import *
 from jira_constants import Status, CustomField, Filter
 from jira_liferay import get_jira_connection
 
-OUTPUT_MESSAGE_FILE_NAME = "../output_message_echo.txt"
-OUTPUT_INFO_FILE_NAME = "../output_info_echo.txt"
+OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
+OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
