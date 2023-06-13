@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from echo_constants import Squads
+from echo_team.echo_constants import Squads
 from helpers import create_output_files
 from jira_constants import Filter
 from jira_liferay import get_jira_connection
@@ -22,10 +22,10 @@ ECH0_DASHBOARD_ESCALATED_SECURITY_NON_SECURITY_VUL_RANGE = ECH0_DASHBOARD_ESCALA
 ECH0_DASHBOARD_ESCALATED_SECURITY_PENDING_BACKPORTS_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!U8:Y'
 ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
 GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/'
-OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
-OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
-OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
-OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
+OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "../bug_threshold_exceed_message_echo.txt"
+OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "../bug_threshold_warning_message_echo.txt"
+OUTPUT_INFO_FILE_NAME = "../output_info_echo.txt"
+OUTPUT_MESSAGE_FILE_NAME = "../output_message_echo.txt"
 
 
 def _get_month_metrics(jira, month, header):
@@ -104,7 +104,6 @@ def _update_echo_bug_metrics(sheet, jira):
                  ECH0_DASHBOARD_BUG_METRICS_TAB_RANGE,
                  body_values,
                  ECH0_DASHBOARD_BUG_METRICS_TAB)
-    print('ok')
 
 
 def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
