@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from helpers import create_output_files
-from jira_constants import Filter
-from jira_liferay import get_jira_connection
-from helpers_testmap import *
-from testmap_jira import get_testmap_connection
+from liferay.helpers import create_output_files
+from liferay.jira_constants import Filter
+from liferay.jira_liferay import get_jira_connection
+from liferay.helpers_testmap import *
+from liferay.testmap_jira import get_testmap_connection
 
 BUG_THRESHOLD_TAB = 'JIRA-BUGS'
 BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B3:L'

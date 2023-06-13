@@ -1,4 +1,4 @@
-from jira_constants import CustomField, Status, Instance
+from liferay.jira_constants import CustomField, Status, Instance
 
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
                           'JS-Unit)||Is it covered by BackEnd ? (unit or integration)||Could it be covered by ' \

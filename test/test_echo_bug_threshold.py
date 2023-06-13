@@ -1,8 +1,8 @@
 import unittest
 
-from echo_team.echo_bug_threshold import update_echo_bug_threshold
-from jira_liferay import get_jira_connection
-from testmap_jira import get_testmap_connection
+from liferay.echo_team.echo_bug_threshold import update_echo_bug_threshold
+from liferay.jira_liferay import get_jira_connection
+from liferay.testmap_jira import get_testmap_connection
 
 
 class EchoTestMapTests(unittest.TestCase):

@@ -1,8 +1,8 @@
 import unittest
 
-from frontend_infra_test_map import *
-from jira_liferay import get_jira_connection
-from testmap_jira import get_testmap_connection
+from liferay.frontend_infra_test_map import *
+from liferay.jira_liferay import get_jira_connection
+from liferay.testmap_jira import get_testmap_connection
 
 
 class EchoTestMapTests(unittest.TestCase):

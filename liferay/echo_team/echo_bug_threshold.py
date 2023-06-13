@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from liferay.echo_team.echo_constants import Squads
-from helpers import create_output_files
-from jira_constants import Filter
-from jira_liferay import get_jira_connection
-from helpers_testmap import *
-from testmap_jira import get_testmap_connection
+from liferay.helpers import create_output_files
+from liferay.jira_constants import Filter
+from liferay.jira_liferay import get_jira_connection
+from liferay.helpers_testmap import *
+from liferay.testmap_jira import get_testmap_connection
 
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'

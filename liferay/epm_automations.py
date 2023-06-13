@@ -2,10 +2,10 @@
 import getopt
 import sys
 
-from helpers_google_sheet import set_update_time_in_cell, create_collapse_group_body
-from jira_constants import Instance
-from jira_liferay import get_jira_connection
-from testmap_jira import get_testmap_connection
+from liferay.helpers_google_sheet import set_update_time_in_cell, create_collapse_group_body
+from liferay.jira_constants import Instance
+from liferay.jira_liferay import get_jira_connection
+from liferay.testmap_jira import get_testmap_connection
 
 SUB_COMPONENTS_URL = Instance.Jira_URL + '/rest/net.brokenbuild.subcomponents/1.0/subcomponents'
 SUB_COMPONENTS_COMMERCE_JSON_URL = SUB_COMPONENTS_URL + '/COMMERCE.json'
