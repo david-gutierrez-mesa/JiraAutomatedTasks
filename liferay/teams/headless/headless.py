@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from liferay.helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
-from liferay.jira_constants import Status, Filter
-from liferay.jira_liferay import get_jira_connection
+from liferay.utils.jira.helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
+from liferay.utils.jira.jira_constants import Status, Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
 
 
 def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):

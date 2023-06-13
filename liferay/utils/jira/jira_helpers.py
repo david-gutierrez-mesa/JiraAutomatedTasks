@@ -2,7 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-from manageCredentialsCrypto import get_credentials
+from liferay.utils.manageCredentialsCrypto import get_credentials
 
 
 def _parse_permission(permissions):

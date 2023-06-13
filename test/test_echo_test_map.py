@@ -1,9 +1,9 @@
 import unittest
 
-from liferay.echo_team.echo_test_map import *
-from liferay.helpers_jira import get_team_components
-from liferay.jira_liferay import get_jira_connection
-from liferay.testmap_jira import get_testmap_connection
+from liferay.teams.echo.echo_test_map import *
+from liferay.utils.jira.helpers_jira import get_team_components
+from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.testmap_jira import get_testmap_connection
 
 
 class EchoTestMapTests(unittest.TestCase):

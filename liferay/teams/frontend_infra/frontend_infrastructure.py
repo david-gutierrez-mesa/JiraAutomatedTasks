@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-from liferay.helpers import create_output_files
-from liferay.helpers_jira import *
-from liferay.helpers_jira import __initialize_subtask_technical_test
-from liferay.jira_constants import Filter
-from liferay.jira_liferay import get_jira_connection
+from liferay.utils.file_helpers import create_output_files
+from liferay.utils.jira.helpers_jira import *
+from liferay.utils.jira.helpers_jira import __initialize_subtask_technical_test
+from liferay.utils.jira.jira_constants import Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
 
 QA_JIRA_USER = 'carlos.brichete'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"

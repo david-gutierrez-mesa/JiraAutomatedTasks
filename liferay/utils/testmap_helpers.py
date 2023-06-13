@@ -1,8 +1,8 @@
 from itertools import islice
 
-from liferay.helpers_google_sheet import *
-from liferay.helpers_jira import get_all_issues
-from liferay.jira_constants import CustomField, Instance
+from liferay.utils.google_sheet_helpers import *
+from liferay.utils.jira.helpers_jira import get_all_issues
+from liferay.utils.jira.jira_constants import CustomField, Instance
 
 
 def _get_field_list(story, field):

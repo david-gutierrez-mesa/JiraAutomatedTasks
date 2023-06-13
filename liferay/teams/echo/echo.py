@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-from liferay.echo_team.echo_constants import Roles
-from liferay.helpers import create_output_files
-from liferay.helpers_jira import *
-from liferay.jira_constants import Status, CustomField, Filter
-from liferay.jira_liferay import get_jira_connection
+from liferay.teams.echo.echo_constants import Roles
+from liferay.utils.file_helpers import create_output_files
+from liferay.utils.jira.helpers_jira import *
+from liferay.utils.jira.jira_constants import Status, CustomField, Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
 
 OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"

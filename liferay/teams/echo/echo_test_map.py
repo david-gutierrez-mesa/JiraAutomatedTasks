@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 from collections import Counter
 
-from liferay.helpers import create_output_files
-from liferay.helpers_jira import *
-from liferay.jira_constants import Filter
-from liferay.jira_liferay import get_jira_connection
-from liferay.helpers_testmap import *
-from liferay.testmap_jira import get_testmap_connection
+from liferay.utils.file_helpers import create_output_files
+from liferay.utils.jira.helpers_jira import *
+from liferay.utils.jira.jira_constants import Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.testmap_helpers import *
+from liferay.utils.testmap_jira import get_testmap_connection
 
 BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
 BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
