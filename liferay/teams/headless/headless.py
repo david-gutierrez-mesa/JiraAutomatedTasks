@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-from liferay.utils.jira.helpers_jira import create_poshi_automation_task_for, close_functional_automation_subtask
+from liferay.utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
 from liferay.utils.jira.jira_constants import Status, Filter
 from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.sheets.sheets_constants import SheetInstance
 
 
 def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
@@ -39,7 +40,7 @@ def update_creation_subtask(jira):
                                   'to the parent story \r\n' \
                                   'description\r\n' \
                                   ' # Add test cases to [Test ' \
-                                  'Map|https://docs.google.com/spreadsheets/d/' \
+                                  'Map|' + SheetInstance.GOOGLE_SHEET_URL + \
                                   '19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY' \
                                   '/edit#gid=2145200593]\r\n' \
                                   '\r\n' \
