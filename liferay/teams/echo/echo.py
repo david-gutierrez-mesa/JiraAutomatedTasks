@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-from liferay.teams.echo.echo_constants import Roles
+from liferay.teams.echo.echo_constants import Roles, FileName
 from liferay.utils.file_helpers import create_output_files
-from liferay.utils.jira.helpers_jira import *
+from liferay.utils.jira.jira_helpers import *
 from liferay.utils.jira.jira_constants import Status, CustomField, Filter
 from liferay.utils.jira.jira_liferay import get_jira_connection
-
-OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
-OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
@@ -246,4 +243,4 @@ if __name__ == "__main__":
     close_ready_for_release_bugs(jira_connection)
     warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
-    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME], [info, OUTPUT_INFO_FILE_NAME])
+    create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])

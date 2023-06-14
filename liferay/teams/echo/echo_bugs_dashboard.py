@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-from liferay.teams.echo.echo_constants import Squads
+from liferay.teams.echo.echo_constants import Squads, FileName, Sheets
 from liferay.utils.file_helpers import create_output_files
-from liferay.utils.jira.jira_constants import Filter
+from liferay.utils.jira.jira_constants import Filter, CustomField, Instance
+from liferay.utils.sheets.sheets_constants import SheetInstance
+from liferay.utils.jira.jira_helpers import get_all_issues
 from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.testmap_helpers import *
-from liferay.utils.testmap_jira import get_testmap_connection
+from liferay.utils.sheets.sheets_liferay import get_testmap_connection
+from liferay.utils.sheets.testmap_helpers import get_components, update_table, get_affected_version
 
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
@@ -20,12 +22,6 @@ ECH0_DASHBOARD_ESCALATED_SECURITY_CURRENT_ESCALATIONS_RANGE = ECH0_DASHBOARD_ESC
 ECH0_DASHBOARD_ESCALATED_SECURITY_NON_CURRENT_CRITICAL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!L8:Q'
 ECH0_DASHBOARD_ESCALATED_SECURITY_NON_SECURITY_VUL_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!AB8:AF'
 ECH0_DASHBOARD_ESCALATED_SECURITY_PENDING_BACKPORTS_RANGE = ECH0_DASHBOARD_ESCALATED_SECURITY + '!U8:Y'
-ECH0_DASHBOARD_V3_0 = '1YFWbjajCUgotSC8YyhPbEMDi1ozJ_5EcyDXbYiJM34Q'
-GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/'
-OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
-OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
-OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
-OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 
 
 def _get_month_metrics(jira, month, header):
@@ -82,7 +78,7 @@ def _update_echo_bug_actionable_bugs_tab(sheet, jira):
                             bug.get_field('created')])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE,
                  body_values,
                  ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB)
@@ -100,7 +96,7 @@ def _update_echo_bug_metrics(sheet, jira):
                             current_month_metrics[i]])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_BUG_METRICS_TAB_RANGE,
                  body_values,
                  ECH0_DASHBOARD_BUG_METRICS_TAB)
@@ -122,7 +118,7 @@ def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
                             components])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_BUGS_PER_AREA_TAB_RANGE,
                  body_values,
                  ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
@@ -144,7 +140,7 @@ def _update_echo_bug_threshold_bug_per_area_tab(sheet, jira):
                             ])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_BUGS_PER_AREA_LAST_MONTH_RANGE,
                  body_values,
                  ECH0_DASHBOARD_BUGS_PER_AREA_TAB)
@@ -166,7 +162,7 @@ def _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira, jql, sheet_range):
                             affected_version])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  sheet_range,
                  body_values,
                  ECH0_DASHBOARD_ESCALATED_SECURITY,
@@ -189,7 +185,7 @@ def _update_echo_bug_threshold_actionable_bugs(sheet, jira):
                             ])
 
     update_table(sheet,
-                 ECH0_DASHBOARD_V3_0,
+                 Sheets.ECH0_DASHBOARD_V3_0,
                  ECH0_DASHBOARD_ESCALATED_SECURITY_ACTIONABLE_IMPEDIBUG_RANGE,
                  body_values,
                  ECH0_DASHBOARD_ESCALATED_SECURITY,
@@ -241,7 +237,7 @@ def update_echo_bug_threshold(sheet, jira, output_info):
     _update_echo_bug_actionable_bugs_tab(sheet, jira)
     _update_echo_bug_metrics(sheet, jira)
 
-    output_info += '<' + GOOGLE_SHEET_URL + ECH0_DASHBOARD_V3_0 + '|Dashboard v3.0 > updated\n'
+    output_info += '<' + SheetInstance.GOOGLE_SHEET_URL + Sheets.ECH0_DASHBOARD_V3_0 + '|Dashboard v3.0 > updated\n'
     return output_info
 
 
@@ -253,7 +249,7 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
-    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME],
-                        [info, OUTPUT_INFO_FILE_NAME],
-                        [bug_threshold_exceed, OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
-                        [bug_threshold_warning, OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME])
+    create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
+                        [info, FileName.OUTPUT_INFO_FILE_NAME],
+                        [bug_threshold_exceed, FileName.OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
+                        [bug_threshold_warning, FileName.OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME])
