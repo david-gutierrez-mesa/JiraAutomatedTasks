@@ -1,7 +1,7 @@
 from itertools import islice
 
-from liferay.utils.google_sheet_helpers import *
-from liferay.utils.jira.helpers_jira import get_all_issues
+from liferay.utils.sheets.sheets_helpers import *
+from liferay.utils.jira.jira_helpers import get_all_issues
 from liferay.utils.jira.jira_constants import CustomField, Instance
 
 
