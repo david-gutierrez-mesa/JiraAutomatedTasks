@@ -1,5 +1,6 @@
 from itertools import islice
 
+from liferay.utils.sheets.sheets_constants import SheetInstance
 from liferay.utils.sheets.sheets_helpers import *
 from liferay.utils.jira.jira_helpers import get_all_issues
 from liferay.utils.jira.jira_constants import CustomField, Instance
@@ -201,7 +202,7 @@ def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test
 
     update_table(sheet, testmap_id, jira_test_map_tab_range, body_values, jira_test_map_tab)
 
-    output_info += 'Test map updated\n'
+    output_info += '<' + SheetInstance.GOOGLE_SHEET_URL + testmap_id + '|Test map > updated\n'
 
     return output_info
 
