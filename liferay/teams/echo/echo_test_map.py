@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 from collections import Counter
 
-from helpers import create_output_files
-from helpers_jira import *
-from jira_constants import Filter
-from jira_liferay import get_jira_connection
-from helpers_testmap import *
-from testmap_jira import get_testmap_connection
+from liferay.teams.echo.echo_constants import FileName, Sheets
+from liferay.utils.file_helpers import create_output_files
+from liferay.utils.jira.jira_helpers import *
+from liferay.utils.jira.jira_constants import Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.sheets.sheets_constants import SheetInstance
+from liferay.utils.sheets.testmap_helpers import *
+from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 
 BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
 BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
@@ -15,20 +17,14 @@ BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
-ECHO_TESTMAP_ID = '1-7-qJE-J3-jChauzSyCnDvvSbTWeJkSr7u5D_VBOIP0'
 ECHO_TESTMAP_SHEET_COMPONENT_COLUMN = 'I'
 ECHO_TESTMAP_SHEET_HEADER_LENGTH = 2
 ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER = ECHO_TESTMAP_SHEET_HEADER_LENGTH + 1
 ECHO_TESTMAP_SHEET_ID = '540408560'
 ECHO_TESTMAP_SHEET_LAST_COLUMN = 'Q'
 ECHO_TESTMAP_SHEET_NAME = 'Test Map'
-GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:H'
-OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
-OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
-OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
-OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 TESTMAP_MAPPED_RANGE = ECHO_TESTMAP_SHEET_NAME + '!G4:G'
 
 
@@ -43,7 +39,7 @@ def _add_lines_to_components_dic(components_testcases_dict, story_component, lin
 
 
 def _insert_lines_in_component(sheet, components_testcases_dict):
-    return insert_lines_in_component(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, ECHO_TESTMAP_SHEET_NAME,
+    return insert_lines_in_component(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, ECHO_TESTMAP_SHEET_NAME,
                                      ECHO_TESTMAP_SHEET_LAST_COLUMN, components_testcases_dict,
                                      ECHO_TESTMAP_SHEET_COMPONENT_COLUMN, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER,
                                      ECHO_TESTMAP_SHEET_HEADER_LENGTH)
@@ -87,7 +83,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
     print("Adding stories into echo test map")
     stories_to_check = jira.search_issues(Filter.Stories_to_add_into_test_map,
                                           fields=['key', 'issuelinks', 'labels', 'components', 'description'])
-    lps_list = get_mapped_stories(sheet, ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
+    lps_list = get_mapped_stories(sheet, Sheets.ECHO_TESTMAP_ID, TESTMAP_MAPPED_RANGE)
     components_testcases_dict = dict([])
     for story in stories_to_check:
         if not is_mapped(story.key, lps_list):
@@ -156,11 +152,11 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
 
 
 def check_bug_threshold(sheet, jira, output_exceed, output_warning):
-    max_values = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_MAX_VALUES).execute() \
+    max_values = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_MAX_VALUES).execute() \
         .get('values', [])
-    components_groups = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS) \
+    components_groups = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS) \
         .execute().get('values', [])
-    jira_filter_ids = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
+    jira_filter_ids = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
         .execute().get('values', [])
     for i, filter_id in enumerate(jira_filter_ids):
         bugs_for_component_group = jira.search_issues('filter=' + filter_id[0],
@@ -189,22 +185,22 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
 
 
 def check_control_panel_tab(sheet, output_warning):
-    summary_status = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
+    summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
         .get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
-            output_warning += '* Please check <' + GOOGLE_SHEET_URL + ECHO_TESTMAP_ID + \
+            output_warning += '* Please check <' + SheetInstance.GOOGLE_SHEET_URL + Sheets.ECHO_TESTMAP_ID + \
                               '/edit#gid=664716482|Control Panel>: ' + status[0] + \
                               '\n '
     return output_warning
 
 
 def check_need_automation_test_cases(sheet, jira, echo_team_components, output_warning, output_info):
-    lps_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
+    lps_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
         .get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
                      str(ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER) + ':' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN
-    current_test_cases_list = sheet.values().get(spreadsheetId=ECHO_TESTMAP_ID, range=test_map_range).execute().get(
+    current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute().get(
         'values', [])
     for lps in lps_list:
         story = jira.issue(lps[0])
@@ -225,17 +221,17 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                     test_cases_table = read_test_cases_table_from_description(linked_issue.fields.description)
                     start, end = get_group_start_and_end_position(component, current_test_cases_list,
                                                                   ECHO_TESTMAP_SHEET_HEADER_LENGTH)
-                    expand_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
+                    expand_group(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                     for test_case in test_cases_table:
                         test_case_list = test_case.split('|')
                         line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
                                           'Automated', test_case_list[7], test_case_list[8], '', '',
                                           test_case_list[4], test_case_list[5])
                         output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
-                                                      ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
+                                                      Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
                                                       ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
                     output_info += "* Added tests for story " + html_issue_with_link(story) + ": Poshi finished\n"
-                    collapse_group(sheet, ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
+                    collapse_group(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                 else:
                     output_info += "* Story " + html_issue_with_link(story) + " is still not automated\n "
 
@@ -243,7 +239,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
 
 
 def update_echo_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, Filter.Echo_7_4_CE_GA_All, ECHO_TESTMAP_ID,
+    output_info = update_test_map(sheet, jira, output_info, Filter.Echo_7_4_CE_GA_All, Sheets.ECHO_TESTMAP_ID,
                                   JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 
@@ -263,7 +259,7 @@ if __name__ == "__main__":
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
                                                                       bug_threshold_exceed, bug_threshold_warning)
 
-    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME],
-                        [info, OUTPUT_INFO_FILE_NAME],
-                        [bug_threshold_exceed, OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
-                        [bug_threshold_warning, OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME])
+    create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
+                        [info, FileName.OUTPUT_INFO_FILE_NAME],
+                        [bug_threshold_exceed, FileName.OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
+                        [bug_threshold_warning, FileName.OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME])

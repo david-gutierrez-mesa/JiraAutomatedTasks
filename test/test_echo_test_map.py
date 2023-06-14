@@ -1,9 +1,9 @@
 import unittest
 
-from echo_test_map import *
-from helpers_jira import get_team_components
-from jira_liferay import get_jira_connection
-from testmap_jira import get_testmap_connection
+from liferay.teams.echo.echo_test_map import *
+from liferay.utils.jira.jira_helpers import get_team_components
+from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 
 
 class EchoTestMapTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class EchoTestMapTests(unittest.TestCase):
             info_test = ''
             jira_connection_test = get_jira_connection()
             sheet_connection_test = get_testmap_connection()
-            team_components_test = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
+            team_components_test = get_team_components(jira_connection_test, 'LPS', 'Product Team Echo')
             message, info_test = add_test_cases_to_test_map(sheet_connection_test, jira_connection_test,
                                                             team_components_test,
                                                             message, info_test)

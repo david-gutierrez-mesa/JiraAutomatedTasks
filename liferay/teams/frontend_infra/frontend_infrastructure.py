@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-from helpers import create_output_files
-from helpers_jira import *
-from helpers_jira import __initialize_subtask_technical_test
-from jira_constants import Filter
-from jira_liferay import get_jira_connection
-
-QA_JIRA_USER = 'carlos.brichete'
-OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
-OUTPUT_INFO_FILE_NAME = "output_info.txt"
+from liferay.teams.frontend_infra.frontend_infra_constants import FileName, Roles
+from liferay.utils.file_helpers import create_output_files
+from liferay.utils.jira.jira_helpers import *
+from liferay.utils.jira.jira_helpers import __initialize_subtask_technical_test
+from liferay.utils.jira.jira_constants import Filter
+from liferay.utils.jira.jira_liferay import get_jira_connection
+from liferay.utils.sheets.sheets_constants import SheetInstance
 
 
 def create_test_creation_subtask(jira, output_info):
@@ -23,7 +21,7 @@ def create_test_creation_subtask(jira, output_info):
                           '\r\n # After being reviewed by the team, add a finalized table to the parent story ' \
                           'description' \
                           '\r\n # Add test cases to [Test ' \
-                          'Map|https://docs.google.com/spreadsheets/d/1_liLRC1XHBydH_mfeeDifgKxBWN3kfRtX7uqbKgJ72k' \
+                          'Map|' + SheetInstance.GOOGLE_SHEET_URL + \
                           '/edit#gid=2145200593]' \
                           '\r\n' \
                           '\r\n*Test Scenarios:*' \
@@ -108,7 +106,7 @@ def create_technical_sub_task_test_scope_out_of_scope_creation(jira, output_info
         subtask_fields = __initialize_subtask_technical_test(story, components, summary, description)
         child = jira.create_issue(fields=subtask_fields)
         output_info += "   * sub-task created " + child.key + " created for story " + story.key
-        jira.assign_issue(child.id, QA_JIRA_USER)
+        jira.assign_issue(child.id, Roles.QA_JIRA_USER)
 
     return output_info
 
@@ -121,4 +119,4 @@ if __name__ == "__main__":
     info = create_test_validation_subtask(jira_connection, info)
     create_technical_sub_task_test_scope_out_of_scope_creation(jira_connection, info)
 
-    create_output_files([warning, OUTPUT_MESSAGE_FILE_NAME], [info, OUTPUT_INFO_FILE_NAME])
+    create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])
