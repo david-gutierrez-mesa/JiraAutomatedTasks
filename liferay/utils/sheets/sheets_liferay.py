@@ -16,9 +16,9 @@ def get_testmap_connection():
     home = Path(expanduser("~"))
     folder = home / ".testmap_user"
     credentials_file = folder / "credentials.json"
-    token_file = "../../token.json"
+    token_file = "../token.json"
     creds = None
-    if os.path.exists('../../token.json'):
+    if os.path.exists('../token.json'):
         creds = Credentials.from_authorized_user_file(abspath(token_file), SheetInstance.SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
