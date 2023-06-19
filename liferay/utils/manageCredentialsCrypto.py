@@ -14,7 +14,7 @@ FOLDER_NAME = ".jira_user"
 def delete_credentials():
     home = Path(expanduser("~"))
     folder = home / FOLDER_NAME
-    rmtree(folder)
+    rmtree(folder, ignore_errors=True)
 
 
 def get_credentials():
