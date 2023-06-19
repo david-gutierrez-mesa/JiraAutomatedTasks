@@ -9,22 +9,23 @@ from liferay.utils.jira.jira_helpers import set_filter_permissions
 from liferay.utils.jira.jira_liferay import get_jira_connection
 from liferay.utils.manageCredentialsCrypto import delete_credentials
 
-DEFAULT_URL = "https://liferay-sandbox-822.atlassian.net"
-LOG_FILE_NAME = 'log_file.log'
+DEFAULT_URL = "https://liferay.atlassian.net/"
+LOG_FILE_NAME = '_log_file.log.log'
 
 
 def main():
-    logging.basicConfig(filename=LOG_FILE_NAME,
-                        filemode='w',
-                        format='%(asctime)s,%(msecs)d %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S',
-                        level=logging.INFO)
     print("Please, enter the URL of Jira instance where you want to import your filters\n")
     jira_url = input("Jira URL (pres enter to use " + DEFAULT_URL + "): ") or DEFAULT_URL
     jira_type = "Cloud"
     delete_credentials()
     jira_connection = get_jira_connection(jira_url, jira_type)
     user_id = jira_connection.user(jira_connection.current_user()).emailAddress.split('@')[0]
+    log_file_name = user_id + LOG_FILE_NAME
+    logging.basicConfig(filename=log_file_name,
+                        filemode='w',
+                        format='%(asctime)s,%(msecs)d %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.INFO)
     file_name = user_id + '_filters.pkl'
     with open(file_name, 'rb') as inp:
         filters_to_import = pickle.load(inp)
@@ -62,12 +63,15 @@ def main():
                               filter_to_import.jql +
                               '\n  Error message:' + err.text)
                 error += 1
-    print('\n\nTOTAL RESULTS:\n'
+    summary = ('\n\nTOTAL RESULTS:\n'
           '   Successfully imported = ' + str(imported) + '\n' +
           '   Skipped since already exist = ' + str(skipped) + '\n' +
           '   Need to be imported manually = ' + str(error) + '\n' +
           ' NOTE: for the imported filters you need to verify the permission since they may not been imported\n' +
           'Check ' + LOG_FILE_NAME + ' file for details.')
+
+    logging.info(summary)
+    print(summary)
 
 
 if __name__ == '__main__':
