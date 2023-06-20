@@ -13,6 +13,13 @@ class EchoJiraTestCase(unittest.TestCase):
         except Exception:
             self.fail("Test failed unexpectedly!")
 
+    def test_close_ready_for_release_bugs(self):
+        jira_connection_test = get_jira_connection()
+        try:
+            close_ready_for_release_bugs(jira_connection_test, '')
+        except Exception:
+            self.fail("Test failed unexpectedly!")
+
     def test_create_poshi_automation_task(self):
         jira_connection_test = get_jira_connection()
         try:
@@ -24,6 +31,13 @@ class EchoJiraTestCase(unittest.TestCase):
         jira_connection_test = get_jira_connection()
         try:
             create_poshi_automation_task_for_bugs(jira_connection_test, '')
+        except Exception:
+            self.fail("Test failed unexpectedly!")
+
+    def test_creating_testing_subtasks(self):
+        jira_connection_test = get_jira_connection()
+        try:
+            creating_testing_subtasks(jira_connection_test, '')
         except Exception:
             self.fail("Test failed unexpectedly!")
 

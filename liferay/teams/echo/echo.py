@@ -24,7 +24,7 @@ def assign_qa_engineer(jira, output_info):
     stories_without_qa_engineer = jira.search_issues(Filter.Assign_QA_Engineer,
                                                      fields=['key', 'assignee', CustomField.QA_Engineer])
     for story in stories_without_qa_engineer:
-        qa_engineer = [{'name': story.fields.assignee.name}]
+        qa_engineer = [{'accountId': story.fields.assignee.accountId}]
         story.update(
             fields={CustomField.QA_Engineer: qa_engineer}
         )
@@ -34,13 +34,12 @@ def assign_qa_engineer(jira, output_info):
     return output_info
 
 
-def close_ready_for_release_bugs(jira):
-    print("Closing bugs in Ready for Release status...")
-    bugs_in_ready_for_release = jira.search_issues(Filter.All_bugs_in_Ready_for_Release)
+def close_ready_for_release_bugs(jira, output_info):
+    bugs_in_ready_for_release = jira.search_issues(Filter.All_bugs_in_Ready_for_Release,
+                                                   fields=['id', 'fixVersions', 'subtasks'])
     all_bugs_closed = True
     for bug in bugs_in_ready_for_release:
         bug_id = bug.id
-        print("Closing ", bug.key)
         if not bug.fields.fixVersions:
             fix_version = [{'name': 'Master'}]
             bug.update(
@@ -62,14 +61,13 @@ def close_ready_for_release_bugs(jira):
     if not all_bugs_closed:
         raise TypeError("Not all bugs were closed since some of them has not closed subtask")
 
-    print("Ready for Release status are closed")
+    output_info += "Ready for Release bugs has been closed" + "\n "
 
 
-def creating_testing_subtasks(jira):
-    print("Creating subtasks for Echo team...")
-    stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation)
+def creating_testing_subtasks(jira, output_info):
+    stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
+                                                         fields=['key', 'subtasks', 'components'])
     for story in stories_without_testing_subtask:
-        print("Creating sub-task for story " + story.key)
         needs_backend = True
         needs_frontend = True
         for subtask in story.fields.subtasks:
@@ -85,44 +83,44 @@ def creating_testing_subtasks(jira):
 
         if needs_backend:
             subtask_backend = initialize_subtask_back_end(story, components)
-            child = jira.create_issue(fields=subtask_backend)
-            print("* Created sub-task: " + child.key)
+            jira.create_issue(fields=subtask_backend)
 
         if needs_frontend:
             subtask_frontend = initialize_subtask_front_end(story, components)
-            child = jira.create_issue(fields=subtask_frontend)
-            print("* Created sub-task: " + child.key)
-
-    print("Subtasks for Echo team are up to date")
+            jira.create_issue(fields=subtask_frontend)
+        output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
 
 
 def create_testing_table_for_stories(jira, output_info):
-    stories_without_testing_table = jira.search_issues(Filter.Ready_to_create_test_table_on_description)
+    stories_without_testing_table = jira.search_issues(Filter.Ready_to_create_test_table_on_description,
+                                                       fields=['key', 'description', 'subtasks'])
     for story in stories_without_testing_table:
         current_description = story.fields.description
-        poshi_automation_table = AUTOMATION_TABLE_HEADER + '\r\n'
+        poshi_automation_table = AUTOMATION_TABLE_HEADER + '\n'
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == 'Test Scenarios Coverage | Test Creation':
                 test_definitions = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '') \
-                    .split('\r\n*Case ')
+                    .split('\n*Case ')
                 for case in test_definitions[1:]:
-                    case_summary = get_property(case, ':*\r\n')
+                    case_summary = get_property(case, ':*\n')
                     case_priority = get_property(case, 'Test Strategy:')
                     can_be_automated = get_property(case, 'Can be covered by POSHI?:')
 
                     poshi_automation_table += '|' + case_summary + '|' + case_priority + '|Manual|TBD|TBD|' \
-                                              + can_be_automated + '|' + '\r\n'
+                                              + can_be_automated + '|' + '\n'
                 break
 
-        updated_description = current_description + '\r\n\r\nh3. Test Scenarios\r\n' + poshi_automation_table
+        updated_description = current_description + '\n\nh3. Test Scenarios\n' + poshi_automation_table
         output_info += "* Testing table created for story " + html_issue_with_link(story) + "\n "
         story.update(fields={'description': updated_description})
     return output_info
 
 
 def create_poshi_automation_task(jira, output_warning, output_info):
-    stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task)
+    stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task,
+                                                                  fields=['description', 'key', 'labels', 'components',
+                                                                          CustomField.Epic_Link, 'subtasks'])
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
         description = story.fields.description
@@ -131,8 +129,8 @@ def create_poshi_automation_task(jira, output_warning, output_info):
         if table_staring_position != -1:
             skip_story = False
             table = description[table_staring_position:]
-            table_rows = table.split('\r\n')
-            poshi_automation_table = table_rows[0] + 'testcase||Test Name||' + '\r\n'
+            table_rows = table.split('\n')
+            poshi_automation_table = table_rows[0] + 'testcase||Test Name||' + '\n'
             for row in table_rows[1:]:
                 if row.count('|') == 7:
                     cells = row.split('|')
@@ -145,12 +143,12 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                         break
                     elif (cells[4].casefold() == 'No'.casefold() and cells[5].casefold() == 'No'.casefold()) \
                             and cells[6].casefold() == 'Yes'.casefold():
-                        poshi_automation_table += row + ' | |' + '\r\n'
+                        poshi_automation_table += row + ' | |' + '\n'
                         is_automation_task_needed = True
                     else:
                         poshi_automation_table += '|-' + cells[1].strip() + '-|-' + cells[2].strip() + '-|-' + \
                                                   cells[3].strip() + '-|-' + cells[4].strip() + '-|-' + \
-                                                  cells[5].strip() + '-|-' + cells[6].strip() + '-| | |' + '\r\n'
+                                                  cells[5].strip() + '-|-' + cells[6].strip() + '-| | |' + '\n'
                 else:
                     break
             if skip_story:
@@ -184,7 +182,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
 
 
 def fill_round_technical_testing_description(jira, output_info):
-    round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields="key")
+    round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields='key')
     for task in round_technical_testing_sub_tasks:
         updated_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
                               "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2. Not " \
@@ -236,11 +234,11 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     info = assign_qa_engineer(jira_connection, info)
     info = fill_round_technical_testing_description(jira_connection, info)
-    creating_testing_subtasks(jira_connection)
+    # creating_testing_subtasks(jira_connection, info)
     warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
-    info = create_poshi_automation_task_for_bugs(jira_connection, info)
-    close_ready_for_release_bugs(jira_connection)
-    warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
+    # info = create_poshi_automation_task_for_bugs(jira_connection, info)
+    close_ready_for_release_bugs(jira_connection, info)
+    # warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])
