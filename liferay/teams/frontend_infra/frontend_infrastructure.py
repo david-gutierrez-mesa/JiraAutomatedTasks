@@ -16,23 +16,23 @@ def create_test_creation_subtask(jira, output_info):
 
         if test_creation:
             description = '*Output*' \
-                          '\r\n # Our table with the Test scenarios/test cases to be validated in the ' \
+                          '\n # Our table with the Test scenarios/test cases to be validated in the ' \
                           'validation phase.' \
-                          '\r\n # After being reviewed by the team, add a finalized table to the parent story ' \
+                          '\n # After being reviewed by the team, add a finalized table to the parent story ' \
                           'description' \
-                          '\r\n # Add test cases to [Test ' \
+                          '\n # Add test cases to [Test ' \
                           'Map|' + SheetInstance.GOOGLE_SHEET_URL + \
                           '/edit#gid=2145200593]' \
-                          '\r\n' \
-                          '\r\n*Test Scenarios:*' \
-                          '\r\n||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (' \
+                          '\n' \
+                          '\n*Test Scenarios:*' \
+                          '\n||Requirement||Test Case||Covered by unit/integration test? (Yes/No)||Test Priority (' \
                           'business impact)||' \
-                          '\r\n| | | | |' \
-                          '\r\n' \
-                          '\r\n*Exploratory testing to consider:*' \
-                          '\r\n||Requirement||Test Scenarios||Test Priority (business impact)||Covered by ' \
+                          '\n| | | | |' \
+                          '\n' \
+                          '\n*Exploratory testing to consider:*' \
+                          '\n||Requirement||Test Scenarios||Test Priority (business impact)||Covered by ' \
                           'frontend/backend Unit Test?||' \
-                          '\r\n| | | | |'
+                          '\n| | | | |'
             subtask_test_creation = initialize_subtask_test_creation(story, components, description)
             child = jira.create_issue(fields=subtask_test_creation)
             output_info += "   * sub-task created: " + child.key
@@ -48,43 +48,43 @@ def create_test_validation_subtask(jira, output_info):
         test_validation, components = prepare_test_validation_subtask(story)
 
         if test_validation:
-            description = '\r\n*Context*' \
-                          '\r\nExecute the tests of the parent story, and use the information in the*Test ' \
+            description = '\n*Context*' \
+                          '\nExecute the tests of the parent story, and use the information in the*Test ' \
                           'Information*section to perform the tests.' \
-                          '\r\n' \
-                          '\r\n*Output*' \
-                          '\r\nTell in one comment (in the story ticket) the final status of this first round, ' \
+                          '\n' \
+                          '\n*Output*' \
+                          '\nTell in one comment (in the story ticket) the final status of this first round, ' \
                           'and in this ticket, fill the bug section.' \
-                          '\r\nRemember to link the bug (if you discover it) with the Story ticket.' \
-                          '\r\n{code:java}' \
-                          '\r\n*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          '\nRemember to link the bug (if you discover it) with the Story ticket.' \
+                          '\n{code:java}' \
+                          '\n*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
                           'color:#59afe1}BLOCKED{color}* Manual Testing following the steps in the description.' \
-                          '\r\n' \
-                          '\r\n*Verified on:*' \
-                          '\r\n*Environment*: localhost' \
-                          '\r\n*Github*: https://github.com/liferay/liferay-portal.git' \
-                          '\r\n*Branch*: master' \
-                          '\r\n*Bundle*: Liferay DXP' \
-                          '\r\n*Database*: MySQL 5.7.22' \
-                          '\r\n*Last Commit*: ? ' \
-                          '\r\n' \
-                          '\r\n|| Test Scenarios || Test Result ||' \
-                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          '\n' \
+                          '\n*Verified on:*' \
+                          '\n*Environment*: localhost' \
+                          '\n*Github*: https://github.com/liferay/liferay-portal.git' \
+                          '\n*Branch*: master' \
+                          '\n*Bundle*: Liferay DXP' \
+                          '\n*Database*: MySQL 5.7.22' \
+                          '\n*Last Commit*: ? ' \
+                          '\n' \
+                          '\n|| Test Scenarios || Test Result ||' \
+                          '\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
                           'color:#59afe1}BLOCKED{color}*|' \
-                          '\r\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
+                          '\n| |*{color:#14892c}PASSED{color}* / *{color:#d04437}FAILED{color}* / *{' \
                           'color:#59afe1}BLOCKED{color}*|' \
-                          '\r\n...' \
-                          '\r\n{code}' \
-                          '\r\n*Bugs:*' \
-                          '\r\n (/)- PASS' \
-                          '\r\n (!)- To Do' \
-                          '\r\n (x)- FAIL' \
-                          '\r\n * *Impeditive:*' \
-                          '\r\n||Ticket||Title||' \
-                          '\r\n|?|?|' \
-                          '\r\n * *Not Impeditive:*' \
-                          '\r\n||Ticket||Title||' \
-                          '\r\n|?|?|'
+                          '\n...' \
+                          '\n{code}' \
+                          '\n*Bugs:*' \
+                          '\n (/)- PASS' \
+                          '\n (!)- To Do' \
+                          '\n (x)- FAIL' \
+                          '\n * *Impeditive:*' \
+                          '\n||Ticket||Title||' \
+                          '\n|?|?|' \
+                          '\n * *Not Impeditive:*' \
+                          '\n||Ticket||Title||' \
+                          '\n|?|?|'
             subtask_test_validation = initialize_subtask_test_validation(story, components, description)
             child = jira.create_issue(fields=subtask_test_validation)
             output_info += "   * sub-task created: " + child.key

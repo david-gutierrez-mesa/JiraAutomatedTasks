@@ -1,13 +1,13 @@
 class CustomField:
-    Bug_type = 'customfield_18920'
-    Epic_Link = 'customfield_12821'
-    Fix_Priority = 'customfield_12523'
-    QA_Engineer = 'customfield_24852'
+    Bug_type = 'customfield_10240'
+    Epic_Link = 'customfield_10014'
+    Fix_Priority = 'customfield_10211'
+    QA_Engineer = 'customfield_10227'
 
 
 class Filter:
-    All_bugs_in_Ready_for_Release = 'filter=54632'
-    Assign_QA_Engineer = 'filter=54607'
+    All_bugs_in_Ready_for_Release = 'filter=11502'
+    Assign_QA_Engineer = 'filter=11500'
     Closed_Bugs_with_FP4_and_FP5_without_automation_task = 'filter=51790'
     Echo_7_4_CE_GA_All = 'filter=49998'
     Echo_Dashboard_v3_0_Actionable_bugs = 'filter=56599'
@@ -41,18 +41,18 @@ class Filter:
     GSheets_FI_7_4_CE_GA_All = 'filter=50189'
     Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=54999'
     Integration_In_Development_Sub_task_creation_Headless_team = 'filter=54996'
-    Integration_Sub_task_creation = 'filter=54572'
+    Integration_Sub_task_creation = 'filter=12131'
     Product_QA_Test_Validation_Round_1 = 'filter=55398'
     Ready_to_create_POSHI_automation_task = 'filter=54646'
-    Ready_to_create_test_table_on_description = 'filter=54772'
-    Round_tasks_without_description = 'filter=56455'
+    Ready_to_create_test_table_on_description = 'filter=12111'
+    Round_tasks_without_description = 'filter=11517'
     Stories_ready_to_be_closed = 'filter=55152'
     Stories_to_add_into_test_map = 'filter=55104'
 
 
 class Instance:
-    Jira_URL = "https://issues.liferay.com"
-    Type = "Server"
+    Jira_URL = "https://liferay.atlassian.net"
+    Type = "Cloud"
 
 
 class Status:

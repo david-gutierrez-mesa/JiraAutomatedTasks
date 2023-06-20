@@ -101,11 +101,11 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
 
 
 def get_property(local_case, property_name):
-    local_case = local_case.replace(' \r\n', '\r\n')
+    local_case = local_case.replace(' \n', '\n')
     test_property = 'TBD'
     string_start = local_case.find(property_name) + len(property_name)
     if string_start != -1:
-        string_end = local_case.find('\r\n', string_start)
+        string_end = local_case.find('\n', string_start)
         test_property = local_case[string_start:string_end].strip()
     return test_property
 
@@ -201,7 +201,7 @@ def read_test_cases_table_from_description(description):
         if table_ending_position == -1:
             table_ending_position = description.find(table_alternative_ending_string)
         table = description[table_staring_position:table_ending_position]
-        table_rows = table.split('\r\n')
+        table_rows = table.split('\n')
         table_rows = [value for value in table_rows if value != '']
         return table_rows[1:]
     else:
