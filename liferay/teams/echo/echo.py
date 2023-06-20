@@ -235,7 +235,7 @@ if __name__ == "__main__":
     info = assign_qa_engineer(jira_connection, info)
     info = fill_round_technical_testing_description(jira_connection, info)
     # creating_testing_subtasks(jira_connection, info)
-    warning, info = create_poshi_automation_task(jira_connection, warning, info)
+    # warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
     # info = create_poshi_automation_task_for_bugs(jira_connection, info)
     close_ready_for_release_bugs(jira_connection, info)
