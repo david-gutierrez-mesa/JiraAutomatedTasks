@@ -28,7 +28,7 @@ def assign_qa_engineer(jira, output_info):
         story.update(
             fields={CustomField.QA_Engineer: qa_engineer}
         )
-        output_info += "* " + story.fields.assignee.name + " has been assigned as QA for " + \
+        output_info += "* " + story.fields.assignee.displayName + " has been assigned as QA for " + \
                        html_issue_with_link(story) + "\n "
 
     return output_info
