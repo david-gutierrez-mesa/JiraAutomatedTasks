@@ -68,7 +68,7 @@ def close_ready_for_release_bugs(jira, output_info):
 
 def creating_testing_subtasks(jira, output_info):
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
-                                                         fields=['key', 'subtasks', 'components'])
+                                                         fields=['key', 'subtasks', 'components', 'id'])
     for story in stories_without_testing_subtask:
         needs_backend = True
         needs_frontend = True
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     info = assign_qa_engineer(jira_connection, info)
     info = fill_round_technical_testing_description(jira_connection, info)
-    # info = creating_testing_subtasks(jira_connection, info)
+    info = creating_testing_subtasks(jira_connection, info)
     # warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
     # info = create_poshi_automation_task_for_bugs(jira_connection, info)
