@@ -252,12 +252,12 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
-    info = update_echo_test_map(sheet_connection, jira_connection, info)
-    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
-    warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
-    warning = check_control_panel_tab(sheet_connection, warning)
-    bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
-                                                                      bug_threshold_exceed, bug_threshold_warning)
+    # info = update_echo_test_map(sheet_connection, jira_connection, info)
+    # warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
+    # warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
+    # warning = check_control_panel_tab(sheet_connection, warning)
+    # bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
+    #                                                                   bug_threshold_exceed, bug_threshold_warning)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
                         [info, FileName.OUTPUT_INFO_FILE_NAME],
