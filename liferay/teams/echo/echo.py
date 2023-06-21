@@ -8,7 +8,6 @@ from liferay.utils.jira.jira_liferay import get_jira_connection
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
     parent_key = parent_story.key
-    print("Creating automation task for ", parent_key)
     summary = parent_key + ' - Product QA | Test Automation Creation'
 
     description = 'Create test automation to validate the critical test scenarios/cases of the related story.\n\nThe ' \
@@ -16,7 +15,6 @@ def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tabl
                   'but if you believe that can and have time to implement the LOW and TRIVIAL test cases, please, ' \
                   'create one more subtask to it, and go ahead!\n\nh3. Test Scenarios\n' + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
-    print("Poshi task ", new_issue.key, " created for", parent_key)
     return new_issue
 
 
@@ -127,7 +125,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
     for story in stories_without_poshi_automation_created:
         is_automation_task_needed = False
         description = story.fields.description
-        table_starring_string = '||Test Scenarios||'
+        table_starring_string = '||*Test Scenarios*||'
         table_staring_position = description.find(table_starring_string)
         if table_staring_position != -1:
             skip_story = False
@@ -136,22 +134,22 @@ def create_poshi_automation_task(jira, output_warning, output_info):
             poshi_automation_table = table_rows[0] + 'testcase||Test Name||' + '\n'
             for row in table_rows[1:]:
                 if row.count('|') == 7:
-                    cells = row.split('|')
-                    if cells[2].casefold() == 'TBD'.casefold() \
+                    cells = list(filter(None, row.split('|')))
+                    if cells[3].casefold() == 'TBD'.casefold() \
                             or cells[4].casefold() == 'TBD'.casefold() \
                             or cells[5].casefold() == 'TBD'.casefold():
                         output_info += "Table for story " + story.key + "(" + Instance.Jira_URL + "/browse/" \
                                        + story.key + ") is not up to date. Skipping.\n"
                         skip_story = True
                         break
-                    elif (cells[4].casefold() == 'No'.casefold() and cells[5].casefold() == 'No'.casefold()) \
-                            and cells[6].casefold() == 'Yes'.casefold():
+                    elif (cells[3].casefold() == 'No'.casefold() and cells[4].casefold() == 'No'.casefold()) \
+                            and cells[5].casefold() == 'Yes'.casefold():
                         poshi_automation_table += row + ' | |' + '\n'
                         is_automation_task_needed = True
                     else:
-                        poshi_automation_table += '|-' + cells[1].strip() + '-|-' + cells[2].strip() + '-|-' + \
-                                                  cells[3].strip() + '-|-' + cells[4].strip() + '-|-' + \
-                                                  cells[5].strip() + '-|-' + cells[6].strip() + '-| | |' + '\n'
+                        poshi_automation_table += '|-' + cells[0].strip() + '-|-' + cells[1].strip() + '-|-' + \
+                                                  cells[2].strip() + '-|-' + cells[3].strip() + '-|-' + \
+                                                  cells[4].strip() + '-|-' + cells[5].strip() + '-| | |' + '\n'
                 else:
                     break
             if skip_story:
@@ -239,7 +237,7 @@ if __name__ == "__main__":
     info = assign_qa_engineer(jira_connection, info)
     info = fill_round_technical_testing_description(jira_connection, info)
     info = creating_testing_subtasks(jira_connection, info)
-    # warning, info = create_poshi_automation_task(jira_connection, warning, info)
+    warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
     # info = create_poshi_automation_task_for_bugs(jira_connection, info)
     info = close_ready_for_release_bugs(jira_connection, info)
