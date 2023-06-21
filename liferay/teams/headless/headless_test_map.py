@@ -12,7 +12,7 @@ HEADLESS_TESTMAP_ID = '19KSqxtKJQ5FHZbHKxDS3_TzptWeD0DrL-mLk0y0WFYY'
 JIRA_TEST_MAP_TAB = "JIRA-TestMap"
 JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!C3:I'
 OUTPUT_MESSAGE_FILE_NAME = "output_message.txt"
-OUTPUT_INFO_FILE_NAME = "output_info.txt"
+OUTPUT_INFO_FILE_NAME = "../../output_info.txt"
 OUTPUT_BUG_THRESHOLD_INFO_FILE_NAME = "bug_threshold_output_info.txt"
 
 
