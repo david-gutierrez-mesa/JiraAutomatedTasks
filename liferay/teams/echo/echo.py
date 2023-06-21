@@ -123,11 +123,17 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                                                                   fields=['description', 'key', 'labels', 'components',
                                                                           CustomField.Epic_Link, 'subtasks'])
     for story in stories_without_poshi_automation_created:
+        if is_sub_task_closed(story, 'Product QA | Functional Automation'):
+            break
         is_automation_task_needed = False
         description = story.fields.description
-        table_starring_string = '||*Test Scenarios*||'
+        table_starring_string = ''
+        if description.find('||*Test Scenarios*||') != -1:
+            table_starring_string = '||*Test Scenarios*||'
+        elif description.find('||Test Scenarios||') != -1:
+            table_starring_string = '||Test Scenarios||'
         table_staring_position = description.find(table_starring_string)
-        if table_staring_position != -1:
+        if table_starring_string:
             skip_story = False
             table = description[table_staring_position:]
             table_rows = table.split('\n')
