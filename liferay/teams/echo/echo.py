@@ -207,8 +207,8 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
         can_be_closed = True
         for row in test_cases:
             if row.count('|') == 7:
-                cells = row.split('|')
-                if cells[2].casefold() == 'TBD'.casefold() \
+                cells = list(filter(None, row.split('|')))
+                if cells[3].casefold() == 'TBD'.casefold() \
                         or cells[4].casefold() == 'TBD'.casefold() \
                         or cells[5].casefold() == 'TBD'.casefold():
                     output_warning += "* Table for story " + html_issue_with_link(story) +\
@@ -247,7 +247,7 @@ if __name__ == "__main__":
     info = create_testing_table_for_stories(jira_connection, info)
     # info = create_poshi_automation_task_for_bugs(jira_connection, info)
     info = close_ready_for_release_bugs(jira_connection, info)
-    # warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
+    warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])
     print("End echo.py")
