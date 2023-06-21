@@ -179,7 +179,8 @@ def create_poshi_automation_task(jira, output_warning, output_info):
 
 def create_poshi_automation_task_for_bugs(jira, output_info):
     bugs_without_poshi_automation_created = \
-        jira.search_issues(Filter.Closed_Bugs_with_FP4_and_FP5_without_automation_task)
+        jira.search_issues(Filter.Closed_Bugs_with_FP4_and_FP5_without_automation_task,
+                           fields=['key', 'summary', CustomField.Epic_Link, 'components'])
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
         jira.transition_issue(poshi_task, transition=Status.Selected_for_development)
@@ -245,7 +246,7 @@ if __name__ == "__main__":
     info = creating_testing_subtasks(jira_connection, info)
     warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
-    # info = create_poshi_automation_task_for_bugs(jira_connection, info)
+    info = create_poshi_automation_task_for_bugs(jira_connection, info)
     info = close_ready_for_release_bugs(jira_connection, info)
     warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
 
