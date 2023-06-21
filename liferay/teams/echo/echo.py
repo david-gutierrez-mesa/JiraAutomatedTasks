@@ -123,6 +123,8 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                                                                   fields=['description', 'key', 'labels', 'components',
                                                                           CustomField.Epic_Link, 'subtasks'])
     for story in stories_without_poshi_automation_created:
+        if is_sub_task_closed(story, 'Product QA | Functional Automation'):
+            break
         is_automation_task_needed = False
         description = story.fields.description
         table_starring_string = '||*Test Scenarios*||'

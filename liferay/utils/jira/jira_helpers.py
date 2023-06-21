@@ -163,6 +163,16 @@ def is_component_lead(component, team_name_in_jira):
         return False
 
 
+def is_sub_task_closed(story, sub_task_title):
+    for subtask in story.get_field('subtasks'):
+        if subtask.fields.summary == sub_task_title:
+            if subtask.fields.status == Status.Closed:
+                return True
+            else:
+                break
+    return False
+
+
 def prepare_test_creation_subtask(story):
     test_creation = True
     for subtask in story.fields.subtasks:
