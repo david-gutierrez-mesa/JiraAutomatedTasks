@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from liferay.utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
+from liferay.utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask, \
+    is_sub_task_closed
 from liferay.utils.jira.jira_constants import Status, Filter
 from liferay.utils.jira.jira_liferay import get_jira_connection
 from liferay.utils.sheets.sheets_constants import SheetInstance
@@ -56,7 +57,7 @@ def update_creation_subtask(jira):
                                   '| | | | |\n'
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
-                        jira.assign_issue(subtask.id, 'support-qa')
+                        jira.assign_issue(subtask.id, 'qa-support@liferay.com')
                     break
     print("Subtasks Test Creation for Headless team are up to date")
 
@@ -113,7 +114,7 @@ def update_validation_subtask(jira):
                                   '|?|?|\n'
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
-                        jira.assign_issue(subtask.id, 'support-qa')
+                        jira.assign_issue(subtask.id, 'qa-support@liferay.com')
                     break
     print("Validation subtasks for Headless team are up to date")
 
@@ -124,6 +125,8 @@ def create_poshi_automation_task(jira):
     stories_without_poshi_automation_created = \
         jira.search_issues(Filter.Headless_Team_Ready_to_create_POSHI_Automation_Task)
     for story in stories_without_poshi_automation_created:
+        if is_sub_task_closed(story, 'Product QA | Functional Automation'):
+            break
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
                 description = jira.issue(subtask.id, fields='description').fields.description
