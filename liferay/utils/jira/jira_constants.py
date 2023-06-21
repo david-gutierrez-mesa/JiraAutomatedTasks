@@ -43,7 +43,7 @@ class Filter:
     Integration_In_Development_Sub_task_creation_Headless_team = 'filter=54996'
     Integration_Sub_task_creation = 'filter=12131'
     Product_QA_Test_Validation_Round_1 = 'filter=55398'
-    Ready_to_create_POSHI_automation_task = 'filter=54646'
+    Ready_to_create_POSHI_automation_task = 'filter=12213'
     Ready_to_create_test_table_on_description = 'filter=12111'
     Round_tasks_without_description = 'filter=11517'
     Stories_ready_to_be_closed = 'filter=55152'
