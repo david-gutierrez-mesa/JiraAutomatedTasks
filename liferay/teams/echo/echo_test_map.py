@@ -6,7 +6,6 @@ from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
 from liferay.utils.jira.jira_constants import Filter
 from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.sheets.sheets_constants import SheetInstance
 from liferay.utils.sheets.testmap_helpers import *
 from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 
@@ -203,7 +202,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
     current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute().get(
         'values', [])
     for lps in lps_list:
-        story = jira.issue(lps[0])
+        story = jira.issue(lps[0], fields=['key', 'issuelinks', 'components'])
         component = get_component_in_team_components(story, echo_team_components)
         if not component:
             output_warning += "* Story " + html_issue_with_link(story) + \
@@ -217,7 +216,7 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                 linked_issue_key = link.outwardIssue
             if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
                 if linked_issue_key.fields.status.name == Status.Closed:
-                    linked_issue = jira.issue(linked_issue_key.key)
+                    linked_issue = jira.issue(linked_issue_key.key, fields=['description'])
                     test_cases_table = read_test_cases_table_from_description(linked_issue.fields.description)
                     start, end = get_group_start_and_end_position(component, current_test_cases_list,
                                                                   ECHO_TESTMAP_SHEET_HEADER_LENGTH)
@@ -252,10 +251,10 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     team_components = get_team_components(jira_connection, 'LPS', 'Product Team Echo')
-    # info = update_echo_test_map(sheet_connection, jira_connection, info)
-    # warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
+    info = update_echo_test_map(sheet_connection, jira_connection, info)
+    warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     # warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
-    # warning = check_control_panel_tab(sheet_connection, warning)
+    warning = check_control_panel_tab(sheet_connection, warning)
     # bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
     #                                                                   bug_threshold_exceed, bug_threshold_warning)
 

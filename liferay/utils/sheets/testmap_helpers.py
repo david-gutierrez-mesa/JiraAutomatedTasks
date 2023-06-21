@@ -48,7 +48,7 @@ def get_group_start_and_end_position(component, matrix, header_length):
 
 
 def get_line_position_by_test_case_name(lps_list, header_length, test_case_name, start, end):
-    for pos, matrix_i in islice(enumerate(lps_list), start, end):
+    for pos, matrix_i in islice(enumerate(lps_list), start - header_length, end- header_length):
         if len(matrix_i) != 0:
             if len(matrix_i[0]) != 0:
                 value = matrix_i[0].strip()

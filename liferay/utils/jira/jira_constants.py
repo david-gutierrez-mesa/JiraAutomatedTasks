@@ -9,7 +9,7 @@ class Filter:
     All_bugs_in_Ready_for_Release = 'filter=11502'
     Assign_QA_Engineer = 'filter=11500'
     Closed_Bugs_with_FP4_and_FP5_without_automation_task = 'filter=11675'
-    Echo_7_4_CE_GA_All = 'filter=49998'
+    Echo_7_4_CE_GA_All = 'filter=11478'
     Echo_Dashboard_v3_0_Actionable_bugs = 'filter=56599'
     Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs = 'filter=56633'
     Echo_Dashboard_v3_0_Current_Critical_Sec_Vul = 'filter=56603'
