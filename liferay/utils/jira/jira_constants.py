@@ -47,7 +47,7 @@ class Filter:
     Ready_to_create_test_table_on_description = 'filter=12111'
     Round_tasks_without_description = 'filter=11517'
     Stories_ready_to_be_closed = 'filter=12230'
-    Stories_to_add_into_test_map = 'filter=55104'
+    Stories_to_add_into_test_map = 'filter=11512'
 
 
 class Instance:
