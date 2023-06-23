@@ -9,7 +9,8 @@ from liferay.utils.sheets.sheets_constants import SheetInstance
 
 
 def create_test_creation_subtask(jira, output_info):
-    stories_without_testing_subtask = jira.search_issues(Filter.FI_Stories_without_test_creation_subtask)
+    stories_without_testing_subtask = jira.search_issues(Filter.FI_Stories_without_test_creation_subtask,
+                                                         fields=['key', 'id', 'subtasks', 'components'])
     for story in stories_without_testing_subtask:
         output_info += "Creating test scenarios coverage sub-task for story " + story.key
         test_creation, components = prepare_test_creation_subtask(story)
@@ -42,7 +43,8 @@ def create_test_creation_subtask(jira, output_info):
 
 
 def create_test_validation_subtask(jira, output_info):
-    stories_without_testing_subtask = jira.search_issues(Filter.FI_Ready_for_Testing_Stories_without_Test_Validation)
+    stories_without_testing_subtask = jira.search_issues(Filter.FI_Ready_for_Testing_Stories_without_Test_Validation,
+                                                         fields=['key', 'id', 'subtasks', 'components'])
     for story in stories_without_testing_subtask:
         output_info += "Creating test validation sub-task for story " + story.key
         test_validation, components = prepare_test_validation_subtask(story)
