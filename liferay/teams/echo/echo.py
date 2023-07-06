@@ -2,7 +2,7 @@
 from liferay.teams.echo.echo_constants import Roles, FileName
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
-from liferay.utils.jira.jira_constants import Status, CustomField, Filter
+from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition
 from liferay.utils.jira.jira_liferay import get_jira_connection
 
 
@@ -50,7 +50,7 @@ def close_ready_for_release_bugs(jira, output_info):
                 can_be_closed = False
                 break
         if can_be_closed:
-            jira.transition_issue(bug_id, transition=Status.Closed)
+            jira.transition_issue(bug_id, transition=Transition.Closed)
             jira.add_comment(bug_id, 'Closing directly since we are not considering Ready for Release status so far',
                              visibility={'type': 'group', 'value': 'liferay-qa'})
         else:
@@ -183,7 +183,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
                            fields=['key', 'summary', CustomField.Epic_Link, 'components'])
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
-        jira.transition_issue(poshi_task, transition=Status.Selected_for_development)
+        jira.transition_issue(poshi_task, transition=Transition.Selected_for_development)
         output_info += "* Automation task created for bug " + html_issue_with_link(bug) + "\n "
 
     return output_info
@@ -226,11 +226,12 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                         linked_issue_key = link.outwardIssue
                     if linked_issue_key.fields.summary.endswith(' - Product QA | Test Automation Creation'):
                         if linked_issue_key.fields.status.name == 'Open':
-                            jira.transition_issue(linked_issue_key.id, transition=Status.Selected_for_development)
+                            jira.transition_issue(linked_issue_key.id, transition=Transition.Selected_for_development)
                         break
             if story.get_field("status").id == Status.Ready_for_testing:
-                jira.transition_issue(story.id, transition=Status.In_Testing)
-            jira.transition_issue(story.id, transition=Status.Ready_for_Product_Review)
+                jira.transition_issue(story.id, transition=Transition.In_Testing)
+            if story.get_field("status").id == Status.In_Testing:
+                jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
             jira.assign_issue(story.id, Roles.Design_lead)
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info

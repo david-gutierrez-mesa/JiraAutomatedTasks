@@ -59,6 +59,11 @@ class Status:
     Closed = 'Closed'
     In_Testing = 'In Testing'
     Open = 'Open'
-    Ready_for_Product_Review = 'Ready for Product Review'
     Ready_for_testing = '10619'
+
+
+class Transition:
+    Closed = 'Closed'
+    In_Testing = 'In Testing'
+    Ready_for_Product_Review = 'Ready for Product Review'
     Selected_for_development = 'Selected for Development'
