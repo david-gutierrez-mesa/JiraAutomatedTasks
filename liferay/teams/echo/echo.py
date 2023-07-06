@@ -66,16 +66,19 @@ def close_ready_for_release_bugs(jira, output_info):
 
 def creating_testing_subtasks(jira, output_info):
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
-                                                         fields=['key', 'subtasks', 'components', 'id'])
+                                                         fields=['key', 'subtasks', 'components', 'id', 'description'])
     for story in stories_without_testing_subtask:
         needs_backend = True
         needs_frontend = True
+        needs_round_1 = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == 'Test Scenarios Coverage | Backend':
                 needs_backend = False
             elif summary == 'Test Scenarios Coverage | Frontend':
                 needs_frontend = False
+            elif summary == 'Product QA | Test Validation - Round 1':
+                needs_round_1 = False
 
         components = []
         for component in story.fields.components:
@@ -87,6 +90,9 @@ def creating_testing_subtasks(jira, output_info):
 
         if needs_frontend:
             subtask_frontend = initialize_subtask_front_end(story, components)
+            jira.create_issue(fields=subtask_frontend)
+        if needs_round_1:
+            subtask_frontend = initialize_subtask_test_validation(story, components, story.fields.description)
             jira.create_issue(fields=subtask_frontend)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
