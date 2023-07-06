@@ -37,7 +37,7 @@ class Filter:
     FI_Ready_for_Testing_Stories_without_Test_Validation = 'filter=12425'
     FI_Ready_to_Create_poshi_tasks = 'filter=55095'
     FI_Stories_without_test_creation_subtask = 'filter=12424'
-    FI_Test_Scope_out_of_Scope_Creation_task_creation = 'filter=12428'
+    FI_Test_Scope_out_of_Scope_Creation_task_creation = 'filter=12855'
     GSheets_FI_7_4_CE_GA_All = 'filter=50189'
     Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=54999'
     Integration_In_Development_Sub_task_creation_Headless_team = 'filter=54996'
