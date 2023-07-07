@@ -195,8 +195,8 @@ def check_control_panel_tab(sheet, output_warning):
 
 
 def check_need_automation_test_cases(sheet, jira, echo_team_components, output_warning, output_info):
-    lps_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE).execute() \
-        .get('values', [])
+    lps_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE)\
+        .execute().get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
                      str(ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER) + ':' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN
     current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute().get(
