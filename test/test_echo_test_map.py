@@ -45,7 +45,7 @@ class EchoTestMapTests(unittest.TestCase):
             jira_connection_test = get_jira_connection()
             sheet_connection_test = get_testmap_connection()
             team_components_test = get_team_components(jira_connection_test, 'LPS', 'Product Team Echo')
-            message, info_test = check_need_automation_test_cases(sheet_connection_test, jira_connection,
+            message, info_test = check_need_automation_test_cases(sheet_connection_test, jira_connection_test,
                                                                   team_components_test, message, info_test)
         except Exception:
             self.fail("Test failed unexpectedly!")
