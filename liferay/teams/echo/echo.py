@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from liferay.teams.echo.echo_constants import Roles, FileName
+from liferay.teams.echo.echo_constants import Roles, FileName, Strings
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
 from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition
@@ -87,12 +87,11 @@ def creating_testing_subtasks(jira, output_info):
         if needs_backend:
             subtask_backend = initialize_subtask_back_end(story, components)
             jira.create_issue(fields=subtask_backend)
-
         if needs_frontend:
             subtask_frontend = initialize_subtask_front_end(story, components)
             jira.create_issue(fields=subtask_frontend)
         if needs_round_1:
-            subtask_frontend = initialize_subtask_test_validation(story, components, story.fields.description)
+            subtask_frontend = initialize_subtask_test_validation(story, components, Strings.Round_1_description)
             jira.create_issue(fields=subtask_frontend)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
@@ -198,10 +197,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
 def fill_round_technical_testing_description(jira, output_info):
     round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields='key')
     for task in round_technical_testing_sub_tasks:
-        updated_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
-                              "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2. Not " \
-                              "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
-        task.update(fields={'description': updated_description})
+        task.update(fields={'description': Strings.Round_1_description})
     return output_info
 
 

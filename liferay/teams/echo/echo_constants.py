@@ -5,6 +5,12 @@ class FileName:
     OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 
 
+class Strings:
+    Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
+                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2. Not " \
+                          "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+
+
 class Roles:
     Design_lead = 'carolina.rodriguez'
 
