@@ -184,8 +184,8 @@ def check_bug_threshold(sheet, jira, output_exceed, output_warning):
 
 
 def check_control_panel_tab(sheet, output_warning):
-    summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE).execute() \
-        .get('values', [])
+    summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE)\
+        .execute().get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
             output_warning += '* Please check <' + SheetInstance.GOOGLE_SHEET_URL + Sheets.ECHO_TESTMAP_ID + \
@@ -199,8 +199,8 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
         .execute().get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
                      str(ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER) + ':' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN
-    current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute().get(
-        'values', [])
+    current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute()\
+        .get('values', [])
     for lps in lps_list:
         story = jira.issue(lps[0], fields=['key', 'issuelinks', 'components'])
         component = get_component_in_team_components(story, echo_team_components)
@@ -227,8 +227,8 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                                           'Automated', test_case_list[7], test_case_list[8], '', '',
                                           test_case_list[4], test_case_list[5])
                         output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
-                                                      Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
-                                                      ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
+                                                      Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER,
+                                                      line, ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
                     output_info += "* Added tests for story " + html_issue_with_link(story) + ": Poshi finished\n"
                     collapse_group(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                 else:
