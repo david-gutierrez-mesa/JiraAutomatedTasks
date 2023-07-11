@@ -67,9 +67,17 @@ def create_poshi_automation_task(jira):
         for subtask in story.get_field('subtasks'):
             if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
                 description = jira.issue(subtask.id, fields='description').fields.description
-                table_starring_string = '||Requirement||'
+                table_starring_string = ''
+                if description.find('||*Requirement*||') != -1:
+                    table_starring_string = '||*Requirement*||'
+                elif description.find('||Requirement||') != -1:
+                    table_starring_string = '||Requirement||'
                 table_staring_position = description.find(table_starring_string)
-                table_ending_string = '*Exploratory'
+                table_ending_string = ''
+                if description.find('*Exploratory') != -1:
+                    table_ending_string = '*Exploratory'
+                elif description.find('Exploratory') != -1:
+                    table_ending_string = 'Exploratory'
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_staring_position:table_ending_position - 1]
                 poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
