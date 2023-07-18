@@ -102,7 +102,6 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
 
 
 def get_property(local_case, property_name):
-    local_case = local_case.replace(' \n', '\n')
     test_property = 'TBD'
     string_start = local_case.find(property_name) + len(property_name)
     if string_start != -1:
@@ -172,6 +171,12 @@ def is_sub_task_closed(story, sub_task_title):
             else:
                 break
     return False
+
+
+def line_strip(line):
+    line = line.replace(' \n', '\n')
+    line = line.replace('\n\n', '\n')
+    return line
 
 
 def prepare_test_creation_subtask(story):
