@@ -109,6 +109,7 @@ def create_testing_table_for_stories(jira, output_info):
                 test_definitions = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '') \
                     .split('\n*Case ')
                 for case in test_definitions[1:]:
+                    case = line_strip(case)
                     case_summary = get_property(case, ':*\n')
                     case_priority = get_property(case, 'Test Strategy:')
                     can_be_automated = get_property(case, 'Can be covered by POSHI?:')
