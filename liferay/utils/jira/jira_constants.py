@@ -44,6 +44,8 @@ class Filter:
     Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=12225'
     Integration_In_Development_Sub_task_creation_Headless_team = 'filter=12231'
     Integration_Sub_task_creation = 'filter=12131'
+    Peds_Bugs_Unresolved = 'filter=12726'
+    Peds_Stories_Unresolved = 'filter=13079'
     Product_QA_Test_Validation_Round_1 = 'filter=12232'
     Ready_to_create_POSHI_automation_task = 'filter=12213'
     Ready_to_create_test_table_on_description = 'filter=12111'
