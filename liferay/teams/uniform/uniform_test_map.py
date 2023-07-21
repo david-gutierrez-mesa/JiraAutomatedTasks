@@ -1,8 +1,3 @@
-BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
-BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A18:A23'
-BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!H4:H9'
-BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!B18:F23'
-
 #!/usr/bin/env python
 from liferay.teams.uniform.uniform_contstants import Sheets, FileName
 from liferay.utils.jira.jira_constants import Filter
@@ -11,10 +6,10 @@ from liferay.utils.jira.jira_liferay import get_jira_connection
 from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 from liferay.utils.sheets.testmap_helpers import update_bug_threshold, update_test_map
 
-BUG_THRESHOLD_TAB = 'JIRA-BUGSv2'
+BUG_THRESHOLD_TAB = 'JIRA-BUGS-7.4'
 BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B3:L'
-JIRA_TEST_MAP_TAB = "JIRA-TestMap"
-JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!C3:I'
+JIRA_TEST_MAP_TAB = "JIRA-TestMap-7.4"
+JIRA_TEST_MAP_TAB_RANGE = JIRA_TEST_MAP_TAB + '!B3:I'
 
 
 def update_uniform_bug_threshold(sheet, jira, output_info):
