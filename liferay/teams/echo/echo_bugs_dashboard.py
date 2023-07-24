@@ -33,12 +33,15 @@ def _get_month_metrics(jira, month, header):
     reported_by_discovery = 0
     regression_bug = 0
     for bug in currently_open_bugs:
-        reporter = bug.get_field('reporter').name
-        if reporter in Squads.QA:
+        reporter = bug.get_field('reporter')
+        email = ''
+        if hasattr(reporter, 'emailAddress'):
+            email = reporter.emailAddress
+        if email in Squads.QA:
             reported_by_qa += 1
-        elif reporter in Squads.Devs:
+        elif email in Squads.Devs:
             reported_by_dev += 1
-        elif reporter in Squads.Discovery:
+        elif email in Squads.Discovery:
             reported_by_discovery += 1
         if bug.get_field(CustomField.Bug_type).value == 'Regression Bug':
             regression_bug += 1
