@@ -10,9 +10,9 @@ class Filter:
     Assign_QA_Engineer = 'filter=11500'
     Closed_Bugs_with_FP4_and_FP5_without_automation_task = 'filter=11675'
     Echo_7_4_CE_GA_All = 'filter=11478'
-    Echo_Dashboard_v3_0_Actionable_bugs = 'filter=56599'
-    Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs = 'filter=56633'
-    Echo_Dashboard_v3_0_Current_Critical_Sec_Vul = 'filter=56603'
+    Echo_Dashboard_v3_0_Actionable_bugs = 'filter=11520'
+    Echo_Dashboard_v3_0_Bugs_Per_Area_Last_month_bugs = 'filter=11527'
+    Echo_Dashboard_v3_0_Current_Critical_Sec_Vul = 'filter=11521'
     Echo_Dashboard_v3_0_Current_month_closed_bugs = 'project = LPS AND filter = "Components | LPS-Echo" AND (' \
                                                     'issuetype = Bug OR issuetype = "Regression Bug") AND filter = ' \
                                                     '"Misc | Bug Version Filtering" AND status changed to Closed ' \
@@ -27,12 +27,12 @@ class Filter:
                                                       'after startOfMonth({month}) before endOfMonth({month})  AND ' \
                                                       'created >= startOfMonth({month}) AND created <= endOfMonth({' \
                                                       'month})) '
-    Echo_Dashboard_v3_0_Esc_Sec_Vul_Pending_Backports = 'filter=56605'
-    Echo_Dashboard_v3_0_Escalations = 'filter=56606'
-    Echo_Dashboard_v3_0_Impedibugs = 'filter=56607'
-    Echo_Dashboard_v3_0_Non_Critical_Security_Vulnerabilities_with_LPP = 'filter=56608'
-    Echo_Dashboard_v3_0_None_Critical_Security_Vulnerabilities = 'filter=56604'
-    Echo_bug_threshold = 'filter=56598'
+    Echo_Dashboard_v3_0_Esc_Sec_Vul_Pending_Backports = 'filter=13089'
+    Echo_Dashboard_v3_0_Escalations = 'filter=11524'
+    Echo_Dashboard_v3_0_Impedibugs = 'filter=11525'
+    Echo_Dashboard_v3_0_Non_Critical_Security_Vulnerabilities_with_LPP = 'filter=13091'
+    Echo_Dashboard_v3_0_None_Critical_Security_Vulnerabilities = 'filter=13090'
+    Echo_bug_threshold = 'filter=11519'
     FI_ALL_bugs_unresolved_Manoel = 'filter=11516'
     FI_Ready_for_Testing_Stories_without_Test_Validation = 'filter=12425'
     FI_Ready_to_Create_poshi_tasks = 'filter=55095'
