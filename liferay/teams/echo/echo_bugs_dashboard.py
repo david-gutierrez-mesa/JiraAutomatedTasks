@@ -10,6 +10,8 @@ from liferay.utils.sheets.testmap_helpers import get_components, update_table, g
 
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
+ECH0_DASHBOARD_CURRENT_BUGS_BREAKDOWN = 'Current Bugs Breakdown per Area'
+ECH0_DASHBOARD_CURRENT_BUGS_BREAKDOWN_TAB_RANGE = ECH0_DASHBOARD_CURRENT_BUGS_BREAKDOWN + '!B8:FJ29'
 ECH0_DASHBOARD_BUG_METRICS_TAB = 'Bug Metrics'
 ECH0_DASHBOARD_BUG_METRICS_TAB_RANGE = ECH0_DASHBOARD_BUG_METRICS_TAB + '!C5:F'
 ECH0_DASHBOARD_BUGS_PER_AREA_TAB = 'Bugs Per area'
@@ -234,6 +236,31 @@ def _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira):
     _update_echo_bug_threshold_pending_backports(sheet, jira)
 
 
+def check_bug_threshold(sheet, jira, output_exceed, output_warning):
+    all_information = sheet.values().get(spreadsheetId=Sheets.ECH0_DASHBOARD_V3_0,
+                                         range=ECH0_DASHBOARD_CURRENT_BUGS_BREAKDOWN_TAB_RANGE).execute()\
+        .get('values', [])
+    for i in range(0, len(all_information), 2):
+        current_component_group = all_information[i][0]
+        thresholds = all_information[i]
+        current = all_information[i+1]
+        for position in range(1, 6):
+            max_value = 0
+            if thresholds[position + 2] != '':
+                max_value = int(thresholds[position + 2])
+            current_bug_numbers = 0
+            if current[position + 2] != '':
+                current_bug_numbers = int(current[position + 2])
+            if current_bug_numbers > max_value:
+                output_exceed += '* Bug threshold exceed for ' + current_component_group + ' in Fix Priority ' \
+                                 + str(6 - position) + '\n'
+            elif max_value != 0 and current_bug_numbers == max_value:
+                output_warning += '* Bug threshold just on the limit for ' + current_component_group + \
+                                  ' in Fix Priority ' + str(6 - position) + '\n'
+
+    return output_exceed, output_warning
+
+
 def update_echo_bug_threshold(sheet, jira, output_info):
     _update_echo_bug_threshold_bug_per_area_tab(sheet, jira)
     _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira)
@@ -252,6 +279,8 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
+    bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, sheet_connection,
+                                                                      bug_threshold_exceed, bug_threshold_warning)
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
                         [info, FileName.OUTPUT_INFO_FILE_NAME],
                         [bug_threshold_exceed, FileName.OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
