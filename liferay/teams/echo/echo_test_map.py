@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from collections import Counter
 
 from liferay.teams.echo.echo_constants import FileName, Sheets
 from liferay.utils.file_helpers import create_output_files
@@ -9,10 +8,6 @@ from liferay.utils.jira.jira_liferay import get_jira_connection
 from liferay.utils.sheets.testmap_helpers import *
 from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 
-BUG_THRESHOLD_SHEET_NAME = 'Bugs Thresholds'
-BUG_THRESHOLD_COMPONENT_GROUPS = BUG_THRESHOLD_SHEET_NAME + '!A23:A33'
-BUG_THRESHOLD_JIRA_FILERS_ID = BUG_THRESHOLD_SHEET_NAME + '!I4:I14'
-BUG_THRESHOLD_MAX_VALUES = BUG_THRESHOLD_SHEET_NAME + '!C23:G33'
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'
 CONTROL_PANEL_SUMMARY_RANGE = CONTROL_PANEL_SHEET_NAME + '!I2:I5'
@@ -150,39 +145,6 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
     return output_warning, output_info
 
 
-def check_bug_threshold(sheet, jira, output_exceed, output_warning):
-    max_values = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_MAX_VALUES).execute() \
-        .get('values', [])
-    components_groups = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_COMPONENT_GROUPS) \
-        .execute().get('values', [])
-    jira_filter_ids = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=BUG_THRESHOLD_JIRA_FILERS_ID) \
-        .execute().get('values', [])
-    for i, filter_id in enumerate(jira_filter_ids):
-        bugs_for_component_group = jira.search_issues('filter=' + filter_id[0],
-                                                      fields=[CustomField.Fix_Priority, 'key'])
-        bugs_fix_priority = []
-        current_component_group = components_groups[i][0]
-        for bug in enumerate(bugs_for_component_group):
-            if hasattr(bug[1].get_field(CustomField.Fix_Priority), "value"):
-                fix_priority = bug[1].get_field(CustomField.Fix_Priority).value
-            else:
-                output_warning += "* Bug without fix priority " + html_issue_with_link(bug[1]) + "\n"
-                continue
-            bugs_fix_priority.append(fix_priority)
-        count_per_priority = Counter(bugs_fix_priority)
-        for fp in range(1, 6):
-            max_value = int(max_values[i][5 - fp])
-            current_bug_numbers = count_per_priority[str(fp)]
-            if current_bug_numbers > max_value:
-                output_exceed += '* Bug threshold exceed for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
-                                 filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
-            elif max_value != 0 and current_bug_numbers == max_value:
-                output_warning += '* Bug threshold just on the limit for <' + LIFERAY_JIRA_ISSUES_URL + '?filter=' + \
-                                  filter_id[0] + "|" + current_component_group + '> in Fix Priority ' + str(fp) + '\n'
-
-    return output_exceed, output_warning
-
-
 def check_control_panel_tab(sheet, output_warning):
     summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE)\
         .execute().get('values', [])
@@ -261,10 +223,6 @@ if __name__ == "__main__":
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
     warning = check_control_panel_tab(sheet_connection, warning)
-    # bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, jira_connection,
-    #                                                                   bug_threshold_exceed, bug_threshold_warning)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
-                        [info, FileName.OUTPUT_INFO_FILE_NAME],
-                        [bug_threshold_exceed, FileName.OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
-                        [bug_threshold_warning, FileName.OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME])
+                        [info, FileName.OUTPUT_INFO_FILE_NAME])
