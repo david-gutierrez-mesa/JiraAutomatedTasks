@@ -21,13 +21,16 @@ class Sheets:
 
 
 class Squads:
-    QA = ['yang.cao', 'lu.liu', 'david.gutierrez', 'alessandro.alves', 'rafaella.jordao']
-    Front = ['pablo.molina', 'victor.galan', 'sandro.chinea', 'veronica.gonzalez', 'clara.izquierdo', 'diego.hu',
-             'stefan.tanasie', 'barbara.cabrera']
-    Back = ['eudaldo.alonso', 'jurgen.kappler', 'ruben.pulido', 'lourdes.fernandez', 'mikel.lorza@liferay.com',
-            'yurena.cabrera']
+    QA = ['yang.cao@liferay.com', 'lu.liu@liferay.com', 'david.gutierrez@liferay.com', 'alessandro.alves@liferay.com',
+          'rafaella.jordao@liferay.com']
+    Front = ['pablo.molina@liferay.com', 'victor.galan@liferay.com', 'sandro.chinea@liferay.com',
+             'veronica.gonzalez@liferay.com', 'clara.izquierdo@liferay.com', 'diego.hu@liferay.com',
+             'stefan.tanasie@liferay.com', 'barbara.cabrera@liferay.com']
+    Back = ['eudaldo.alonso@liferay.com', 'jurgen.kappler@liferay.com', 'ruben.pulido@liferay.com',
+            'lourdes.fernandez@liferay.com', 'mikel.lorza@liferay.com', 'yurena.cabrera@liferay.com']
     Devs = Front + Back
-    Design = ['carolina.rodriguez', 'maria.arce']
-    PO = ['julia.molano', 'mateo.hermosin', 'benicio.herrero@liferay.com', 'javier.burgueno@liferay.com']
-    EPM = ['maria.muriel']
+    Design = ['carolina.rodriguez@liferay.com', 'maria.arce@liferay.com']
+    PO = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com', 'benicio.herrero@liferay.com',
+          'javier.burgueno@liferay.com']
+    EPM = ['maria.muriel@liferay.com']
     Discovery = Design + PO + EPM
