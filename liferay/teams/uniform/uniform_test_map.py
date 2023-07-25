@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from liferay.teams.uniform.uniform_contstants import Sheets, FileName
+from liferay.teams.uniform.uniform_constants import FileName, Sheets
 from liferay.utils.jira.jira_constants import Filter
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_liferay import get_jira_connection
