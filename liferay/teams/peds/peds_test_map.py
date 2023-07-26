@@ -19,7 +19,7 @@ def update_peds_bug_threshold(sheet, jira, output_info):
 
 
 def update_peds_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, Filter.Peds_Stories_Unresolved,
+    output_info = update_test_map(sheet, jira, output_info, Filter.Peds_7_4_CE_GA_All,
                                   Sheets.PEDS_TESTMAP_ID, JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 
