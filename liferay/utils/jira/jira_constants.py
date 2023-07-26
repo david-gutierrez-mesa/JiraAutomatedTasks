@@ -50,6 +50,8 @@ class Filter:
     Round_tasks_without_description = 'filter=11517'
     Stories_ready_to_be_closed = 'filter=12230'
     Stories_to_add_into_test_map = 'filter=11512'
+    Uniform_Bugs_Unresolved = 'filter=12957'
+    Uniform_7_4_CE_GA_All = 'filter=13150'
 
 
 class Instance:
