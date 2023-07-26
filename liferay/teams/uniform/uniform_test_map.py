@@ -19,7 +19,7 @@ def update_uniform_bug_threshold(sheet, jira, output_info):
 
 
 def update_uniform_test_map(sheet, jira, output_info):
-    output_info = update_test_map(sheet, jira, output_info, Filter.Uniform_Stories_Unresolved,
+    output_info = update_test_map(sheet, jira, output_info, Filter.Uniform_7_4_CE_GA_All,
                                   Sheets.UNIFORM_TESTMAP_ID, JIRA_TEST_MAP_TAB, JIRA_TEST_MAP_TAB_RANGE)
     return output_info
 

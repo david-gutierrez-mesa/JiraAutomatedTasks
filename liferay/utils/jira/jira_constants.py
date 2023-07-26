@@ -51,7 +51,7 @@ class Filter:
     Stories_ready_to_be_closed = 'filter=12230'
     Stories_to_add_into_test_map = 'filter=11512'
     Uniform_Bugs_Unresolved = 'filter=12957'
-    Uniform_Stories_Unresolved = 'filter=13087'
+    Uniform_7_4_CE_GA_All = 'filter=13150'
 
 
 class Instance:
