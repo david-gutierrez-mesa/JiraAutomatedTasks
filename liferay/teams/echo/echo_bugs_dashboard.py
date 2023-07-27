@@ -174,14 +174,14 @@ def _update_echo_bug_th_esc_and_sec_vul_table(sheet, jira, jql, sheet_range):
                  False)
 
 
-def _update_echo_bug_threshold_actionable_bugs(sheet, jira):
+def _update_echo_bug_threshold_actionable_impedibugs(sheet, jira):
     currently_open_bugs = get_all_issues(jira, Filter.Echo_Dashboard_v3_0_Impedibugs,
                                          ["status", "summary", "assignee", "created"])
     body_values = []
     for bug in currently_open_bugs:
         assignee = ''
         if bug.get_field('assignee') is not None:
-            assignee = bug.get_field('assignee').name
+            assignee = bug.get_field('assignee').displayName
         body_values.append(['=HYPERLINK("' + Instance.Jira_URL + '/browse/' + bug.key + '","' + bug.key + '")',
                             bug.get_field('status').name,
                             bug.get_field('summary'),
@@ -228,7 +228,7 @@ def _update_echo_bug_threshold_pending_backports(sheet, jira):
 
 
 def _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira):
-    _update_echo_bug_threshold_actionable_bugs(sheet, jira)
+    _update_echo_bug_threshold_actionable_impedibugs(sheet, jira)
     _update_echo_bug_threshold_current_critical_sec_vulnerabilities(sheet, jira)
     _update_echo_bug_threshold_current_escalations(sheet, jira)
     _update_echo_bug_threshold_non_current_critical_sec_vulnerabilities(sheet, jira)
