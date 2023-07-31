@@ -7,7 +7,7 @@ class FileName:
 
 class Strings:
     Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
-                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\nh2.Not " \
+                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
                           "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
 
 
