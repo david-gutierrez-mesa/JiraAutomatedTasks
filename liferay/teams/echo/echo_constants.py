@@ -22,7 +22,7 @@ class Sheets:
 
 class Squads:
     QA = ['yang.cao@liferay.com', 'lu.liu@liferay.com', 'david.gutierrez@liferay.com', 'alessandro.alves@liferay.com',
-          'rafaella.jordao@liferay.com']
+          'rafaella.jordao@liferay.com', 'beatriz.alvarez@liferay.com']
     Front = ['pablo.molina@liferay.com', 'victor.galan@liferay.com', 'sandro.chinea@liferay.com',
              'veronica.gonzalez@liferay.com', 'clara.izquierdo@liferay.com', 'diego.hu@liferay.com',
              'stefan.tanasie@liferay.com', 'barbara.cabrera@liferay.com']
