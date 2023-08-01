@@ -256,8 +256,8 @@ def check_bug_threshold(sheet, output_exceed, output_warning):
             if current[position + 2] != '':
                 current_bug_numbers = int(current[position + 2])
             if current_bug_numbers > max_value:
-                output_exceed += '* Bug threshold exceed for <' + str(filter_ids[int(i/2)][0]) + "|" + current_component_group +\
-                                 '> in Fix Priority ' + str(6 - position) + '\n'
+                output_exceed += '* Bug threshold exceed for <' + str(filter_ids[int(i/2)][0]) + "|" + \
+                                 current_component_group + '> in Fix Priority ' + str(6 - position) + '\n'
             elif max_value != 0 and current_bug_numbers == max_value:
                 output_warning += '* Bug threshold just on the limit for <' + str(filter_ids[int(i/2)][0]) + "|" + \
                                   current_component_group + '> in Fix Priority ' + str(6 - position) + '\n'
