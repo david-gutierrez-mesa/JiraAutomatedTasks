@@ -236,7 +236,7 @@ def _update_echo_bug_threshold_escalated_sec_vulnerabilities_tab(sheet, jira):
     _update_echo_bug_threshold_pending_backports(sheet, jira)
 
 
-def check_bug_threshold(sheet, jira, output_exceed, output_warning):
+def check_bug_threshold(sheet, output_exceed, output_warning):
     all_information = sheet.values().get(spreadsheetId=Sheets.ECH0_DASHBOARD_V3_0,
                                          range=ECH0_DASHBOARD_CURRENT_BUGS_BREAKDOWN_TAB_RANGE).execute()\
         .get('values', [])
@@ -279,8 +279,8 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
-    bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, sheet_connection,
-                                                                      bug_threshold_exceed, bug_threshold_warning)
+    bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, bug_threshold_exceed,
+                                                                      bug_threshold_warning)
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
                         [info, FileName.OUTPUT_INFO_FILE_NAME],
                         [bug_threshold_exceed, FileName.OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME],
