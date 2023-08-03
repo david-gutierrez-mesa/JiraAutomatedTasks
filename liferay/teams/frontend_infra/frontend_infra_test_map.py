@@ -29,7 +29,7 @@ if __name__ == "__main__":
     info = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
-#    info = update_frontend_infra_test_map(sheet_connection, jira_connection, info)
+    info = update_frontend_infra_test_map(sheet_connection, jira_connection, info)
     info = update_frontend_infra_bug_threshold(sheet_connection, jira_connection, info)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
