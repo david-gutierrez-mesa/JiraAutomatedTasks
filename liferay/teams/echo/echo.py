@@ -185,8 +185,9 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                                    html_issue_with_link(story) + "\n "
                     close_functional_automation_subtask(jira, story)
             except JIRAError as err:
-                output_warning += "It was not possible to close automation sub-task or create automation external " \
-                                  "task for story " + story.key + ". Please do it manually. \n    Trace: \n" + str(err)
+                output_warning += "[ERROR] It was not possible to close automation sub-task or create automation " \
+                                  "external task for story " + story.key + ". Please do it manually. \n    Trace: \n"\
+                                  + str(err)
         else:
             output_warning += "Story " + story.key + " don't have test table. \n"
 
