@@ -173,7 +173,10 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                 if is_automation_task_needed:
                     poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                     output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
-                    close_functional_automation_subtask(jira, story, poshi_task.key)
+                    if not poshi_task:
+                        close_functional_automation_subtask(jira, story, ' in the testing task linked in the story.')
+                    else:
+                        close_functional_automation_subtask(jira, story, poshi_task.key)
                 else:
                     jira.add_comment(story, "No Poshi automation is needed.")
                     story.fields.labels.append("poshi_test_not_needed")
