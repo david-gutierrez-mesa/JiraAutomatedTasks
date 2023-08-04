@@ -127,7 +127,8 @@ def create_testing_table_for_stories(jira, output_info):
 def create_poshi_automation_task(jira, output_warning, output_info):
     stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task,
                                                                   fields=['description', 'key', 'labels', 'components',
-                                                                          CustomField.Epic_Link, 'subtasks'])
+                                                                          CustomField.Epic_Link, 'subtasks',
+                                                                          'issuelinks'])
     for story in stories_without_poshi_automation_created:
         if is_sub_task_closed(story, 'Product QA | Functional Automation'):
             break
@@ -189,8 +190,11 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
                            fields=['key', 'summary', CustomField.Epic_Link, 'components'])
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
-        jira.transition_issue(poshi_task, transition=Transition.Selected_for_development)
-        output_info += "* Automation task created for bug " + html_issue_with_link(bug) + "\n "
+        if poshi_task:
+            jira.transition_issue(poshi_task, transition=Transition.Selected_for_development)
+            output_info += "* Automation task created for bug " + html_issue_with_link(bug) + "\n "
+        else:
+            output_info += "* Automation task al ready exists for bug " + html_issue_with_link(bug) + "\n "
 
     return output_info
 

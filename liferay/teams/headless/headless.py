@@ -14,7 +14,10 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     description = Strings.poshi_task_description + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
 
-    print("Poshi task ", new_issue.key, " created for", parent_key)
+    if new_issue:
+        print("Poshi task with summary", summary, " already existed for", parent_key)
+    else:
+        print("Poshi task ", new_issue.key, " created for", parent_key)
     return new_issue
 
 
@@ -80,8 +83,12 @@ def create_poshi_automation_task(jira):
                 table_ending_position = description.find(table_ending_string)
                 poshi_automation_table = description[table_staring_position:table_ending_position - 1]
                 poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
-                close_functional_automation_subtask(jira, story, poshi_task.key)
-                output_message = output_message + "Functional Automation created for " + story.get_field('summary')
+                if poshi_task:
+                    close_functional_automation_subtask(jira, story, poshi_task.key)
+                    output_message = output_message + "Functional Automation created for " + story.get_field('summary')
+                else:
+                    output_message = output_message + "Functional Automation already exists for " + \
+                                     story.get_field('summary')
     print(output_message)
 
 
