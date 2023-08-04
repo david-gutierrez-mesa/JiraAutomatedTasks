@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from jira import JIRAError
+
 from liferay.teams.echo.echo_constants import Roles, FileName, Strings
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
@@ -127,7 +129,8 @@ def create_testing_table_for_stories(jira, output_info):
 def create_poshi_automation_task(jira, output_warning, output_info):
     stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task,
                                                                   fields=['description', 'key', 'labels', 'components',
-                                                                          CustomField.Epic_Link, 'subtasks'])
+                                                                          CustomField.Epic_Link, 'subtasks',
+                                                                          'issuelinks'])
     for story in stories_without_poshi_automation_created:
         if is_sub_task_closed(story, 'Product QA | Functional Automation'):
             break
@@ -166,17 +169,21 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                     break
             if skip_story:
                 continue
-            if is_automation_task_needed:
-                poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
-                output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
-                close_functional_automation_subtask(jira, story, poshi_task.key)
-            else:
-                jira.add_comment(story, "No Poshi automation is needed.")
-                story.fields.labels.append("poshi_test_not_needed")
-                story.update(fields={"labels": story.fields.labels})
-                output_info += "* Automation task not needed or not possible to create for story " + \
-                               html_issue_with_link(story) + "\n "
-                close_functional_automation_subtask(jira, story)
+            try:
+                if is_automation_task_needed:
+                    poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
+                    output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
+                    close_functional_automation_subtask(jira, story, poshi_task.key)
+                else:
+                    jira.add_comment(story, "No Poshi automation is needed.")
+                    story.fields.labels.append("poshi_test_not_needed")
+                    story.update(fields={"labels": story.fields.labels})
+                    output_info += "* Automation task not needed or not possible to create for story " + \
+                                   html_issue_with_link(story) + "\n "
+                    close_functional_automation_subtask(jira, story)
+            except JIRAError as err:
+                output_warning += "It was not possible to close automation sub-task or create automation external " \
+                                  "task for story " + story.key + ". Please do it manually. \n    Trace: \n" + str(err)
         else:
             output_warning += "Story " + story.key + " don't have test table. \n"
 
@@ -189,8 +196,11 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
                            fields=['key', 'summary', CustomField.Epic_Link, 'components'])
     for bug in bugs_without_poshi_automation_created:
         poshi_task = create_poshi_automation_task_for_bug(jira, bug)
-        jira.transition_issue(poshi_task, transition=Transition.Selected_for_development)
-        output_info += "* Automation task created for bug " + html_issue_with_link(bug) + "\n "
+        if poshi_task:
+            jira.transition_issue(poshi_task, transition=Transition.Selected_for_development)
+            output_info += "* Automation task created for bug " + html_issue_with_link(bug) + "\n "
+        else:
+            output_info += "* Automation task al ready exists for bug " + html_issue_with_link(bug) + "\n "
 
     return output_info
 

@@ -51,26 +51,28 @@ def close_functional_automation_subtask(jira_local, story, poshi_task=''):
 
 
 def create_poshi_automation_task_for(jira_local, issue, summary, description):
-    parent_key = issue.key
-    epic_link = issue.get_field(CustomField.Epic_Link)
-    components = []
-    for component in issue.fields.components:
-        components.append({'name': component.name})
-    issue_dict = {
-        'project': {'key': 'LPS'},
-        'summary': summary,
-        'description': description,
-        'issuetype': {'name': 'Testing'},
-        'components': components,
-        CustomField.Epic_Link: epic_link
-    }
+    new_issue = ''
+    if not has_linked_task_with_summary(issue, summary):
+        parent_key = issue.key
+        epic_link = issue.get_field(CustomField.Epic_Link)
+        components = []
+        for component in issue.fields.components:
+            components.append({'name': component.name})
+        issue_dict = {
+            'project': {'key': 'LPS'},
+            'summary': summary,
+            'description': description,
+            'issuetype': {'name': 'Testing'},
+            'components': components,
+            CustomField.Epic_Link: epic_link
+        }
 
-    new_issue = jira_local.create_issue(fields=issue_dict)
-    jira_local.create_issue_link(
-        type="relates",
-        inwardIssue=new_issue.key,
-        outwardIssue=parent_key,
-    )
+        new_issue = jira_local.create_issue(fields=issue_dict)
+        jira_local.create_issue_link(
+            type="relates",
+            inwardIssue=new_issue.key,
+            outwardIssue=parent_key,
+        )
     return new_issue
 
 
@@ -97,7 +99,10 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
                                                                                  'Feel free to create a new test or ' \
                                                                                  'add new steps to an existing one '
     new_issue = create_poshi_automation_task_for(jira_local, bug, summary, description)
-    print("Poshi task ", new_issue.key, " created for bug", parent_key)
+    if new_issue:
+        print("Poshi task with summary", summary, " already existed for", parent_key)
+    else:
+        print("Poshi task ", new_issue.key, " created for", parent_key)
     return new_issue
 
 
@@ -114,6 +119,18 @@ def get_team_components(jira, project, team_name_in_jira):
     components_full_info = jira.project_components(project)
     team_components = [x.name for x in components_full_info if is_component_lead(x, team_name_in_jira)]
     return team_components
+
+
+def has_linked_task_with_summary(story, summary):
+    for link in story.fields.issuelinks:
+        linked_issue_key = ""
+        if hasattr(link, "inwardIssue"):
+            linked_issue_key = link.inwardIssue
+        elif hasattr(link, "outwardIssue"):
+            linked_issue_key = link.outwardIssue
+        if summary in linked_issue_key.fields.summary:
+            return True
+    return False
 
 
 def html_issue_with_link(issue):
