@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from jira import JIRAError
+
 from liferay.teams.echo.echo_constants import Roles, FileName, Strings
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
@@ -167,17 +169,21 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                     break
             if skip_story:
                 continue
-            if is_automation_task_needed:
-                poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
-                output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
-                close_functional_automation_subtask(jira, story, poshi_task.key)
-            else:
-                jira.add_comment(story, "No Poshi automation is needed.")
-                story.fields.labels.append("poshi_test_not_needed")
-                story.update(fields={"labels": story.fields.labels})
-                output_info += "* Automation task not needed or not possible to create for story " + \
-                               html_issue_with_link(story) + "\n "
-                close_functional_automation_subtask(jira, story)
+            try:
+                if is_automation_task_needed:
+                    poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
+                    output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
+                    close_functional_automation_subtask(jira, story, poshi_task.key)
+                else:
+                    jira.add_comment(story, "No Poshi automation is needed.")
+                    story.fields.labels.append("poshi_test_not_needed")
+                    story.update(fields={"labels": story.fields.labels})
+                    output_info += "* Automation task not needed or not possible to create for story " + \
+                                   html_issue_with_link(story) + "\n "
+                    close_functional_automation_subtask(jira, story)
+            except JIRAError as err:
+                output_warning += "It was not possible to close automation sub-task or create automation external " \
+                                  "task for story " + story.key + ". Please do it manually. \n    Trace: \n" + str(err)
         else:
             output_warning += "Story " + story.key + " don't have test table. \n"
 
