@@ -85,9 +85,9 @@ def create_poshi_automation_task(jira):
                 poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
                 if poshi_task:
                     close_functional_automation_subtask(jira, story, poshi_task.key)
-                    output_message = output_message + "Functional Automation created for " + story.get_field('summary')
+                    output_message += "Functional Automation created for " + story.get_field('summary')
                 else:
-                    output_message = output_message + "Functional Automation already exists for " + \
+                    output_message += "Functional Automation already exists for " + \
                                      story.get_field('summary')
     print(output_message)
 
