@@ -41,7 +41,8 @@ def close_functional_automation_subtask(jira_local, story, poshi_task=''):
                                                                                                        'Test Creation':
             testing_subtask = subtask.id
             if not subtask.fields.status.name == Status.Closed:
-                jira_local.transition_issue(testing_subtask, transition=Transition.Closed)
+                jira_local.transition_issue(testing_subtask, transition=Transition.Closed,
+                                            resolution={'name': 'Discarded'})
                 if poshi_task:
                     jira_local.add_comment(testing_subtask, 'Closing. Poshi automation is going to be done in '
                                            + poshi_task)
