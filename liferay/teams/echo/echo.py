@@ -153,8 +153,8 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                     if cells[3].casefold() == 'TBD'.casefold() \
                             or cells[4].casefold() == 'TBD'.casefold() \
                             or cells[5].casefold() == 'TBD'.casefold():
-                        output_info += "Table for story " + story.key + "(" + Instance.Jira_URL + "/browse/" \
-                                       + story.key + ") is not up to date. Skipping.\n"
+                        output_info += "* Table for story " + html_issue_with_link(story) + \
+                                       ") is not up to date. Skipping.\n"
                         skip_story = True
                         break
                     elif (cells[3].casefold() == 'No'.casefold() and cells[4].casefold() == 'No'.casefold()) \
