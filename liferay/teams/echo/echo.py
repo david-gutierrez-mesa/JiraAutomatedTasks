@@ -233,6 +233,9 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                                       " is not uptodate. Skipping.\n"
                     can_be_closed = False
                     break
+        if not has_linked_task_with_summary(story, '- Product QA | Test Automation Creation') \
+                and ('poshi_test_not_needed' not in story.get_field("labels")):
+            can_be_closed = False
         if can_be_closed:
             if 'poshi_test_not_needed' not in story.get_field("labels"):
                 for link in story.fields.issuelinks:
