@@ -33,6 +33,7 @@ class Filter:
     Echo_Dashboard_v3_0_Non_Critical_Security_Vulnerabilities_with_LPP = 'filter=13091'
     Echo_Dashboard_v3_0_None_Critical_Security_Vulnerabilities = 'filter=13090'
     Echo_bug_threshold = 'filter=11519'
+    Echo_Stories_with_impedibug_opened_by_PM_UX = 'filter=13504'
     FI_ALL_bugs_unresolved_Manoel = 'filter=11516'
     FI_Ready_for_Testing_Stories_without_Test_Validation = 'filter=12425'
     FI_Stories_without_test_creation_subtask = 'filter=12424'
