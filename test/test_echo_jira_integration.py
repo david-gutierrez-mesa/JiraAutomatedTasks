@@ -34,6 +34,13 @@ class EchoJiraTestCase(unittest.TestCase):
         except Exception:
             self.fail("Test failed unexpectedly!")
 
+    def test_creating_testing_subtask_to_check_impedibugs_from_ux_pm(self):
+        jira_connection_test = get_jira_connection()
+        try:
+            creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira_connection_test, '')
+        except Exception:
+            self.fail("Test failed unexpectedly!")
+
     def test_creating_testing_subtasks(self):
         jira_connection_test = get_jira_connection()
         try:
