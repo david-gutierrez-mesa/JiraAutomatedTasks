@@ -66,6 +66,28 @@ def close_ready_for_release_bugs(jira, output_info):
     return output_info
 
 
+def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
+    stories_without_checking_subtask = jira.search_issues(Filter.Echo_Stories_with_impedibug_opened_by_PM_UX,
+                                                         fields=['key', 'subtasks', 'components', 'id'])
+
+    for story in stories_without_checking_subtask:
+        components = []
+        impedibug = False
+        for component in story.fields.components:
+            components.append({'name': component.name})
+        for subtask in story.fields.subtasks:
+            subtask_type = subtask.fields.issuetype
+            subtask_status = subtask.fields.status
+            if subtask_type.name == 'Impedibug' and subtask_status.name != 'Closed':
+                impedibug = subtask
+                break
+        subtask_frontend = initialize_subtask_check_ux_pm_impedibug(story, components, impedibug)
+        jira.create_issue(fields=subtask_frontend)
+        output_info += '* Testing subtasks for checking impedibug has been created for story ' \
+                       + html_issue_with_link(story) + "\n "
+    return output_info
+
+
 def creating_testing_subtasks(jira, output_info):
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
                                                          fields=['key', 'subtasks', 'components', 'id', 'description'])
