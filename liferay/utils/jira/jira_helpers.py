@@ -147,7 +147,7 @@ def initialize_subtask_check_ux_pm_impedibug(story, components, impedibug):
         impedibug_summary = impedibug.fields.summary
     description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
                   "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
-                  "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Assert fix: " \
+                  "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(x)|\n\nh2. Assert fix: " \
                   "\n||Ticket||Title||QA Status||\n|" + impedibug_id + "|" + impedibug_summary + "|(!)|\n\nh2. " \
                                                                                                  "Note:\nPlease also " \
                                                                                                  "check if we should " \
