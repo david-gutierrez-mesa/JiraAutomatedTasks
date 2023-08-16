@@ -138,6 +138,25 @@ def html_issue_with_link(issue):
     return "<" + LIFERAY_JIRA_BROWSE_URL + issue.key + "|" + issue.key + ">"
 
 
+def initialize_subtask_check_ux_pm_impedibug(story, components, impedibug):
+    summary = 'Product QA | Test Validation - Assert fix PM/Design bugs'
+    impedibug_id = '?'
+    impedibug_summary = '?'
+    if impedibug:
+        impedibug_id = impedibug.key
+        impedibug_summary = impedibug.fields.summary
+    description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
+                  "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
+                  "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Assert fix: " \
+                  "\n||Ticket||Title||QA Status||\n|" + impedibug_id + "|" + impedibug_summary + "|(!)|\n\nh2. " \
+                                                                                                 "Note:\nPlease also " \
+                                                                                                 "check if we should " \
+                                                                                                 "update already " \
+                                                                                                 "defined test cases "
+    subtask_check_impedi = __initialize_subtask_technical_test(story, components, summary, description)
+    return subtask_check_impedi
+
+
 def initialize_subtask_back_end(story, components):
     summary = 'Test Scenarios Coverage | Backend'
     description = '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n' \
