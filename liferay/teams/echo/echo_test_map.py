@@ -184,19 +184,22 @@ def check_need_automation_test_cases(sheet, jira, echo_team_components, output_w
                                                                   ECHO_TESTMAP_SHEET_HEADER_LENGTH)
                     expand_group(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                     for test_case in test_cases_table:
-                        test_case_list = test_case.split('|')
-                        try:
-                            line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
-                                              'Automated', test_case_list[7], test_case_list[8], '', '',
-                                              test_case_list[4], test_case_list[5])
-                            output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
-                                                          Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER,
-                                                          line, ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
-                        except IndexError as err:
-                            output_warning += "[Error] IndexError for Story " + lps[0] + ". More info: \n" + \
-                                              "test_cases_table = " + ''.join(test_case_list) + "\n" + \
-                                              "automation task status = " + str(linked_issue_key.fields.status.name) + \
-                                              "\n" + "Trace: \n" + str(err)
+                        if test_case.startswith('|'):
+                            test_case_list = test_case.split('|')
+                            try:
+                                line = _line_data(story.key, test_case_list[1], test_case_list[2], 'Poshi',
+                                                  'Automated', test_case_list[7], test_case_list[8], '', '',
+                                                  test_case_list[4], test_case_list[5])
+                                output_warning += update_line(sheet, current_test_cases_list, ECHO_TESTMAP_SHEET_NAME,
+                                                              Sheets.ECHO_TESTMAP_ID,
+                                                              ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER, line,
+                                                              ECHO_TESTMAP_SHEET_LAST_COLUMN, start, end)
+                            except IndexError as err:
+                                output_warning += "[Error] IndexError for Story " + html_issue_with_link(lps[0]) + \
+                                                  ". More info: \ntest_cases_table = " + ''.join(test_case_list) \
+                                                  + "\nautomation task status = " \
+                                                  + str(linked_issue_key.fields.status.name) + "\n" + "Trace: \n" \
+                                                  + str(err)
                     output_info += "* Added tests for story " + html_issue_with_link(story) + ": Poshi finished\n"
                     collapse_group(sheet, Sheets.ECHO_TESTMAP_ID, ECHO_TESTMAP_SHEET_ID, start, end)
                 else:
