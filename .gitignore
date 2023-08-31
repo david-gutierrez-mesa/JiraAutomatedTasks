@@ -11,5 +11,5 @@
 /**/output_message.txt
 /liferay/test.py
 /**/token.json
-/liferay/tools/*_filters.pkl
+/liferay/tools/*.pkl
 /venv/

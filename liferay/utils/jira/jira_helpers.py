@@ -123,14 +123,15 @@ def get_team_components(jira, project, team_name_in_jira):
 
 
 def has_linked_task_with_summary(story, summary):
-    for link in story.fields.issuelinks:
-        linked_issue_key = ""
-        if hasattr(link, "inwardIssue"):
-            linked_issue_key = link.inwardIssue
-        elif hasattr(link, "outwardIssue"):
-            linked_issue_key = link.outwardIssue
-        if summary in linked_issue_key.fields.summary:
-            return True
+    if hasattr(story, "issuelinks"):
+        for link in story.fields.issuelinks:
+            linked_issue_key = ""
+            if hasattr(link, "inwardIssue"):
+                linked_issue_key = link.inwardIssue
+            elif hasattr(link, "outwardIssue"):
+                linked_issue_key = link.outwardIssue
+            if summary in linked_issue_key.fields.summary:
+                return True
     return False
 
 
