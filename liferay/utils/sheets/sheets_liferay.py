@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os.path
+import socket
 from os.path import expanduser, abspath
 from pathlib import Path
 from google.auth.transport.requests import Request
@@ -31,6 +32,7 @@ def get_testmap_connection():
             token.write(creds.to_json())
 
     try:
+        socket.setdefaulttimeout(600)
         service = build('sheets', 'v4', credentials=creds)
         sheet = service.spreadsheets()
 
