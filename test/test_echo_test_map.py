@@ -25,9 +25,8 @@ class EchoTestMapTests(unittest.TestCase):
         try:
             message = ''
             info_test = ''
-            jira_connection_test = get_jira_connection()
             sheet_connection_test = get_testmap_connection()
-            message, info_test = check_bug_threshold(sheet_connection_test, jira_connection_test, message, info_test)
+            message, info_test = check_bug_threshold(sheet_connection_test, message, info_test)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
