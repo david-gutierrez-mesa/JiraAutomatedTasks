@@ -136,7 +136,7 @@ def create_testing_table_for_stories(jira, output_info):
                     case = line_strip(case)
                     case_summary = get_property(case, ':*\n')
                     case_priority = get_property(case, 'Test Strategy:')
-                    can_be_automated = get_property(case, 'Can be covered by POSHI?:')
+                    can_be_automated = get_property(case, 'be covered by POSHI?:')
 
                     poshi_automation_table += '|' + case_summary + '|' + case_priority + '|Manual|TBD|TBD|' \
                                               + can_be_automated + '|' + '\n'
