@@ -13,9 +13,10 @@ def _get_field_list(story, field):
 def component_row(component, matrix):
     position = -1
     for i, matrix_i in enumerate(matrix):
-        if component in matrix_i[0]:
-            position = i
-            break
+        if matrix_i:
+            if component in matrix_i[0]:
+                position = i
+                break
     return position
 
 
