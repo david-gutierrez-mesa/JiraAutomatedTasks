@@ -109,8 +109,9 @@ def create_poshi_automation_task_for_bug(jira_local, bug):
 
 def get_property(local_case, property_name):
     test_property = 'TBD'
-    string_start = local_case.find(property_name) + len(property_name)
-    if string_start != -1:
+    label_start = local_case.lower().find(property_name.lower())
+    string_start = label_start + len(property_name)
+    if label_start != -1:
         string_end = local_case.find('\n', string_start)
         test_property = local_case[string_start:string_end].strip()
     return test_property
