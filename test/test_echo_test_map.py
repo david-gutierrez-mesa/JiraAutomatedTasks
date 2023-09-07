@@ -1,5 +1,6 @@
 import unittest
 
+from liferay.teams.echo.echo_bugs_dashboard import check_bug_threshold
 from liferay.teams.echo.echo_test_map import *
 from liferay.utils.jira.jira_helpers import get_team_components
 from liferay.utils.jira.jira_liferay import get_jira_connection
@@ -33,8 +34,8 @@ class EchoTestMapTests(unittest.TestCase):
     def test_check_control_panel_tab(self):
         try:
             message = ''
-            sheet_connection = get_testmap_connection()
-            message = check_control_panel_tab(sheet_connection, message)
+            sheet_connection_test = get_testmap_connection()
+            message = check_control_panel_tab(sheet_connection_test, message)
         except Exception:
             self.fail("Test failed unexpectedly!")
 
