@@ -89,7 +89,7 @@ def insert_line_after(sheet, spreadsheet_id, sheet_id, sheet_name, sheet_last_co
     body = {
         'values': line
     }
-    range_name = sheet_name + '!A' + str(index + 1) + ':' + sheet_last_column + str(index)
+    range_name = sheet_name + '!A' + str(index + 1) + ':' + sheet_last_column + str(index + 1)
     sheet.values().append(
         spreadsheetId=spreadsheet_id, range=range_name, valueInputOption='USER_ENTERED', body=body).execute()
 
