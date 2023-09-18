@@ -63,12 +63,13 @@ def main():
                               filter_to_import.jql +
                               '\n  Error message:' + err.text)
                 error += 1
+    jira_connection.close()
     summary = ('\n\nTOTAL RESULTS:\n'
-          '   Successfully imported = ' + str(imported) + '\n' +
-          '   Skipped since already exist = ' + str(skipped) + '\n' +
-          '   Need to be imported manually = ' + str(error) + '\n' +
-          ' NOTE: for the imported filters you need to verify the permission since they may not been imported\n' +
-          'Check ' + LOG_FILE_NAME + ' file for details.')
+               '   Successfully imported = ' + str(imported) + '\n' +
+               '   Skipped since already exist = ' + str(skipped) + '\n' +
+               '   Need to be imported manually = ' + str(error) + '\n' +
+               ' NOTE: for the imported filters you need to verify the permission since they may not been imported\n' +
+               'Check ' + LOG_FILE_NAME + ' file for details.')
 
     logging.info(summary)
     print(summary)
