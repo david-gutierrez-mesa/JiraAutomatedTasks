@@ -283,6 +283,7 @@ if __name__ == "__main__":
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
     info = update_echo_bug_threshold(sheet_connection, jira_connection, info)
+    jira_connection.close()
     bug_threshold_exceed, bug_threshold_warning = check_bug_threshold(sheet_connection, bug_threshold_exceed,
                                                                       bug_threshold_warning)
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
