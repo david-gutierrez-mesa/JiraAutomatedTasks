@@ -5,7 +5,9 @@ from liferay.utils.manageCredentialsCrypto import get_credentials
 
 
 def get_jira_connection(instance_url=Instance.Jira_URL, instance_type=Instance.Type):
+    print("Getting credentials")
     login = get_credentials()
+    print("Credentials for user " + login[0] + " get")
     try:
         print("Connecting to Jira " + instance_type + " in URL " + instance_url + " with user " + login[0])
         if instance_type == "Cloud":
