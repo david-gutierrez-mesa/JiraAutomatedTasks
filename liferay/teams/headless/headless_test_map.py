@@ -31,6 +31,7 @@ if __name__ == "__main__":
     sheet_connection = get_testmap_connection()
     info = update_headless_test_map(sheet_connection, jira_connection, info)
     info = update_headless_bug_threshold(sheet_connection, jira_connection, info)
+    jira_connection.close()
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],
                         [info, FileName.OUTPUT_INFO_FILE_NAME])
