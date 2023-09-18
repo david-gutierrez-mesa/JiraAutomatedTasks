@@ -183,6 +183,7 @@ def main(argv):
             spreadsheet_id = arg
     jira_connection = get_jira_connection()
     update_components_sheet(jira_connection, spreadsheet_id)
+    jira_connection.close()
 
 
 if __name__ == "__main__":

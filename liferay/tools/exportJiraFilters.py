@@ -13,6 +13,7 @@ def main():
     jira_connection = get_jira_connection(jira_url, jira_type)
     favorite_filters = jira_connection.favourite_filters()
     user_id = jira_connection.current_user()
+    jira_connection.close()
     file_name = user_id + '_filters.pkl'
     with open(file_name, 'wb') as f:
         pickle.dump(favorite_filters, f, pickle.HIGHEST_PROTOCOL)

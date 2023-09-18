@@ -225,6 +225,7 @@ if __name__ == "__main__":
     info = update_echo_test_map(sheet_connection, jira_connection, info)
     warning, info = check_need_automation_test_cases(sheet_connection, jira_connection, team_components, warning, info)
     warning, info = add_test_cases_to_test_map(sheet_connection, jira_connection, team_components, warning, info)
+    jira_connection.close()
     warning = check_control_panel_tab(sheet_connection, warning)
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME],

@@ -96,3 +96,4 @@ if __name__ == "__main__":
     update_creation_subtask(jira_connection)
     update_validation_subtask(jira_connection)
     create_poshi_automation_task(jira_connection)
+    jira_connection.close()

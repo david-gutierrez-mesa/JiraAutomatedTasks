@@ -8,7 +8,7 @@
 /build/
 /**/bug_threshold_*.txt
 /**/output_info_*.txt
-/**/output_message.txt
+/**/output_message_*.txt
 /liferay/test.py
 /**/token.json
 /liferay/tools/*.pkl

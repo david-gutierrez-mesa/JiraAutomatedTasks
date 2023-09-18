@@ -294,6 +294,7 @@ if __name__ == "__main__":
     info = close_ready_for_release_bugs(jira_connection, info)
     warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
     info = creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira_connection, info)
+    jira_connection.close()
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])
     print("End echo.py")
