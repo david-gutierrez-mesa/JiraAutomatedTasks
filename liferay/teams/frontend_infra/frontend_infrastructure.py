@@ -120,5 +120,6 @@ if __name__ == "__main__":
     info = create_test_creation_subtask(jira_connection, info)
     info = create_test_validation_subtask(jira_connection, info)
     create_technical_sub_task_test_scope_out_of_scope_creation(jira_connection, info)
+    jira_connection.close()
 
     create_output_files([warning, FileName.OUTPUT_MESSAGE_FILE_NAME], [info, FileName.OUTPUT_INFO_FILE_NAME])
