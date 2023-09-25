@@ -260,7 +260,7 @@ def read_test_cases_table_from_description(description):
         if table_ending_position == -1:
             table_ending_position = description.find(table_alternative_ending_string)
         table = description[table_staring_position:table_ending_position]
-        table_rows = table.split('\n')
+        table_rows = table.replace('|\n', '||\n').split('|\n')
         table_rows = [value for value in table_rows if value != '']
         return table_rows[1:]
     else:
