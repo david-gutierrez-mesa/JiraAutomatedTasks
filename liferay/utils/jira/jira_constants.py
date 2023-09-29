@@ -41,7 +41,7 @@ class Filter:
     GSheets_FI_7_4_CE_GA_All = 'filter=13335'
     GSheets_Headless_All_Stories = 'filter=12516'
     Headless_All_verified_Bugs_in_master = 'filter=12514'
-    Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=12225'
+    Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=13880'
     Integration_In_Development_Sub_task_creation_Headless_team = 'filter=12231'
     Integration_Sub_task_creation = 'filter=12131'
     Peds_Bugs_Unresolved = 'filter=12726'
