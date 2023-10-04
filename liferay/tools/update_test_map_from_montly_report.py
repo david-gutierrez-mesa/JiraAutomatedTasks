@@ -15,7 +15,7 @@ POSHI_REPORT_TAB = "Poshi-Report"
 POSHI_REPORT_TAB_RANGE = POSHI_REPORT_TAB + '!A3:Q'
 
 
-def update_echo_test_cases_from_monthly_report(sheet, jira, liferay_repo_path):
+def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
     teams = ['Echo', 'Tango']
     all_test_cases = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=POSHI_REPORT_TAB_RANGE).execute()\
         .get('values', [])
@@ -123,7 +123,4 @@ if __name__ == "__main__":
     bug_threshold_warning = ''
     jira_connection = get_jira_connection()
     sheet_connection = get_testmap_connection()
-    update_echo_test_cases_from_monthly_report(sheet_connection, jira_connection,
-                                               '/Users/dgutierrez/Liferay/ENG/liferay-portal')
-
-
+    update_echo_test_cases_from_monthly_report(sheet_connection, '/Users/dgutierrez/Liferay/ENG/liferay-portal')
