@@ -4,20 +4,20 @@ import os
 import pickle
 import re
 
-from liferay.teams.echo.echo_constants import Sheets
 from liferay.teams.echo.echo_test_map import _line_data, _add_lines_to_components_dic, _insert_lines_in_component
 from liferay.utils.file_helpers import search_file_inside_dir
 from liferay.utils.jira.jira_liferay import get_jira_connection
 from liferay.utils.sheets.sheets_liferay import get_testmap_connection
 
-ECHO_TESTMAP_SHEET_ID = '540408560'
+ECHO_LAST_REPORT_ID = '1owKo77sLqtqNkxod8427blIZkMemEseszHDq8f7X_Tg'
+ECHO_TESTMAP_SHEET_ID = '15465545'
 POSHI_REPORT_TAB = "Poshi-Report"
 POSHI_REPORT_TAB_RANGE = POSHI_REPORT_TAB + '!A3:Q'
 
 
 def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
     teams = ['Echo', 'Tango']
-    all_test_cases = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=POSHI_REPORT_TAB_RANGE).execute()\
+    all_test_cases = sheet.values().get(spreadsheetId=ECHO_LAST_REPORT_ID, range=POSHI_REPORT_TAB_RANGE).execute()\
         .get('values', [])
     test_not_in_test_map = []
     file_paths_dict = dict()
