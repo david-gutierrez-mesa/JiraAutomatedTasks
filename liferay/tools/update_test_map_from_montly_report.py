@@ -35,6 +35,7 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
                         if file_name not in file_paths_dict:
                             file_path = search_file_inside_dir(liferay_repo_path, file_name + '.testcase')
                             file_paths_dict[file_name] = file_path
+                            print("Adding path" + file_path + "\n")
 
     if check_file:
         with open(tesctcases_paths_name, 'rb') as inp:
