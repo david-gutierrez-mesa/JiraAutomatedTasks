@@ -191,6 +191,11 @@ def initialize_subtask_test_automation(story, components, description):
     return subtask_test_automation
 
 
+def initialize_subtask_ux_validation(story, components):
+    subtask_test_validation = __initialize_subtask_technical_test(story, components, Strings.subtask_ux_summary)
+    return subtask_test_validation
+
+
 def is_component_lead(component, team_name_in_jira):
     if hasattr(component, "lead"):
         return component.lead.displayName == team_name_in_jira
