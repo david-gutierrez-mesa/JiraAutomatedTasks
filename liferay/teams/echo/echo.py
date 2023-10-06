@@ -95,6 +95,7 @@ def creating_testing_subtasks(jira, output_info):
         needs_backend = True
         needs_frontend = True
         needs_round_1 = True
+        needs_ux_task = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == Strings.subtask_backend_summary:
@@ -103,6 +104,8 @@ def creating_testing_subtasks(jira, output_info):
                 needs_frontend = False
             elif summary.startswith(Strings.subtask_round_1_summary):
                 needs_round_1 = False
+            elif summary.startswith(Strings.subtask_ux_summary):
+                needs_ux_task = False
 
         components = []
         for component in story.fields.components:
@@ -115,8 +118,11 @@ def creating_testing_subtasks(jira, output_info):
             subtask_frontend = initialize_subtask_front_end(story, components)
             jira.create_issue(fields=subtask_frontend)
         if needs_round_1:
-            subtask_frontend = initialize_subtask_test_validation(story, components, Strings.Round_1_description)
-            jira.create_issue(fields=subtask_frontend)
+            subtask_round_1 = initialize_subtask_test_validation(story, components, EchoStrings.Round_1_description)
+            jira.create_issue(fields=subtask_round_1)
+        if needs_ux_task:
+            subtask_ux = initialize_subtask_ux_validation(story, components)
+            jira.create_issue(fields=subtask_ux)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
 
