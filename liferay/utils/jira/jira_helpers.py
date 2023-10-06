@@ -2,7 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition, Strings
+from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition, Strings, IssueTypes
 from liferay.utils.manageCredentialsCrypto import get_credentials
 
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
@@ -63,7 +63,7 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
             'project': {'key': 'LPS'},
             'summary': summary,
             'description': description,
-            'issuetype': {'name': 'Testing'},
+            'issuetype': {'name': IssueTypes.Testing},
             'components': components,
             CustomField.Epic_Link: epic_link
         }
