@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from liferay.teams.headless.headless_contstants import Strings
-from liferay.utils.jira.jira_constants import Filter, Status
+from liferay.teams.headless.headless_contstants import HeadlessStrings
+from liferay.utils.jira.jira_constants import Filter, Status, Strings
 from liferay.utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
 from liferay.utils.jira.jira_liferay import get_jira_connection
 
@@ -11,7 +11,7 @@ def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
     print("Creating poshi automation task for story", parent_key)
     summary = 'Product QA | Functional Automation - ' + parent_key + ' - ' + parent_summary
 
-    description = Strings.poshi_task_description + poshi_automation_table
+    description = HeadlessStrings.poshi_task_description + poshi_automation_table
     new_issue = create_poshi_automation_task_for(jira_local, parent_story, summary, description)
 
     if new_issue:
@@ -30,10 +30,10 @@ def update_creation_subtask(jira):
             summary = subtask.fields.summary
             key = subtask.key
             assignee = jira.issue(key, fields='assignee')
-            if summary == 'Test Scenarios Coverage | Test Creation':
+            if summary == Strings.subtask_test_creation_summary:
                 print("Updating "+key+" ...")
                 if subtask.fields.status.name == Status.Open:
-                    description = Strings.test_creation_description
+                    description = HeadlessStrings.test_creation_description
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
                         jira.assign_issue(subtask.id, 'support-qa')
@@ -52,7 +52,7 @@ def update_validation_subtask(jira):
             if 'Product QA | Test Validation' in summary:
                 if subtask.fields.status.name == Status.Open:
                     print("Updating "+key+" ...")
-                    description = Strings.test_validation_round_1_description
+                    description = HeadlessStrings.test_validation_round_1_description
                     subtask.update(fields={'description': description})
                     if assignee != 'Support QA':
                         jira.assign_issue(subtask.id, 'support-qa')
@@ -67,7 +67,7 @@ def create_poshi_automation_task(jira):
         jira.search_issues(Filter.Headless_Team_Ready_to_create_POSHI_Automation_Task)
     for story in stories_without_poshi_automation_created:
         for subtask in story.get_field('subtasks'):
-            if subtask.fields.summary == 'Test Scenarios Coverage | Test Creation':
+            if subtask.fields.summary == Strings.subtask_test_creation_summary:
                 description = jira.issue(subtask.id, fields='description').fields.description
                 table_starring_string = ''
                 if description.find('||*Requirement*||') != -1:

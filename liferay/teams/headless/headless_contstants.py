@@ -7,7 +7,7 @@ class FileName:
     OUTPUT_INFO_FILE_NAME = "output_info_headless.txt"
 
 
-class Strings:
+class HeadlessStrings:
     poshi_task_description = 'Create test automation to validate the critical test scenarios/cases of the related ' \
                              'story.\n\nThe focus of this task is to implement the CRITICAL, HIGH, and MID tests of ' \
                              'the related story, ' \
