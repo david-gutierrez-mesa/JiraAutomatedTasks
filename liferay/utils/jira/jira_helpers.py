@@ -2,7 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition, Strings
+from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition, Strings, IssueTypes
 from liferay.utils.manageCredentialsCrypto import get_credentials
 
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
@@ -12,16 +12,24 @@ LIFERAY_JIRA_BROWSE_URL = Instance.Jira_URL + "/browse/"
 LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
-def __initialize_subtask_technical_test(story, components, summary, description=''):
+def __initialize_subtask(story, components, summary, issuetype, description=''):
     subtask_test_automation = {
         'project': {'key': 'LPS'},
         'summary': summary,
         'description': description,
-        'issuetype': {'name': 'Technical Testing'},
+        'issuetype': {'name': issuetype},
         'components': components,
         'parent': {'id': story.id},
     }
     return subtask_test_automation
+
+
+def __initialize_subtask_design_task(story, components, summary, description=''):
+    return __initialize_subtask(story, components, summary, IssueTypes.Design_Task, description)
+
+
+def __initialize_subtask_technical_test(story, components, summary, description=''):
+    return __initialize_subtask(story, components, summary, IssueTypes.Technical_Testing, description)
 
 
 def _parse_permission(permissions):
@@ -63,7 +71,7 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
             'project': {'key': 'LPS'},
             'summary': summary,
             'description': description,
-            'issuetype': {'name': 'Testing'},
+            'issuetype': {'name': IssueTypes.Testing},
             'components': components,
             CustomField.Epic_Link: epic_link
         }
@@ -192,7 +200,7 @@ def initialize_subtask_test_automation(story, components, description):
 
 
 def initialize_subtask_ux_validation(story, components):
-    subtask_test_validation = __initialize_subtask_technical_test(story, components, Strings.subtask_ux_summary)
+    subtask_test_validation = __initialize_subtask_design_task(story, components, Strings.subtask_ux_summary)
     return subtask_test_validation
 
 
