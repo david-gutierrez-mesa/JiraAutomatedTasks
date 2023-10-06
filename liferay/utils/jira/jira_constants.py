@@ -84,6 +84,12 @@ class Strings:
     subtask_ux_summary = 'Design QA | UX Review'
 
 
+class IssueTypes:
+    Design_Task = 'Design task'
+    Technical_Testing = 'Technical Testing'
+    Testing = 'Testing'
+
+
 class Transition:
     Closed = 'Closed'
     In_Testing = 'In Testing'
