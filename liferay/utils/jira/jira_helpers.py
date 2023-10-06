@@ -12,7 +12,7 @@ LIFERAY_JIRA_BROWSE_URL = Instance.Jira_URL + "/browse/"
 LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
-def __initialize_subtask_technical_test(story, components, summary, description):
+def __initialize_subtask_technical_test(story, components, summary, description=''):
     subtask_test_automation = {
         'project': {'key': 'LPS'},
         'summary': summary,
