@@ -68,6 +68,22 @@ class Status:
     Ready_for_testing = '10619'
 
 
+class Strings:
+    subtask_automation_test_creation_summary = 'Product QA | Automation Test Creation'
+    subtask_check_ux_pm_impedibug_summary = 'Product QA | Test Validation - Assert fix PM/Design bugs'
+    subtask_backend_description = '* Fill the Backend coverage on the test scenarios table, created in the parent ' \
+                                  'story.\n* Implement the Backend unit and/or integration tests that are missing, ' \
+                                  'comparing with the test scenarios table, created in the parent story. '
+    subtask_backend_summary = 'Test Scenarios Coverage | Backend'
+    subtask_frontend_description = '* Fill the Frontend coverage on the test scenarios table, created in the parent ' \
+                                   'story.\n* Implement the Frontend unit and/or integration tests that are missing, ' \
+                                   'comparing with the test scenarios table, created in the parent story. '
+    subtask_frontend_summary = 'Test Scenarios Coverage | Frontend'
+    subtask_round_1_summary = 'Product QA | Test Validation - Round 1'
+    subtask_test_creation_summary = 'Test Scenarios Coverage | Test Creation'
+    subtask_ux_summary = 'Design QA | UX Review'
+
+
 class Transition:
     Closed = 'Closed'
     In_Testing = 'In Testing'
