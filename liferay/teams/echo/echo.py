@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import Roles, FileName, Strings
+from liferay.teams.echo.echo_constants import FileName, EchoStrings
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
-from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition
+from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition, Strings
 from liferay.utils.jira.jira_liferay import get_jira_connection
 
 
@@ -68,7 +68,7 @@ def close_ready_for_release_bugs(jira, output_info):
 
 def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
     stories_without_checking_subtask = jira.search_issues(Filter.Echo_Stories_with_impedibug_opened_by_PM_UX,
-                                                         fields=['key', 'subtasks', 'components', 'id'])
+                                                          fields=['key', 'subtasks', 'components', 'id'])
 
     for story in stories_without_checking_subtask:
         components = []
@@ -95,14 +95,17 @@ def creating_testing_subtasks(jira, output_info):
         needs_backend = True
         needs_frontend = True
         needs_round_1 = True
+        needs_ux_task = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Backend':
+            if summary == Strings.subtask_backend_summary:
                 needs_backend = False
-            elif summary == 'Test Scenarios Coverage | Frontend':
+            elif summary == Strings.subtask_frontend_summary:
                 needs_frontend = False
-            elif summary == 'Product QA | Test Validation - Round 1':
+            elif summary.startswith(Strings.subtask_round_1_summary):
                 needs_round_1 = False
+            elif summary.startswith(Strings.subtask_ux_summary):
+                needs_ux_task = False
 
         components = []
         for component in story.fields.components:
@@ -115,8 +118,11 @@ def creating_testing_subtasks(jira, output_info):
             subtask_frontend = initialize_subtask_front_end(story, components)
             jira.create_issue(fields=subtask_frontend)
         if needs_round_1:
-            subtask_frontend = initialize_subtask_test_validation(story, components, Strings.Round_1_description)
-            jira.create_issue(fields=subtask_frontend)
+            subtask_round_1 = initialize_subtask_test_validation(story, components, EchoStrings.Round_1_description)
+            jira.create_issue(fields=subtask_round_1)
+        if needs_ux_task:
+            subtask_ux = initialize_subtask_ux_validation(story, components)
+            jira.create_issue(fields=subtask_ux)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
 
@@ -129,7 +135,7 @@ def create_testing_table_for_stories(jira, output_info):
         poshi_automation_table = AUTOMATION_TABLE_HEADER + '\n'
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Test Creation':
+            if summary == Strings.subtask_test_creation_summary:
                 description = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '')
                 if description.startswith("*Case "):
                     description = '\n' + description
@@ -236,7 +242,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
 def fill_round_technical_testing_description(jira, output_info):
     round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields='key')
     for task in round_technical_testing_sub_tasks:
-        task.update(fields={'description': Strings.Round_1_description})
+        task.update(fields={'description': EchoStrings.Round_1_description})
     return output_info
 
 
@@ -253,7 +259,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 if cells[3].casefold() == 'TBD'.casefold() \
                         or cells[4].casefold() == 'TBD'.casefold() \
                         or cells[5].casefold() == 'TBD'.casefold():
-                    output_warning += "* Table for story " + html_issue_with_link(story) +\
+                    output_warning += "* Table for story " + html_issue_with_link(story) + \
                                       " is not uptodate. Skipping.\n"
                     can_be_closed = False
                     break
@@ -277,7 +283,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
             elif story.get_field("status").name == Status.In_Testing:
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
-            jira.assign_issue(story.id, Roles.Design_lead)
+            jira.assign_issue(story.id, '-1')
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info
 

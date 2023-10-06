@@ -2,7 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition
+from liferay.utils.jira.jira_constants import CustomField, Status, Instance, Transition, Strings
 from liferay.utils.manageCredentialsCrypto import get_credentials
 
 AUTOMATION_TABLE_HEADER = '||Test Scenarios||Test Strategy||Kind of test||Is it covered by FrontEnd ? (' \
@@ -12,7 +12,7 @@ LIFERAY_JIRA_BROWSE_URL = Instance.Jira_URL + "/browse/"
 LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
-def __initialize_subtask_technical_test(story, components, summary, description):
+def __initialize_subtask_technical_test(story, components, summary, description=''):
     subtask_test_automation = {
         'project': {'key': 'LPS'},
         'summary': summary,
@@ -141,7 +141,6 @@ def html_issue_with_link(issue):
 
 
 def initialize_subtask_check_ux_pm_impedibug(story, components, impedibug):
-    summary = 'Product QA | Test Validation - Assert fix PM/Design bugs'
     impedibug_id = '?'
     impedibug_summary = '?'
     if impedibug:
@@ -155,44 +154,46 @@ def initialize_subtask_check_ux_pm_impedibug(story, components, impedibug):
                                                                                                  "check if we should " \
                                                                                                  "update already " \
                                                                                                  "defined test cases "
-    subtask_check_impedi = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_check_impedi = __initialize_subtask_technical_test(story, components,
+                                                               Strings.subtask_check_ux_pm_impedibug_summary,
+                                                               description)
     return subtask_check_impedi
 
 
 def initialize_subtask_back_end(story, components):
-    summary = 'Test Scenarios Coverage | Backend'
-    description = '* Fill the Backend coverage on the test scenarios table, created in the parent story.\n' \
-                  '* Implement the Backend unit and/or integration tests that are missing, comparing with the test ' \
-                  'scenarios table, created in the parent story. '
-    subtask_backend = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_backend = __initialize_subtask_technical_test(story, components, Strings.subtask_backend_summary,
+                                                          Strings.subtask_backend_description)
     return subtask_backend
 
 
 def initialize_subtask_front_end(story, components):
-    summary = 'Test Scenarios Coverage | Frontend'
-    description = '* Fill the Frontend coverage on the test scenarios table, created in the parent story.\n' \
-                  '* Implement the Frontend unit and/or integration tests that are missing, comparing with the test ' \
-                  'scenarios table, created in the parent story. '
-    subtask_test_creation = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_test_creation = __initialize_subtask_technical_test(story, components, Strings.subtask_frontend_summary,
+                                                                Strings.subtask_frontend_description)
     return subtask_test_creation
 
 
 def initialize_subtask_test_creation(story, components, description):
-    summary = 'Test Scenarios Coverage | Test Creation'
-    subtask_test_creation = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_test_creation = __initialize_subtask_technical_test(story, components,
+                                                                Strings.subtask_test_creation_summary, description)
     return subtask_test_creation
 
 
 def initialize_subtask_test_validation(story, components, description):
-    summary = 'Product QA | Test Validation - Round 1'
-    subtask_test_validation = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_test_validation = __initialize_subtask_technical_test(story, components, Strings.subtask_round_1_summary,
+                                                                  description)
     return subtask_test_validation
 
 
 def initialize_subtask_test_automation(story, components, description):
-    summary = 'Product QA | Automation Test Creation'
-    subtask_test_automation = __initialize_subtask_technical_test(story, components, summary, description)
+    subtask_test_automation = __initialize_subtask_technical_test(story, components,
+                                                                  Strings.subtask_automation_test_creation_summary,
+                                                                  description)
     return subtask_test_automation
+
+
+def initialize_subtask_ux_validation(story, components):
+    subtask_test_validation = __initialize_subtask_technical_test(story, components, Strings.subtask_ux_summary)
+    return subtask_test_validation
 
 
 def is_component_lead(component, team_name_in_jira):
@@ -222,7 +223,7 @@ def prepare_test_creation_subtask(story):
     test_creation = True
     for subtask in story.fields.subtasks:
         summary = subtask.fields.summary
-        if summary == 'Test Scenarios Coverage | Test Creation':
+        if summary == Strings.subtask_test_creation_summary:
             test_creation = False
 
     components = []
@@ -236,7 +237,7 @@ def prepare_test_validation_subtask(story):
     test_validation = True
     for subtask in story.fields.subtasks:
         summary = subtask.fields.summary
-        if summary == 'Product QA | Test Validation - Round 1':
+        if summary == Strings.subtask_round_1_summary:
             test_validation = False
 
     components = []
@@ -259,6 +260,8 @@ def read_test_cases_table_from_description(description):
     if table_starring_string:
         if table_ending_position == -1:
             table_ending_position = description.find(table_alternative_ending_string)
+        if table_ending_position == -1:
+            table_ending_position = len(description)
         table = description[table_staring_position:table_ending_position]
         table_rows = table.replace('|\n', '||\n').split('|\n')
         table_rows = [value for value in table_rows if value != '']
