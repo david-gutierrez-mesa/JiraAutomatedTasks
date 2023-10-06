@@ -253,7 +253,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 if cells[3].casefold() == 'TBD'.casefold() \
                         or cells[4].casefold() == 'TBD'.casefold() \
                         or cells[5].casefold() == 'TBD'.casefold():
-                    output_warning += "* Table for story " + html_issue_with_link(story) +\
+                    output_warning += "* Table for story " + html_issue_with_link(story) + \
                                       " is not uptodate. Skipping.\n"
                     can_be_closed = False
                     break
