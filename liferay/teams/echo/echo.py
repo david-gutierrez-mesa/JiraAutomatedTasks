@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import Roles, FileName, Strings
+from liferay.teams.echo.echo_constants import FileName, EchoStrings
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
-from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition
+from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition, Strings
 from liferay.utils.jira.jira_liferay import get_jira_connection
 
 
@@ -97,11 +97,11 @@ def creating_testing_subtasks(jira, output_info):
         needs_round_1 = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Backend':
+            if summary == Strings.subtask_backend_summary:
                 needs_backend = False
-            elif summary == 'Test Scenarios Coverage | Frontend':
+            elif summary == Strings.subtask_frontend_summary:
                 needs_frontend = False
-            elif summary == 'Product QA | Test Validation - Round 1':
+            elif summary.startswith(Strings.subtask_round_1_summary):
                 needs_round_1 = False
 
         components = []
@@ -129,7 +129,7 @@ def create_testing_table_for_stories(jira, output_info):
         poshi_automation_table = AUTOMATION_TABLE_HEADER + '\n'
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
-            if summary == 'Test Scenarios Coverage | Test Creation':
+            if summary == Strings.subtask_test_creation_summary:
                 description = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '')
                 if description.startswith("*Case "):
                     description = '\n' + description
@@ -236,7 +236,7 @@ def create_poshi_automation_task_for_bugs(jira, output_info):
 def fill_round_technical_testing_description(jira, output_info):
     round_technical_testing_sub_tasks = jira.search_issues(Filter.Round_tasks_without_description, fields='key')
     for task in round_technical_testing_sub_tasks:
-        task.update(fields={'description': Strings.Round_1_description})
+        task.update(fields={'description': EchoStrings.Round_1_description})
     return output_info
 
 
