@@ -277,7 +277,7 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
             elif story.get_field("status").name == Status.In_Testing:
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
-            jira.assign_issue(story.id, Roles.Design_lead)
+            jira.assign_issue(story.id, '-1')
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info
 
