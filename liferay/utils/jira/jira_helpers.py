@@ -33,8 +33,8 @@ def __initialize_subtask(story, components, summary, issuetype, description=''):
     return subtask_test_automation
 
 
-def __initialize_subtask_design_task(story, components, summary, description=''):
-    return __initialize_subtask(story, components, summary, IssueTypes.Design_Task, description)
+def __initialize_subtask_design_task(story, summary, description=''):
+    return __initialize_subtask(story, [], summary, IssueTypes.Design_Task, description)
 
 
 def __initialize_subtask_technical_test(story, components, summary, description=''):
@@ -208,8 +208,8 @@ def initialize_subtask_test_automation(story, components, description):
     return subtask_test_automation
 
 
-def initialize_subtask_ux_validation(story, components):
-    subtask_test_validation = __initialize_subtask_design_task(story, components, Strings.subtask_ux_summary)
+def initialize_subtask_ux_validation(story):
+    subtask_test_validation = __initialize_subtask_design_task(story, Strings.subtask_ux_summary)
     return subtask_test_validation
 
 

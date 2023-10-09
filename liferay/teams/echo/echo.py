@@ -121,7 +121,7 @@ def creating_testing_subtasks(jira, output_info):
             subtask_round_1 = initialize_subtask_test_validation(story, components, EchoStrings.Round_1_description)
             jira.create_issue(fields=subtask_round_1)
         if needs_ux_task:
-            subtask_ux = initialize_subtask_ux_validation(story, components)
+            subtask_ux = initialize_subtask_ux_validation(story)
             jira.create_issue(fields=subtask_ux)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
