@@ -211,4 +211,5 @@ def update_test_map(sheet, jira, output_info, jira_filter, testmap_id, jira_test
 def remove_underline(string):
     string = string.replace('-\n-', '\n')
     string = string.strip('+')
-    return string.strip('-')
+    string = string.strip('-')
+    return string.strip()
