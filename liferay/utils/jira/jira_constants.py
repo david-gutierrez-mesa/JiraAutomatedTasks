@@ -81,7 +81,7 @@ class Strings:
     subtask_frontend_summary = 'Test Scenarios Coverage | Frontend'
     subtask_round_1_summary = 'Product QA | Test Validation - Round 1'
     subtask_test_creation_summary = 'Test Scenarios Coverage | Test Creation'
-    subtask_ux_summary = 'Design QA | UX Review'
+    subtask_ux_summary = 'Design QA | UX Review - Round 1'
 
 
 class IssueTypes:
