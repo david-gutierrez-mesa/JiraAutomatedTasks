@@ -92,6 +92,8 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
             lps_missing += 1
         if not description:
             description = file_name + '#' + test_name
+            description_missing += 1
+            list_missing_description.append(file_name + ' ' + test_name + ' ' + file_path)
         if priority:
             testcases_to_be_added += 1
             priority_text = 'low'
@@ -107,11 +109,6 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
                            test_name, '', '', 'No', 'No'))
             _add_lines_to_components_dic(components_testcases_dict, component, lines)
 
-        if not lps_number:
-            lps_missing += 1
-        if not description:
-            description_missing += 1
-            list_missing_description.append(file_name + ' ' + test_name + ' ' + file_path)
         if not priority:
             priority_missing += 1
             list_missing_priority.append(file_name + ' ' + test_name + ' ' + file_path)
