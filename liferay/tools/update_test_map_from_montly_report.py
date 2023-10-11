@@ -61,6 +61,9 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
         lps_number = ''
         priority = ''
         lines = []
+        if not file_path:
+            print('[WARNING] No path found for ' + file_name + ' when trying to add case ' + test_name )
+            continue
         with open(file_path, 'r') as fp:
             for l_no, line in enumerate(fp):
                 if 'test ' + test_name in line:
