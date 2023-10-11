@@ -88,7 +88,8 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
                 else:
                     last_property = True
         if not lps_number:
-            lps_number = '-'
+            lps_number = '~'
+            lps_missing += 1
         if not description:
             description = file_name + '#' + test_name
         if priority:
