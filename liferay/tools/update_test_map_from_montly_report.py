@@ -75,6 +75,8 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
             if '@description' in properties_line:
                 description = properties_line.split('=')[1].strip().strip('"')
                 lps_number = re.findall(r'\bLPS-\w+', description)
+                if not lps_number:
+                    lps_number = re.findall(r'\bLRQA-\w+', description)
                 if last_property:
                     break
                 else:
