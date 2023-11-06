@@ -265,18 +265,23 @@ def prepare_test_validation_subtask(story):
 
 
 def read_test_cases_table_from_description(description):
-    table_ending_string = 'h3. Test Cases'
-    table_alternative_ending_string = '*Case '
     table_starring_string = ''
     if description.find('||*Test Scenarios*||') != -1:
         table_starring_string = '||*Test Scenarios*||'
     elif description.find('||Test Scenarios||') != -1:
         table_starring_string = '||Test Scenarios||'
     table_staring_position = description.find(table_starring_string)
+
+    table_ending_string = ''
+    if description.find('h3. Test Cases') != -1:
+        table_ending_string = 'h3. Test Cases'
+    elif description.find('h3. *Test Cases*') != -1:
+        table_ending_string = 'h3. *Test Cases*'
+    elif description.find('*Case ') != -1:
+        table_ending_string = '*Case '
     table_ending_position = description.find(table_ending_string)
+
     if table_starring_string:
-        if table_ending_position == -1:
-            table_ending_position = description.find(table_alternative_ending_string)
         if table_ending_position == -1:
             table_ending_position = len(description)
         table = description[table_staring_position:table_ending_position]
