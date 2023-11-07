@@ -160,7 +160,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
     stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task,
                                                                   fields=['description', 'key', 'labels', 'components',
                                                                           CustomField.Epic_Link, 'subtasks',
-                                                                          'issuelinks', 'priority'])
+                                                                          'issuelinks'])
     for story in stories_without_poshi_automation_created:
         if is_sub_task_closed(story, 'Product QA | Functional Automation'):
             break
