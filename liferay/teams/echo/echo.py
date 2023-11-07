@@ -160,7 +160,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
     stories_without_poshi_automation_created = jira.search_issues(Filter.Ready_to_create_POSHI_automation_task,
                                                                   fields=['description', 'key', 'labels', 'components',
                                                                           CustomField.Epic_Link, 'subtasks',
-                                                                          'issuelinks'])
+                                                                          'issuelinks', 'priority'])
     for story in stories_without_poshi_automation_created:
         if is_sub_task_closed(story, 'Product QA | Functional Automation'):
             break
@@ -203,7 +203,7 @@ def create_poshi_automation_task(jira, output_warning, output_info):
                 if is_automation_task_needed:
                     poshi_task = _create_poshi_task_for_story(jira, story, poshi_automation_table)
                     if not poshi_task:
-                        close_functional_automation_subtask(jira, story, ' in the testing task linked in the story.')
+                        close_functional_automation_subtask(jira, story, 'the testing task linked in the story.')
                     else:
                         output_info += "* Automation task created for story " + html_issue_with_link(story) + "\n "
                         close_functional_automation_subtask(jira, story, poshi_task.key)
