@@ -13,23 +13,15 @@ LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
 def __initialize_subtask(story, components, summary, issuetype, description=''):
+    subtask_test_automation = {
+        'project': {'key': 'LPS'},
+        'summary': summary,
+        'description': description,
+        'issuetype': {'name': issuetype},
+        'parent': {'id': story.id}
+    }
     if components:
-        subtask_test_automation = {
-            'project': {'key': 'LPS'},
-            'summary': summary,
-            'description': description,
-            'issuetype': {'name': issuetype},
-            'components': components,
-            'parent': {'id': story.id},
-        }
-    else:
-        subtask_test_automation = {
-            'project': {'key': 'LPS'},
-            'summary': summary,
-            'description': description,
-            'issuetype': {'name': issuetype},
-            'parent': {'id': story.id},
-        }
+        subtask_test_automation.update({'components': components})
     return subtask_test_automation
 
 
