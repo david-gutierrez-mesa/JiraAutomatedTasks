@@ -1,3 +1,9 @@
+class EchoStrings:
+    Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
+                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
+                          "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+
+
 class FileName:
     OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
     OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
@@ -34,10 +40,4 @@ class Squads:
     PM = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com']
     PO = ['javier.burgueno@liferay.com', 'ruth.alves@liferay.com']
     EPM = ['maria.muriel@liferay.com']
-    Discovery = Design + PO + EPM
-
-
-class EchoStrings:
-    Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
-                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
-                          "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+    Discovery = Design + PM + PO + EPM
