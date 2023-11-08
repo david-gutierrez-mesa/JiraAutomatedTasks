@@ -1,8 +1,21 @@
+class EchoStrings:
+    Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
+                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
+                          "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+
+
 class FileName:
     OUTPUT_BUG_THRESHOLD_EXCEED_FILE_NAME = "bug_threshold_exceed_message_echo.txt"
     OUTPUT_BUG_THRESHOLD_WARNING_FILE_NAME = "bug_threshold_warning_message_echo.txt"
     OUTPUT_INFO_FILE_NAME = "output_info_echo.txt"
     OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
+
+
+class Relationship:
+    PM_PO_matrix = {
+        'mateo.hermosin@liferay.com': 'javier.burgueno@liferay.com',
+        'julia.molano@liferay.com': 'ruth.alves@liferay.com'
+    }
 
 
 class Roles:
@@ -24,13 +37,7 @@ class Squads:
             'lourdes.fernandez@liferay.com', 'mikel.lorza@liferay.com', 'yurena.cabrera@liferay.com']
     Devs = Front + Back
     Design = ['carolina.rodriguez@liferay.com', 'maria.arce@liferay.com']
-    PO = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com', 'benicio.herrero@liferay.com',
-          'javier.burgueno@liferay.com']
+    PM = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com']
+    PO = ['javier.burgueno@liferay.com', 'ruth.alves@liferay.com']
     EPM = ['maria.muriel@liferay.com']
-    Discovery = Design + PO + EPM
-
-
-class EchoStrings:
-    Round_1_description = "h1. Bugs found:\n(/) - PASS\n(!) - To Do\n(x) - FAIL\nh2. " \
-                          "Impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh2. Not " \
-                          "impeditive:\n||Ticket||Title||QA Status||\n|?|?|(!)|\n\nh3.Test Cases\n\n*Case 1:* "
+    Discovery = Design + PM + PO + EPM

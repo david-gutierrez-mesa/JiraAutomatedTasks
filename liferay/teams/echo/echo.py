@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import FileName, EchoStrings
+from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
 from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition, Strings
@@ -249,7 +249,7 @@ def fill_round_technical_testing_description(jira, output_info):
 def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
     story_to_ready_for_pm_review = jira.search_issues(Filter.Stories_ready_to_be_closed,
                                                       fields=['key', 'id', 'description', 'labels',
-                                                              'issuelinks', 'status'])
+                                                              'issuelinks', 'status', 'reporter'])
     for story in story_to_ready_for_pm_review:
         test_cases = read_test_cases_table_from_description(story.fields.description)
         can_be_closed = True
@@ -283,7 +283,14 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
             elif story.get_field("status").name == Status.In_Testing:
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
-            jira.assign_issue(story.id, '-1')
+
+            reporter_email = story.get_field("reporter").emailAddress
+            assign_to = '-1'
+            if reporter_email in Squads.PO:
+                assign_to = reporter_email
+            elif reporter_email in Squads.PM:
+                assign_to = Relationship.PM_PO_matrix.get(reporter_email)
+            jira.assign_issue(story.id, assign_to)
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info
 
