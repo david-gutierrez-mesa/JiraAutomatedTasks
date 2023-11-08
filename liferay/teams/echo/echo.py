@@ -283,7 +283,14 @@ def transition_story_to_ready_for_pm_review(jira, output_warning, output_info):
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
             elif story.get_field("status").name == Status.In_Testing:
                 jira.transition_issue(story.id, transition=Transition.Ready_for_Product_Review)
-            jira.assign_issue(story.id, '-1')
+
+            reporter_email = story.get_field("reporter").emailAddress
+            assign_to = '-1'
+            if reporter_email in Squads.PO:
+                assign_to = reporter_email
+            elif reporter_email in Squads.PM:
+                assign_to = Relationship.PM_PO_matrix.get(reporter_email)
+            jira.assign_issue(story.id, assign_to)
             output_info += "* Story " + html_issue_with_link(story) + " has been send for PM review.\n"
     return output_warning, output_info
 
