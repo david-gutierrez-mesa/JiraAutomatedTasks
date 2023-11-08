@@ -24,8 +24,8 @@ class Squads:
             'lourdes.fernandez@liferay.com', 'mikel.lorza@liferay.com', 'yurena.cabrera@liferay.com']
     Devs = Front + Back
     Design = ['carolina.rodriguez@liferay.com', 'maria.arce@liferay.com']
-    PO = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com', 'benicio.herrero@liferay.com',
-          'javier.burgueno@liferay.com']
+    PM = ['julia.molano@liferay.com', 'mateo.hermosin@liferay.com']
+    PO = ['javier.burgueno@liferay.com', 'ruth.alves@liferay.com']
     EPM = ['maria.muriel@liferay.com']
     Discovery = Design + PO + EPM
 
