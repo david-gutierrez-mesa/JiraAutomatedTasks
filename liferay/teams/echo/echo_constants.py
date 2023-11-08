@@ -5,6 +5,13 @@ class FileName:
     OUTPUT_MESSAGE_FILE_NAME = "output_message_echo.txt"
 
 
+class Relationship:
+    PM_PO_matrix = {
+        'mateo.hermosin@liferay.com': 'javier.burgueno@liferay.com',
+        'julia.molano@liferay.com': 'ruth.alves@liferay.com'
+    }
+
+
 class Roles:
     Design_lead = 'carolina.rodriguez'
 
