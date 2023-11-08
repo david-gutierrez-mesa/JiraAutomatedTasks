@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import FileName, EchoStrings
+from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship
 from liferay.utils.file_helpers import create_output_files
 from liferay.utils.jira.jira_helpers import *
 from liferay.utils.jira.jira_constants import Status, CustomField, Filter, Transition, Strings
