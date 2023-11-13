@@ -73,6 +73,7 @@ def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
     for story in stories_without_checking_subtask:
         components = []
         impedibug = False
+        already_exists = False
         for component in story.fields.components:
             components.append({'name': component.name})
         for subtask in story.fields.subtasks:
@@ -80,11 +81,16 @@ def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
             subtask_status = subtask.fields.status
             if subtask_type.name == 'Impedibug' and subtask_status.name != 'Closed':
                 impedibug = subtask
+            if (subtask_type.name == 'Technical Testing' and
+                    subtask.fields.summary == Strings.subtask_check_ux_pm_impedibug_summary):
+                already_exists = True
                 break
-        subtask_frontend = initialize_subtask_check_ux_pm_impedibug(story, components, impedibug)
-        jira.create_issue(fields=subtask_frontend)
-        output_info += '* Testing subtasks for checking impedibug has been created for story ' \
-                       + html_issue_with_link(story) + "\n "
+
+        if not already_exists:
+            subtask_frontend = initialize_subtask_check_ux_pm_impedibug(story, components, impedibug)
+            jira.create_issue(fields=subtask_frontend)
+            output_info += '* Testing subtasks for checking impedibug has been created for story ' \
+                           + html_issue_with_link(story) + "\n "
     return output_info
 
 
