@@ -68,6 +68,16 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
         components = []
         for component in issue.fields.components:
             components.append({'name': component.name})
+
+        labels = []
+        if hasattr(issue.fields, CustomField.Epic_Link):
+            epic = jira_local.issue(epic_link, fields='labels')
+            if hasattr(epic.fields, 'labels'):
+                epic_labels = epic.get_field('labels')
+                for label in epic_labels:
+                    if label.startswith('202') and label.endswith('_DEV'):
+                        labels.append(label)
+
         issue_dict = {
             'project': {'key': 'LPS'},
             'summary': summary,
