@@ -90,7 +90,8 @@ def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
 
 def creating_testing_subtasks(jira, output_info):
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
-                                                         fields=['key', 'subtasks', 'components', 'id', 'description'])
+                                                         fields=['key', 'subtasks', 'components', 'id', 'description',
+                                                                 CustomField.Epic_Link])
     for story in stories_without_testing_subtask:
         needs_backend = True
         needs_frontend = True
