@@ -93,6 +93,8 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
             inwardIssue=new_issue.key,
             outwardIssue=parent_key,
         )
+        if labels:
+            new_issue.update(fields={"labels": labels})
     return new_issue
 
 
