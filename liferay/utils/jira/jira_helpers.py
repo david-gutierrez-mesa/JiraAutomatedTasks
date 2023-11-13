@@ -13,23 +13,15 @@ LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 
 def __initialize_subtask(story, components, summary, issuetype, description=''):
+    subtask_test_automation = {
+        'project': {'key': 'LPS'},
+        'summary': summary,
+        'description': description,
+        'issuetype': {'name': issuetype},
+        'parent': {'id': story.id}
+    }
     if components:
-        subtask_test_automation = {
-            'project': {'key': 'LPS'},
-            'summary': summary,
-            'description': description,
-            'issuetype': {'name': issuetype},
-            'components': components,
-            'parent': {'id': story.id},
-        }
-    else:
-        subtask_test_automation = {
-            'project': {'key': 'LPS'},
-            'summary': summary,
-            'description': description,
-            'issuetype': {'name': issuetype},
-            'parent': {'id': story.id},
-        }
+        subtask_test_automation.update({'components': components})
     return subtask_test_automation
 
 
@@ -76,6 +68,16 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
         components = []
         for component in issue.fields.components:
             components.append({'name': component.name})
+
+        labels = []
+        if hasattr(issue.fields, CustomField.Epic_Link):
+            epic = jira_local.issue(epic_link, fields='labels')
+            if hasattr(epic.fields, 'labels'):
+                epic_labels = epic.get_field('labels')
+                for label in epic_labels:
+                    if label.startswith('202') and label.endswith('_DEV'):
+                        labels.append(label)
+
         issue_dict = {
             'project': {'key': 'LPS'},
             'summary': summary,
@@ -91,6 +93,8 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
             inwardIssue=new_issue.key,
             outwardIssue=parent_key,
         )
+        if labels:
+            new_issue.update(fields={"labels": labels})
     return new_issue
 
 
