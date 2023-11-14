@@ -286,7 +286,7 @@ def read_test_cases_table_from_description(description):
     table_ending_position = description.find(table_ending_string)
 
     if table_starring_string:
-        if table_ending_position == -1:
+        if table_ending_position <= 0:
             table_ending_position = len(description)
         table = description[table_staring_position:table_ending_position]
         table_rows = table.replace('|\n', '||\n').split('|\n')
