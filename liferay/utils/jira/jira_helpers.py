@@ -70,7 +70,7 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
             components.append({'name': component.name})
 
         labels = []
-        if hasattr(issue.fields, CustomField.Epic_Link):
+        if epic_link:
             epic = jira_local.issue(epic_link, fields='labels')
             if hasattr(epic.fields, 'labels'):
                 epic_labels = epic.get_field('labels')
