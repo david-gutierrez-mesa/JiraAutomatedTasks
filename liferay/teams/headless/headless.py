@@ -70,24 +70,25 @@ def create_poshi_automation_task(jira):
             if subtask.fields.summary == Strings.subtask_test_creation_summary:
                 description = jira.issue(subtask.id, fields='description').fields.description
                 table_starring_string = ''
-                if description.find('||*Requirement*||') != -1:
-                    table_starring_string = '||*Requirement*||'
-                elif description.find('||Requirement||') != -1:
-                    table_starring_string = '||Requirement||'
-                table_staring_position = description.find(table_starring_string)
-                table_ending_string = ''
-                if description.find('*Exploratory') != -1:
-                    table_ending_string = '*Exploratory'
-                elif description.find('Exploratory') != -1:
-                    table_ending_string = 'Exploratory'
-                table_ending_position = description.find(table_ending_string)
-                poshi_automation_table = description[table_staring_position:table_ending_position - 1]
-                poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
-                if poshi_task:
-                    close_functional_automation_subtask(jira, story, poshi_task.key)
-                    output_message += "Functional Automation created for " + story.get_field('summary')
-                else:
-                    output_message += "Functional Automation already exists for " + story.get_field('summary')
+                if description is not None:
+                    if description.find('||*Requirement*||') != -1:
+                        table_starring_string = '||*Requirement*||'
+                    elif description.find('||Requirement||') != -1:
+                        table_starring_string = '||Requirement||'
+                    table_staring_position = description.find(table_starring_string)
+                    table_ending_string = ''
+                    if description.find('*Exploratory') != -1:
+                        table_ending_string = '*Exploratory'
+                    elif description.find('Exploratory') != -1:
+                        table_ending_string = 'Exploratory'
+                    table_ending_position = description.find(table_ending_string)
+                    poshi_automation_table = description[table_staring_position:table_ending_position - 1]
+                    poshi_task = _create_poshi_task_for(jira, story, poshi_automation_table)
+                    if poshi_task:
+                        close_functional_automation_subtask(jira, story, poshi_task.key)
+                        output_message += "Functional Automation created for " + story.get_field('summary')
+                    else:
+                        output_message += "Functional Automation already exists for " + story.get_field('summary')
     print(output_message)
 
 
