@@ -46,8 +46,10 @@ def _get_month_metrics(jira, month, header):
             reported_by_dev += 1
         elif email in Squads.Discovery:
             reported_by_discovery += 1
-        if bug.get_field(CustomField.Bug_type).value == 'Regression Bug':
-            regression_bug += 1
+        bug_type_field = bug.get_field(CustomField.Bug_type)
+        if bug_type_field is not None:
+            if bug_type_field.value == 'Regression Bug':
+                regression_bug += 1
 
     filter_closed_bugs = Filter.Echo_Dashboard_v3_0_Current_month_closed_bugs.format(month=month)
     currently_reported_bugs = get_all_issues(jira, filter_closed_bugs, ["key", "resolution"])
