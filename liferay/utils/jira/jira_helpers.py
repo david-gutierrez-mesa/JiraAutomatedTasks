@@ -283,6 +283,8 @@ def read_test_cases_table_from_description(description):
         table_ending_string = 'h3. *Test Cases*'
     elif description.find('*Case ') != -1:
         table_ending_string = '*Case '
+    elif description.find('\n*Design') != -1:
+        table_ending_string = '\n*Design'
     table_ending_position = description.find(table_ending_string)
 
     if table_starring_string:
