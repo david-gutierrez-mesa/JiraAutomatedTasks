@@ -327,6 +327,7 @@ if __name__ == "__main__":
     # info = fill_round_technical_testing_description(jira_connection, info)
     # info = creating_testing_subtasks(jira_connection, info)
     # warning, info = create_poshi_automation_task(jira_connection, warning, info)
+    info = creating_design_subtasks(jira_connection, info)
     info = create_testing_table_for_stories(jira_connection, info)
     # info = create_poshi_automation_task_for_bugs(jira_connection, info)
     # info = close_ready_for_release_bugs(jira_connection, info)
