@@ -307,14 +307,14 @@ if __name__ == "__main__":
     warning = ''
     info = ''
     jira_connection = get_jira_connection()
-    info = assign_qa_engineer(jira_connection, info)
-    info = fill_round_technical_testing_description(jira_connection, info)
+    # info = assign_qa_engineer(jira_connection, info)
+    # info = fill_round_technical_testing_description(jira_connection, info)
     info = creating_testing_subtasks(jira_connection, info)
     # warning, info = create_poshi_automation_task(jira_connection, warning, info)
     info = create_testing_table_for_stories(jira_connection, info)
-    info = create_poshi_automation_task_for_bugs(jira_connection, info)
+    # info = create_poshi_automation_task_for_bugs(jira_connection, info)
     # info = close_ready_for_release_bugs(jira_connection, info)
-    warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
+    # warning, info = transition_story_to_ready_for_pm_review(jira_connection, warning, info)
     # info = creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira_connection, info)
     jira_connection.close()
 
