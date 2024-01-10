@@ -94,6 +94,28 @@ def creating_testing_subtask_to_check_impedibugs_from_ux_pm(jira, output_info):
     return output_info
 
 
+def creating_design_subtasks(jira, output_info):
+    stories_without_design_subtask = jira.search_issues(Filter.Design_Sub_task_creation,
+                                                        fields=['key', 'subtasks', 'components', 'id', 'description',
+                                                                CustomField.Epic_Link])
+    for story in stories_without_design_subtask:
+        needs_ux_task = True
+        for subtask in story.fields.subtasks:
+            summary = subtask.fields.summary
+            if summary.startswith(Strings.subtask_ux_summary):
+                needs_ux_task = False
+
+        components = []
+        for component in story.fields.components:
+            components.append({'name': component.name})
+
+        if needs_ux_task:
+            subtask_ux = initialize_subtask_ux_validation(story)
+            jira.create_issue(fields=subtask_ux)
+        output_info += '* Design subtask created for story ' + html_issue_with_link(story) + "\n "
+    return output_info
+
+
 def creating_testing_subtasks(jira, output_info):
     stories_without_testing_subtask = jira.search_issues(Filter.Integration_Sub_task_creation,
                                                          fields=['key', 'subtasks', 'components', 'id', 'description',
@@ -102,7 +124,6 @@ def creating_testing_subtasks(jira, output_info):
         needs_backend = True
         needs_frontend = True
         needs_round_1 = True
-        needs_ux_task = True
         for subtask in story.fields.subtasks:
             summary = subtask.fields.summary
             if summary == Strings.subtask_backend_summary:
@@ -111,8 +132,6 @@ def creating_testing_subtasks(jira, output_info):
                 needs_frontend = False
             elif summary.startswith(Strings.subtask_round_1_summary):
                 needs_round_1 = False
-            elif summary.startswith(Strings.subtask_ux_summary):
-                needs_ux_task = False
 
         components = []
         for component in story.fields.components:
@@ -127,9 +146,6 @@ def creating_testing_subtasks(jira, output_info):
         if needs_round_1:
             subtask_round_1 = initialize_subtask_test_validation(story, components, EchoStrings.Round_1_description)
             jira.create_issue(fields=subtask_round_1)
-        if needs_ux_task:
-            subtask_ux = initialize_subtask_ux_validation(story)
-            jira.create_issue(fields=subtask_ux)
         output_info += '* Testing subtasks created for story ' + html_issue_with_link(story) + "\n "
     return output_info
 
