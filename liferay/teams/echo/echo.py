@@ -20,6 +20,29 @@ def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_tabl
     return new_issue
 
 
+def _get_table_from_subtasks(jira, story):
+    poshi_automation_table = ''
+    for subtask in story.fields.subtasks:
+        summary = subtask.fields.summary
+        description = jira.issue(subtask.id, fields='description').fields.description
+        if not description:
+            return ''
+        if summary == Strings.subtask_test_creation_summary:
+            description = description.replace('\t', '')
+            if description.startswith("*Case "):
+                description = '\n' + description
+            test_definitions = description.split('\n*Case ')
+            for case in test_definitions[1:]:
+                case = line_strip(case)
+                case_summary = get_property(case, ':*\n')
+                case_priority = get_property(case, 'Test Strategy:')
+                can_be_automated = get_property(case, 'be covered by POSHI?:')
+
+                poshi_automation_table += '|' + case_summary + '|' + case_priority + '|Manual|TBD|TBD|' \
+                                          + can_be_automated + '|' + '\n'
+            return poshi_automation_table
+
+
 def assign_qa_engineer(jira, output_info):
     stories_without_qa_engineer = jira.search_issues(Filter.Assign_QA_Engineer,
                                                      fields=['key', 'assignee', CustomField.QA_Engineer])
@@ -155,25 +178,11 @@ def create_testing_table_for_stories(jira, output_info):
                                                        fields=['key', 'description', 'subtasks'])
     for story in stories_without_testing_table:
         current_description = story.fields.description
-        poshi_automation_table = AUTOMATION_TABLE_HEADER + '\n'
-        for subtask in story.fields.subtasks:
-            summary = subtask.fields.summary
-            if summary == Strings.subtask_test_creation_summary:
-                description = jira.issue(subtask.id, fields='description').fields.description.replace('\t', '')
-                if description.startswith("*Case "):
-                    description = '\n' + description
-                test_definitions = description.split('\n*Case ')
-                for case in test_definitions[1:]:
-                    case = line_strip(case)
-                    case_summary = get_property(case, ':*\n')
-                    case_priority = get_property(case, 'Test Strategy:')
-                    can_be_automated = get_property(case, 'be covered by POSHI?:')
-
-                    poshi_automation_table += '|' + case_summary + '|' + case_priority + '|Manual|TBD|TBD|' \
-                                              + can_be_automated + '|' + '\n'
-                break
-
-        updated_description = current_description + '\n\nh3. Test Scenarios\n' + poshi_automation_table
+        poshi_automation_table = _get_table_from_subtasks(jira, story)
+        if poshi_automation_table == '':
+            break
+        updated_description = (current_description + '\n\nh3. Test Scenarios\n' + AUTOMATION_TABLE_HEADER + '\n' +
+                               poshi_automation_table)
         output_info += "* Testing table created for story " + html_issue_with_link(story) + "\n "
         story.update(fields={'description': updated_description})
     return output_info
