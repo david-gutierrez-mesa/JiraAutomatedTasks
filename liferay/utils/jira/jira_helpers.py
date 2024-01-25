@@ -14,7 +14,7 @@ LIFERAY_JIRA_ISSUES_URL = Instance.Jira_URL + "/issues/"
 
 def __initialize_subtask(story, components, summary, issuetype, description=''):
     subtask_test_automation = {
-        'project': {'key': 'LPS'},
+        'project': {'key': 'LPD'},
         'summary': summary,
         'description': description,
         'issuetype': {'name': issuetype},
@@ -79,7 +79,7 @@ def create_poshi_automation_task_for(jira_local, issue, summary, description):
                         labels.append(label)
 
         issue_dict = {
-            'project': {'key': 'LPS'},
+            'project': {'key': 'LPD'},
             'summary': summary,
             'description': description,
             'issuetype': {'name': IssueTypes.Testing},
