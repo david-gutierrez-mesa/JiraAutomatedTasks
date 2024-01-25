@@ -115,7 +115,7 @@ def update_echo_test_cases_from_monthly_report(sheet, liferay_repo_path):
 
     output_warning = _insert_lines_in_component(sheet, components_testcases_dict)
     print("Total test cases to be added: " + str(testcases_to_be_added))
-    print("Missing LPS: " + str(lps_missing))
+    print("Missing LPD: " + str(lps_missing))
     print("Missing Description: " + str(description_missing))
     print("   " + "\n   ".join(list_missing_description))
     print("Missing Priority: " + str(priority_missing))
