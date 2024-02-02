@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 from liferay.teams.frontend_infra.frontend_infra_constants import FileName, Roles
-from liferay.utils.file_helpers import create_output_files
-from liferay.utils.jira.jira_helpers import *
-from liferay.utils.jira.jira_helpers import __initialize_subtask_technical_test
-from liferay.utils.jira.jira_constants import Filter
-from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.sheets.sheets_constants import SheetInstance
+from utils.liferay_utils.file_helpers import create_output_files
+from utils.liferay_utils.jira.jira_helpers import *
+from utils.liferay_utils.jira.jira_helpers import __initialize_subtask_technical_test
+from utils.liferay_utils.jira.jira_constants import Filter
+from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.sheets.sheets_constants import SheetInstance
 
 
 def create_test_creation_subtask(jira, output_info):

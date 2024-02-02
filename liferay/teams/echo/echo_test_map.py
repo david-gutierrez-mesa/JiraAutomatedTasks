@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 from liferay.teams.echo.echo_constants import FileName, Sheets
-from liferay.utils.file_helpers import create_output_files
-from liferay.utils.jira.jira_helpers import *
-from liferay.utils.jira.jira_constants import Filter
-from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.sheets.testmap_helpers import *
-from liferay.utils.sheets.sheets_liferay import get_testmap_connection
+from utils.liferay_utils.file_helpers import create_output_files
+from utils.liferay_utils.jira.jira_helpers import *
+from utils.liferay_utils.jira.jira_constants import Filter
+from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.sheets.testmap_helpers import *
+from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'

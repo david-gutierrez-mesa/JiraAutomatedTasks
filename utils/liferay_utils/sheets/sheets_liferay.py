@@ -10,7 +10,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from liferay.utils.sheets.sheets_constants import SheetInstance
+from utils.liferay_utils.sheets.sheets_constants import SheetInstance
 
 
 def get_testmap_connection():

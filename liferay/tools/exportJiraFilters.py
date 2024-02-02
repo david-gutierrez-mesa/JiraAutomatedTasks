@@ -2,8 +2,8 @@ from __future__ import print_function
 
 import pickle
 
-from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.manageCredentialsCrypto import delete_credentials
+from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.manageCredentialsCrypto import delete_credentials
 
 
 def main():

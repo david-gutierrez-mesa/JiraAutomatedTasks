@@ -1,7 +1,7 @@
 from jira import JIRA
 
-from liferay.utils.jira.jira_constants import Instance
-from liferay.utils.manageCredentialsCrypto import get_credentials
+from utils.liferay_utils.jira.jira_constants import Instance
+from utils.liferay_utils.manageCredentialsCrypto import get_credentials
 
 
 def get_jira_connection(instance_url=Instance.Jira_URL, instance_type=Instance.Type):
