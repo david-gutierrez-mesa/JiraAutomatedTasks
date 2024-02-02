@@ -5,9 +5,9 @@ import pickle
 
 from jira import JIRAError
 
-from liferay.utils.jira.jira_helpers import set_filter_permissions
-from liferay.utils.jira.jira_liferay import get_jira_connection
-from liferay.utils.manageCredentialsCrypto import delete_credentials
+from utils.liferay_utils.jira.jira_helpers import set_filter_permissions
+from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.manageCredentialsCrypto import delete_credentials
 
 DEFAULT_URL = "https://liferay.atlassian.net/"
 LOG_FILE_NAME = '_log_file.log.log'

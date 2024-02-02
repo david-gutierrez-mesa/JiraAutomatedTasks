@@ -1,7 +1,7 @@
 import unittest
 
 from liferay.teams.epm.epm_automations import update_components_sheet
-from liferay.utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira.jira_liferay import get_jira_connection
 
 
 class EpmAutomationTests(unittest.TestCase):
