@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-from liferay.teams.echo.echo_constants import FileName, Sheets
+from liferay.teams.echo.echo_constants import FileName, Filter, Sheets
 from utils.liferay_utils.file_helpers import create_output_files
+from utils.liferay_utils.jira.jira_constants import Instance, Status
 from utils.liferay_utils.jira.jira_helpers import *
-from utils.liferay_utils.jira.jira_constants import Filter
 from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.sheets.sheets_constants import SheetInstance
+from utils.liferay_utils.sheets.sheets_helpers import collapse_group, expand_group
 from utils.liferay_utils.sheets.testmap_helpers import *
 from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
@@ -146,7 +148,7 @@ def add_test_cases_to_test_map(sheet, jira, echo_team_components, output_warning
 
 
 def check_control_panel_tab(sheet, output_warning):
-    summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE)\
+    summary_status = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_SUMMARY_RANGE) \
         .execute().get('values', [])
     for status in summary_status:
         if status[0] != "FINE":
@@ -157,11 +159,11 @@ def check_control_panel_tab(sheet, output_warning):
 
 
 def check_need_automation_test_cases(sheet, jira, echo_team_components, output_warning, output_info):
-    lps_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE)\
+    lps_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=CONTROL_PANEL_NEEDS_AUTOMATION_RANGE) \
         .execute().get('values', [])
     test_map_range = ECHO_TESTMAP_SHEET_NAME + '!' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN + \
                      str(ECHO_TESTMAP_SHEET_FIRST_COLUMN_NUMBER) + ':' + ECHO_TESTMAP_SHEET_COMPONENT_COLUMN
-    current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute()\
+    current_test_cases_list = sheet.values().get(spreadsheetId=Sheets.ECHO_TESTMAP_ID, range=test_map_range).execute() \
         .get('values', [])
     for lps in lps_list:
         story = jira.issue(lps[0], fields=['key', 'issuelinks', 'components'])

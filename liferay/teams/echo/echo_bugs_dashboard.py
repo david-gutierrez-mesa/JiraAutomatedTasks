@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from liferay.teams.echo.echo_constants import Squads, FileName, Sheets
+from liferay.teams.echo.echo_constants import Squads, FileName, Filter, Sheets
 from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_constants import Filter, CustomField, Instance
+from utils.liferay_utils.jira.jira_constants import CustomField, Instance
 from utils.liferay_utils.sheets.sheets_constants import SheetInstance
 from utils.liferay_utils.jira.jira_helpers import get_all_issues
 from utils.liferay_utils.jira.jira_liferay import get_jira_connection
