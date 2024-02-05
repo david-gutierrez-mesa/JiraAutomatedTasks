@@ -7,6 +7,14 @@ class FileName:
     OUTPUT_INFO_FILE_NAME = "output_info_headless.txt"
 
 
+class Filter:
+    GSheets_Headless_All_Stories = 'filter=12516'
+    Headless_All_verified_Bugs_in_master = 'filter=12514'
+    Headless_Team_Ready_to_create_POSHI_Automation_Task = 'filter=13880'
+    Integration_In_Development_Sub_task_creation_Headless_team = 'filter=12231'
+    Product_QA_Test_Validation_Round_1 = 'filter=12232'
+
+
 class HeadlessStrings:
     poshi_task_description = 'Create test automation to validate the critical test scenarios/cases of the related ' \
                              'story.\n\nThe focus of this task is to implement the CRITICAL, HIGH, and MID tests of ' \
@@ -37,7 +45,8 @@ class HeadlessStrings:
                                 'frontend/backend Unit Test?||\n' \
                                 '| | | | |\n'
     test_validation_round_1_description = '*Context*\n' \
-                                          'Execute the tests of the parent story, and use the information in the *Test \n' \
+                                          'Execute the tests of the parent story, and use the information in the  '\
+                                          '*Test \n' \
                                           'Information* section to perform the tests.\n' \
                                           '\n' \
                                           '*Output*\n' \
