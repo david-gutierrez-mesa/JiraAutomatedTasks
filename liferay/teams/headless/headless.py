@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from liferay.teams.headless.headless_contstants import HeadlessStrings
-from utils.liferay_utils.jira.jira_constants import Filter, Status, Strings
+from liferay.teams.headless.headless_contstants import Filter, HeadlessStrings
+from utils.liferay_utils.jira.jira_constants import Status, Strings
 from utils.liferay_utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
 from utils.liferay_utils.jira.jira_liferay import get_jira_connection
 
