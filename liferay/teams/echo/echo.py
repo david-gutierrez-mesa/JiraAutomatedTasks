@@ -10,7 +10,7 @@ from utils.liferay_utils.jira.jira_constants import Status, CustomField, Transit
 from utils.liferay_utils.jira.jira_helpers import *
 from utils.liferay_utils.jira.jira_liferay import get_jira_connection
 
-sys.path.append(os.path.join(os.path.join(sys.path[0], '../..'), 'utils'))
+sys.path.append(os.path.join(os.path.join(sys.path[0], '../../..'), 'utils'))
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):
