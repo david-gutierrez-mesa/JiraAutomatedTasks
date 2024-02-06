@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
+
 from liferay.teams.headless.headless_contstants import Filter, HeadlessStrings
 from utils.liferay_utils.jira.jira_constants import Status, Strings
 from utils.liferay_utils.jira.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask

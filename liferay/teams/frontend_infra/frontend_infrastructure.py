@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
+
 from liferay.teams.frontend_infra.frontend_infra_constants import FileName, Roles, Filter
 from utils.liferay_utils.file_helpers import create_output_files
 from utils.liferay_utils.jira.jira_helpers import *
