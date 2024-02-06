@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
+
 from liferay.teams.uniform.uniform_constants import FileName, Sheets, Filter
 from utils.liferay_utils.file_helpers import create_output_files
 from utils.liferay_utils.jira.jira_liferay import get_jira_connection
