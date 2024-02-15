@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 
 from jira import JIRAError
 
-from teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter
+from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter
 from utils.liferay_utils.file_helpers import create_output_files
 from utils.liferay_utils.jira_utils.jira_constants import Status, CustomField, Transition, Strings
 from utils.liferay_utils.jira_utils.jira_helpers import *
