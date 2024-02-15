@@ -5,14 +5,14 @@ import sys
 sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
 
 from liferay.teams.echo.echo_constants import FileName, Filter, Sheets
-from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_constants import Instance, Status
-from utils.liferay_utils.jira.jira_helpers import *
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
-from utils.liferay_utils.sheets.sheets_constants import SheetInstance
-from utils.liferay_utils.sheets.sheets_helpers import collapse_group, expand_group
-from utils.liferay_utils.sheets.testmap_helpers import *
-from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from liferay_utils.file_helpers import create_output_files
+from liferay_utils.jira_utils.jira_constants import Instance, Status
+from liferay_utils.jira_utils.jira_helpers import *
+from liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from liferay_utils.sheets.sheets_constants import SheetInstance
+from liferay_utils.sheets.sheets_helpers import collapse_group, expand_group
+from liferay_utils.sheets.testmap_helpers import *
+from liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 CONTROL_PANEL_SHEET_NAME = 'Control panel'
 CONTROL_PANEL_NEEDS_AUTOMATION_RANGE = CONTROL_PANEL_SHEET_NAME + '!B11:B'

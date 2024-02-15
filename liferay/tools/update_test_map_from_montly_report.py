@@ -5,9 +5,9 @@ import pickle
 import re
 
 from liferay.teams.echo.echo_test_map import _line_data, _add_lines_to_components_dic, _insert_lines_in_component
-from utils.liferay_utils.file_helpers import search_file_inside_dir
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
-from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from liferay_utils.file_helpers import search_file_inside_dir
+from liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 ECHO_LAST_REPORT_ID = '1owKo77sLqtqNkxod8427blIZkMemEseszHDq8f7X_Tg'
 ECHO_TESTMAP_SHEET_ID = '15465545'

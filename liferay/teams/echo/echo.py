@@ -6,11 +6,11 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter
-from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_constants import Status, CustomField, Transition, Strings
-from utils.liferay_utils.jira.jira_helpers import *
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter
+from liferay_utils.file_helpers import create_output_files
+from liferay_utils.jira_utils.jira_constants import Status, CustomField, Transition, Strings
+from liferay_utils.jira_utils.jira_helpers import *
+from liferay_utils.jira_utils.jira_liferay import get_jira_connection
 
 
 def _create_poshi_task_for_story(jira_local, parent_story, poshi_automation_table):

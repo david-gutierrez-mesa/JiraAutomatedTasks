@@ -2,9 +2,9 @@ import unittest
 
 from liferay.teams.echo.echo_bugs_dashboard import check_bug_threshold
 from liferay.teams.echo.echo_test_map import *
-from utils.liferay_utils.jira.jira_helpers import get_team_components
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
-from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from liferay_utils.jira_utils.jira_helpers import get_team_components
+from liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 
 class EchoTestMapTests(unittest.TestCase):

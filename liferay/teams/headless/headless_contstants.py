@@ -1,4 +1,4 @@
-from utils.liferay_utils.sheets.sheets_constants import SheetInstance
+from liferay_utils.sheets.sheets_constants import SheetInstance
 
 
 class FileName:

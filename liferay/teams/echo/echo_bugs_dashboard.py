@@ -4,13 +4,13 @@ import sys
 
 sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
 from liferay.teams.echo.echo_constants import Squads, FileName, Filter, Sheets
-from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_constants import CustomField, Instance
-from utils.liferay_utils.sheets.sheets_constants import SheetInstance
-from utils.liferay_utils.jira.jira_helpers import get_all_issues
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
-from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
-from utils.liferay_utils.sheets.testmap_helpers import get_components, update_table, get_affected_version
+from liferay_utils.file_helpers import create_output_files
+from liferay_utils.jira_utils.jira_constants import CustomField, Instance
+from liferay_utils.sheets.sheets_constants import SheetInstance
+from liferay_utils.jira_utils.jira_helpers import get_all_issues
+from liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from liferay_utils.sheets.testmap_helpers import get_components, update_table, get_affected_version
 
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB = 'Actionable Bugs'
 ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB_RANGE = ECH0_DASHBOARD_ACTIONABLE_BUGS_TAB + '!B4:G'
