@@ -6,9 +6,9 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 
 from liferay.teams.frontend_infra.frontend_infra_constants import FileName, Roles, Filter
 from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_helpers import *
-from utils.liferay_utils.jira.jira_helpers import __initialize_subtask_technical_test
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_helpers import *
+from utils.liferay_utils.jira_utils.jira_helpers import __initialize_subtask_technical_test
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 from utils.liferay_utils.sheets.sheets_constants import SheetInstance
 
 

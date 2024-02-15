@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import pickle
 
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 from utils.liferay_utils.manageCredentialsCrypto import delete_credentials
 
 

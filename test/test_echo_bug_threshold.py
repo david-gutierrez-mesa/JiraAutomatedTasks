@@ -1,7 +1,7 @@
 import unittest
 
 from liferay.teams.echo.echo_bugs_dashboard import update_echo_bug_threshold, check_bug_threshold
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 

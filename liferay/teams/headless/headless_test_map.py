@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 
 from liferay.teams.headless.headless_contstants import Sheets, Filter, FileName
 from utils.liferay_utils.file_helpers import create_output_files
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 from utils.liferay_utils.sheets.testmap_helpers import update_bug_threshold, update_test_map
 

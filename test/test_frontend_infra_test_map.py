@@ -1,7 +1,7 @@
 import unittest
 
 from liferay.teams.frontend_infra.frontend_infra_test_map import *
-from utils.liferay_utils.jira.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 
