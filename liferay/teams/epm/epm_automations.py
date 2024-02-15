@@ -7,10 +7,10 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 import getopt
 import sys
 
-from liferay_utils.sheets.sheets_helpers import set_update_time_in_cell, create_collapse_group_body
-from liferay_utils.jira_utils.jira_constants import Instance
-from liferay_utils.jira_utils.jira_liferay import get_jira_connection
-from liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from utils.liferay_utils.sheets.sheets_helpers import set_update_time_in_cell, create_collapse_group_body
+from utils.liferay_utils.jira_utils.jira_constants import Instance
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
 
 SUB_COMPONENTS_URL = Instance.Jira_URL + '/rest/net.brokenbuild.subcomponents/1.0/subcomponents'
 SUB_COMPONENTS_COMMERCE_JSON_URL = SUB_COMPONENTS_URL + '/COMMERCE.json'

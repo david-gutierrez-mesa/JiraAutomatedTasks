@@ -5,10 +5,10 @@ import sys
 sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
 
 from liferay.teams.uniform.uniform_constants import FileName, Sheets, Filter
-from liferay_utils.file_helpers import create_output_files
-from liferay_utils.jira_utils.jira_liferay import get_jira_connection
-from liferay_utils.sheets.sheets_liferay import get_testmap_connection
-from liferay_utils.sheets.testmap_helpers import update_bug_threshold, update_test_map
+from utils.liferay_utils.file_helpers import create_output_files
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from utils.liferay_utils.sheets.sheets_liferay import get_testmap_connection
+from utils.liferay_utils.sheets.testmap_helpers import update_bug_threshold, update_test_map
 
 BUG_THRESHOLD_TAB = 'JIRA-BUGS-7.4'
 BUG_THRESHOLD_TAB_RANGE = BUG_THRESHOLD_TAB + '!B3:L'

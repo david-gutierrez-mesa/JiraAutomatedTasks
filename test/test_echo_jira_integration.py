@@ -1,7 +1,7 @@
 import unittest
 
-from echo.echo import *
-from jira_utils.jira_liferay import get_jira_connection
+from liferay.teams.echo.echo import *
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 
 
 class EchoJiraTestCase(unittest.TestCase):

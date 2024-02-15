@@ -5,9 +5,9 @@ import sys
 sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils'))
 
 from liferay.teams.headless.headless_contstants import Filter, HeadlessStrings
-from liferay_utils.jira_utils.jira_constants import Status, Strings
-from liferay_utils.jira_utils.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
-from liferay_utils.jira_utils.jira_liferay import get_jira_connection
+from utils.liferay_utils.jira_utils.jira_constants import Status, Strings
+from utils.liferay_utils.jira_utils.jira_helpers import create_poshi_automation_task_for, close_functional_automation_subtask
+from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
 
 
 def _create_poshi_task_for(jira_local, parent_story, poshi_automation_table):
