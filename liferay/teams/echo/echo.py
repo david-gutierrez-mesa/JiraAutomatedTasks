@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.join(sys.path[0], '..', '..', '..'), 'utils
 
 from jira import JIRAError
 
-from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter
+from liferay.teams.echo.echo_constants import FileName, EchoStrings, Squads, Relationship, Filter, Roles
 from utils.liferay_utils.file_helpers import create_output_files
 from utils.liferay_utils.jira_utils.jira_helpers import *
 from utils.liferay_utils.jira_utils.jira_liferay import get_jira_connection
@@ -138,8 +138,9 @@ def creating_design_subtasks(jira, output_info):
 
         if needs_ux_task:
             subtask_ux = initialize_subtask_ux_validation(story)
-            jira.create_issue(fields=subtask_ux)
-        output_info += '* Design subtask created for story ' + html_issue_with_link(story) + "\n "
+            issue = jira.create_issue(fields=subtask_ux)
+            jira.assign_issue(issue.key, Roles.Design_lead)
+            output_info += '* Design subtask created for story ' + html_issue_with_link(story) + "\n "
     return output_info
 
 
