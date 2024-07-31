@@ -57,7 +57,7 @@ class Relationship:
 
 
 class Roles:
-    Design_lead = 'carolina.rodriguez'
+    Design_lead = 'maria.arce'
 
 
 class Sheets:
